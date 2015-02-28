@@ -1,18 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<script src="http://d3js.org/d3.v3.js"></script>
 	<script src="javascripts/jquery.min.js"></script>
 	<script src="javascripts/underscore-min.js"></script>
 	<script src="javascripts/scrollspy.js"></script>
-	<script>
+	<style>
+		body {font: 20px arial; color:white;}
+		.axis path,
+		.axis line {
+		  fill: none;
+		  stroke: #000;
+		  shape-rendering: crispEdges;
+		}
 
-	</script>
+		.x.axis path {
+		  display: none;
+		}
+
+		.line {
+		  fill: none;
+		  stroke: white;
+		  stroke-width: 4.5px;
+		}
+
+		#img1 {
+		  -webkit-transition: opacity 1s ease-in-out;
+		  -moz-transition: opacity 1s ease-in-out;
+		  -o-transition: opacity 1s ease-in-out;
+		  transition: opacity 1s ease-in-out;
+		}
+	</style>
 </head>
-<body>
+<body style="padding:0px; margin:0px;">
 
-<h1>Test</h1>
+<div style="position:fixed; width:100%;">
+	<img id="img1" style="position:absolute; top:0px; z-index:10;" src="images/shanghai-clean.jpg" width="100%"/>
+	<img id="img2" style="position:absolute; top:0px; z-index:0;" src="images/shanghai-dirty.jpg" width="100%"/>
+</div>
+<div style="position:relative; padding:50px 0px 0px 50px; width:370px; height:1500px;">
+	<div style="font-size:80px;">Good air quality</div>
+	<p style="line-height:40px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ultricies vitae sem id congue. Nunc vel quam porttitor, hendrerit neque sed, viverra tellus. Aliquam pretium nec elit vel molestie. Vestibulum vestibulum leo eget elit consequat, id mollis justo euismod. Fusce pulvinar lacus volutpat risus suscipit hendrerit.</p>
+	
+</div>
+<div id="shim"></div>
+<div style="position:relative; padding:50px 0px 0px 50px; width:370px; height:600px;">
+	<div style="font-size:80px;">Bad air quality</div>
+	<p style="line-height:40px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ultricies vitae sem id congue. Nunc vel quam porttitor, hendrerit neque sed, viverra tellus. Aliquam pretium nec elit vel molestie. Vestibulum vestibulum leo eget elit consequat, id mollis justo euismod. Fusce pulvinar lacus volutpat risus suscipit hendrerit.</p>	
+</div>
 
-<p>Test</p>
+<div id="chart" style="position:fixed; top:100px; left:400px; margin:20px;"></div>
 
 </body>
 </html>
+<script>
+	
+	$(function() {
+		$('#shim').on('scrollSpy:enter', function() {
+			$("#img1").fadeTo( 0 , 0.0, function() {
+   			 // Animation complete.
+  			});
+		});
+
+		$('#shim').on('scrollSpy:exit', function() {
+		  	$("#img1").fadeTo( 0 , 1.0, function() {
+   			 // Animation complete.
+  			});
+		});
+
+		$('#shim').scrollSpy();
+	});
+	
+	var margin = {top: 20, right: 20, bottom: 30, left: 50},
+	width = 660 - margin.left - margin.right,
+	height = 500 - margin.top - margin.bottom;
+
+	var parseDate = d3.time.format("%d-%b-%y").parse;
+
+	var x = d3.time.scale()
+	    .range([0, width]);
+
+	var y = d3.scale.linear()
+	    .range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom");
+
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left");
+
+	var line = d3.svg.line()
+	    .x(function(d) { return x(d.date); })
+	    .y(function(d) { return y(d.close); });
+
+	var svg = d3.select("#chart").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	d3.tsv("data/data.tsv", function(error, data) {
+	  data.forEach(function(d) {
+	    d.date = parseDate(d.date);
+	    d.close = +d.close;
+	  });
+
+	  x.domain(d3.extent(data, function(d) { return d.date; }));
+	  y.domain(d3.extent(data, function(d) { return d.close; }));
+
+	  svg.append("g")
+	      .attr("class", "x axis")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(xAxis);
+
+	  svg.append("g")
+	      .attr("class", "y axis")
+	      .call(yAxis)
+	    .append("text")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", 6)
+	      .attr("dy", ".71em")
+	      .style("text-anchor", "end")
+	      .text("Air quality");
+
+	  svg.append("path")
+	      .datum(data)
+	      .attr("class", "line")
+	      .attr("d", line);
+	});
+
+</script>
