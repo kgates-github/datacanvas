@@ -33,6 +33,12 @@ sensors = {
 	}
 }
 
+##
+#
+# Get lat lon for each sensor location
+#
+##
+"""
 for city in sensors:
 	locations = {}
 	f = open('../data/%s-locations.csv' % (city), 'w')
@@ -41,7 +47,8 @@ for city in sensors:
 
 	for area in sensors[city]:
 		print area
-		url = 'http://sensor-api.localdata.com/api/v1/sources/%s/entries?resolution=10m&op=mean&from=2015-02-12T05:00&before=2015-02-12T10:00' % (sensors[city][area])
+		url = 'http://sensor-api.localdata.com/api/v1/sources/%s/entries?' + /
+			'resolution=10m&op=mean&from=2015-01-12T05:00&before=2015-02-12T10:00' % (sensors[city][area])
 		req = urllib2.Request(url)
 		results = urllib2.urlopen(req)
 		
@@ -58,13 +65,33 @@ for city in sensors:
 		row = '%s,%s,%s\n' % (locations[l][0], locations[l][1], l)			
 		f.write(row)
 	f.close()
+"""
+##
+#
+# Get data
+#
+#
 
+# temperature, light, airquality_raw sound, humidity, dust 
+fields = 'temperature, light, airquality_raw, sound, humidity, dust' 
+
+##
+# mean: the average (mean) value over the time resolution
+# count: the number of raw data points that went into the aggregate value
+# max: the maximum value over the time resolution
+# min: the minimum value over the time resolution
+# sumsq
+#
+metric = 'mean'
+fr = '2015-02-19T04:00:00Z' # from
+before = '2015-02-20T01:00:00Z'
+resolution = '20m'
 
 data = {}
 for city in sensors:
 	f1 = open('../data/%s-time-location.json' % (city), 'w')
 	for area in sensors[city]:
-		url = 'http://sensor-api.localdata.com/api/v1/aggregations?each.sources=%s&fields=sound,light&op=mean&from=2015-02-03T04:00:00Z&before=2015-02-03T23:59:00Z&resolution=10m' % (sensors[city][area])
+		url = 'http://sensor-api.localdata.com/api/v1/aggregations?each.sources=%s&fields=%s&op=%s&from=%s&before=%s&resolution=%s' % (sensors[city][area], fields, metric, fr, before, resolution)
 		req = urllib2.Request(url)
 		results = urllib2.urlopen(req)
 		print url
