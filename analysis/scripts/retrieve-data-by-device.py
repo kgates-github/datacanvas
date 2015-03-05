@@ -102,6 +102,13 @@ for city in sensors:
 				data[d['timestamp']].setdefault(d['source'], {})
 				data[d['timestamp']][d['source']]['sound'] = 0.0158 * float(d['sound']) + 49.184
 				data[d['timestamp']][d['source']]['light'] = d['light']
+			"""
+			for d in elements['data']:
+				data.setdefault(d['timestamp'], {})
+				data[d['timestamp']].setdefault(d['source'], {})
+				data[d['timestamp']][d['source']]['sound'] = 0.0158 * float(d['sound']) + 49.184
+				data[d['timestamp']][d['source']]['light'] = d['light']
+			"""
 		results.close()	
 	
 	f1.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
