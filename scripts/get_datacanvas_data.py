@@ -7,10 +7,10 @@ import pandas as pd
 def get_datacanvas(from_dt, before_dt, city=None, sensor=None, metric='mean', resolution='1h'):
     api_url = 'http://sensor-api.localdata.com/api/v1/aggregations'
     api_params = {}
-    if city:
-        api_params['over.city'] = city
-    elif sensor:
+    if sensor:
         api_params['each.sources'] = sensor
+    else:
+        api_params['over.city'] = city
     api_params['op'] = metric
     api_params['fields'] = 'temperature,light,airquality_raw,sound,humidity,dust'
     api_params['resolution'] = resolution
