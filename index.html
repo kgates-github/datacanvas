@@ -1,110 +1,184 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script src="http://d3js.org/d3.v3.js"></script>
+	<script src="javascripts/d3.min.js"></script>
 	<script src="javascripts/jquery.min.js"></script>
 	<script src="javascripts/underscore-min.js"></script>
 	<script src="javascripts/scrollspy.js"></script>
 	<style>
 		body {font: 20px arial; color:white;}
-		.axis path,
-		.axis line {
-		  fill: none;
-		  stroke: #000;
-		  shape-rendering: crispEdges;
-		}
-
-		.x.axis path {
-		  display: none;
-		}
-
-		.line {
-		  fill: none;
-		  stroke: white;
-		  stroke-width: 4.5px;
-		}
-
-		#img1 {
-		  -webkit-transition: opacity 1s ease-in-out;
-		  -moz-transition: opacity 1s ease-in-out;
-		  -o-transition: opacity 1s ease-in-out;
-		  transition: opacity 1s ease-in-out;
-		}
+		
 	</style>
 </head>
 <body style="padding:0px; margin:0px;">
 
-<div style="position:fixed; width:100%;">
-	<img id="img1" style="position:absolute; top:0px; z-index:10;" src="images/shanghai-clean.jpg" width="100%"/>
-	<img id="img2" style="position:absolute; top:0px; z-index:0;" src="images/shanghai-dirty.jpg" width="100%"/>
-</div>
-<div style="position:relative; padding:50px 0px 0px 50px; width:370px; height:1500px;">
-	<div style="font-size:80px;">Good air quality</div>
-	<p style="line-height:40px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ultricies vitae sem id congue. Nunc vel quam porttitor, hendrerit neque sed, viverra tellus. Aliquam pretium nec elit vel molestie. Vestibulum vestibulum leo eget elit consequat, id mollis justo euismod. Fusce pulvinar lacus volutpat risus suscipit hendrerit.</p>
-	
-</div>
-<div id="shim"></div>
-<div style="position:relative; padding:50px 0px 0px 50px; width:370px; height:600px;">
-	<div style="font-size:80px;">Bad air quality</div>
-	<p style="line-height:40px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ultricies vitae sem id congue. Nunc vel quam porttitor, hendrerit neque sed, viverra tellus. Aliquam pretium nec elit vel molestie. Vestibulum vestibulum leo eget elit consequat, id mollis justo euismod. Fusce pulvinar lacus volutpat risus suscipit hendrerit.</p>	
-</div>
 
-<div id="chart" style="position:fixed; top:100px; left:400px; margin:20px;"></div>
-
-</body>
-</html>
 <script>
 	
 	$(function() {
-		$('#shim').on('scrollSpy:enter', function() {
-			$("#img1").fadeTo( 0 , 0.0, function() {
-   			 // Animation complete.
-  			});
-		});
+		var width = 200,
+	    	height = 200,
+	    	radius = Math.min(width, height) / 2.5,
+	    	innerRadius = 0;
 
-		$('#shim').on('scrollSpy:exit', function() {
-		  	$("#img1").fadeTo( 0 , 1.0, function() {
-   			 // Animation complete.
-  			});
-		});
+		var pie = d3.layout.pie()
+		    .sort(null)
+		    .value(function(d) { return d.width; });
 
-		$('#shim').scrollSpy();
+		
+
+		/*
+		var tip = d3.tip()
+		  .attr('class', 'd3-tip')
+		  .offset([0, 0])
+		  .html(function(d) {
+		    return d.data.label + ": <span style='color:orangered'>" + d.data.score + "</span>";
+		  });
+		*/
+		var arc = d3.svg.arc()
+		  .innerRadius(innerRadius)
+		  .outerRadius(function (d) { 
+		    return (radius - innerRadius) * (d.data.score) + innerRadius; 
+		  });
+
+		var innerArc = d3.svg.arc()
+		  .innerRadius(innerRadius)
+		  .outerRadius(function (d) { 
+		    return ((radius - innerRadius) * (d.data.score) + innerRadius) * Math.random() * 0.7; 
+		  });
+
+		var middleArc = d3.svg.arc()
+		  .innerRadius(innerRadius)
+		  .outerRadius(function (d) { 
+		    return ((radius - innerRadius) * (d.data.score) + innerRadius) * Math.random(); 
+		  });
+
+		var outlineArc = d3.svg.arc()
+		        .innerRadius(innerRadius)
+		        .outerRadius(radius);
+
+		var svg = d3.select("body").append("svg")
+		    .attr("width", width)
+		    .attr("height", height)
+		    .append("g")
+		    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+		//svg.call(tip);
+
+		//d3.csv('aster_data.csv', function(error, data) {
+		
+		d3.csv('data/prototype/shanghai.csv', function(error, rawData) {
+			radius = Math.min(width, height) / (1.7 + Math.random());
+			var fields = [
+				{
+					'idx': 'airquality_raw',
+					'name': 'Air quality',
+					'scale': d3.scale.linear
+				},
+				{
+					'idx': 'dust',
+					'name': 'Dust',
+					'scale': d3.scale.linear
+				},
+				{
+					'idx': 'humidity',
+					'name': 'Humidity',
+					'scale': d3.scale.linear
+				},
+				{
+					'idx': 'light',
+					'name': 'Light',
+					'scale': d3.scale.linear
+				},
+				{
+					'idx': 'sound',
+					'name': 'Sound',
+					'scale': d3.scale.linear
+				},
+				{
+					'idx': 'temperature',
+					'name': 'Temperature',
+					'scale': d3.scale.linear
+				}
+			];
+			var transformedData = [];
+			var scalesGlobal = {}; // Use maxes and mins to calculate d3 scales foreach field
+
+			for (var i = 0; i  < fields.length; i++) {
+				var field = fields[i].idx;
+				var values = _.pluck(rawData, field);
+
+				scalesGlobal[field] = fields[i].scale()
+					.range([0,1])
+					.domain([0, _.max(values)]);
+			}
+
+			//console.log('temp 11', scalesGlobal['temperature'](11))
+			//console.log('airquality_raw 22', scalesGlobal['airquality_raw'](22.0))
+
+			rawData.forEach(function(d) {
+				var elems = [];
+				for (var i = 0; i  < fields.length; i++) {
+					
+					elems.push(
+						{
+							'id': fields[i].idx,
+							'order': i,
+							'color': '#ddd',
+							'weight': 1,
+							'score': scalesGlobal[fields[i].idx](d[fields[i].idx]),
+							'width': 1,
+							'label': fields[i].name
+						}
+					)
+				}
+				transformedData.push(elems);
+			});
+			data = transformedData[0];
+			
+		  // for (var i = 0; i < data.score; i++) { console.log(data[i].id) }
+		  
+		  var path = svg.selectAll(".solidArc")
+		      .data(pie(data))
+		    .enter().append("path")
+		      .attr("fill", "#99ccff")
+		      .attr("class", "solidArc")
+		      .attr("stroke", "#fff")
+		      .attr("d", arc)
+
+		   var tpath = svg.selectAll(".middleSolidArc")
+		      .data(pie(data))
+		    .enter().append("path")
+		      .attr("fill", function(d) { return '#ff6633'; })
+		      .attr("class", "middleSolidArc")
+		      .attr("stroke", "none")
+		      .attr("d", middleArc)
+		   
+		   /*
+		   setInterval(function() {
+		   		 tpath.transition().duration(1000).attr("d", middleArc)
+		   }, 1000);
+		   */
+
+		   var path = svg.selectAll(".innerSolidArc")
+		      .data(pie(data))
+		    .enter().append("path")
+		      .attr("fill", function(d) { return '#666'; })
+		      .attr("class", "innerSolidArc")
+		      .attr("stroke", "none")
+		      .attr("d", innerArc)
+		      //.on('mouseover', tip.show)
+		      //.on('mouseout', tip.hide);
+		    var path = svg.selectAll(".solidArcOuter")
+		      .data(pie(data))
+		    .enter().append("path")
+		      .attr("fill", "none")
+		      .attr("class", "solidArcOuter")
+		      .attr("stroke", "#fff")
+		      .attr("d", arc)
+		});
 	});
 	
-	var svg = d3.select("#chart").append("svg")
-	    .attr("width", 900)
-	    .attr("height", 600)
-	  .append("g")
-	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	d3.tsv("data/data.tsv", function(error, data) {
-	  data.forEach(function(d) {
-	    d.date = parseDate(d.date);
-	    d.close = +d.close;
-	  });
-
-	  x.domain(d3.extent(data, function(d) { return d.date; }));
-	  y.domain(d3.extent(data, function(d) { return d.close; }));
-
-	  svg.append("g")
-	      .attr("class", "x axis")
-	      .attr("transform", "translate(0," + height + ")")
-	      .call(xAxis);
-
-	  svg.append("g")
-	      .attr("class", "y axis")
-	      .call(yAxis)
-	    .append("text")
-	      .attr("transform", "rotate(-90)")
-	      .attr("y", 6)
-	      .attr("dy", ".71em")
-	      .style("text-anchor", "end")
-	      .text("Air quality");
-
-	  svg.append("path")
-	      .datum(data)
-	      .attr("class", "line")
-	      .attr("d", line);
-	});
+	
 
 </script>

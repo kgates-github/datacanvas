@@ -23,6 +23,8 @@ def get_datacanvas(from_dt, before_dt, city=None, sensor=None, metric='mean', re
 
 
 def get_sensor_data(start_dt, end_dt, city, sensor_name=None, sensor_id=None, metric='mean', resolution='1h'):
+    print city, sensor_name
+    
     def date_ranges(start, end, delta):
         curr = start
         while curr < end:
