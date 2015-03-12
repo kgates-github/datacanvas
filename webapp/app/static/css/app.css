@@ -3,7 +3,7 @@
   width: 970px;
 }
 .chart-container {
-  min-height: 300px;
+  min-height: 100px;
 }
 .header-1 {
   /*font-family: 'Tinos', serif;*/
@@ -42,12 +42,12 @@
   text-align:center;
 }
 
-.good { background:#33cc33; color:#33cc33; }
-.moderate { background:#eebb00; color:#eebb00; }
-.unhealthy-mild { background:rgb(255, 126, 0); color:rgb(255, 126, 0); }
-.unhealthy { background:#cc0000; color:#cc0000; }
-.unhealthy-very { background:rgb(153, 0, 76); color:rgb(153, 0, 76); }
-.hazardous { background:rgb(126, 0, 35); color:rgb(126, 0, 35); }
+.good { background:#33cc33; color:#33cc33; fill:#33cc33; }
+.moderate { background:#eebb00; color:#eebb00; fill:#eebb00; }
+.unhealthy-mild { background:rgb(255, 126, 0); color:rgb(255, 126, 0); fill:rgb(255, 126, 0); }
+.unhealthy { background:#cc0000; color:#cc0000; fill:#cc0000; }
+.unhealthy-very { background:rgb(153, 0, 76); color:rgb(153, 0, 76); fill:rgb(153, 0, 76); }
+.hazardous { background:rgb(126, 0, 35); color:rgb(126, 0, 35); fill:rgb(126, 0, 35); }
 
 .btn-compact { padding: 2px 22px 2px 22px; font-size:11px; }
 

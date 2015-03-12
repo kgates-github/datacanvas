@@ -22,16 +22,61 @@
       this.params = _at_params;
       this.data = _at_data;
       this.el = this.params.el;
+      this.scaleX = this._getScaleX();
+      this.scaleY = this._getScaleY();
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.data = this.sortBy(this.data, "median");
-      this.svg.append("rect").attr("width", 100).attr("height", 100).style("fill", "red");
+      this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
+      this.data = this._sortBy(this.data, "median");
+      this.plots = this.chart.selectAll("rect").data(this.data).enter().append("rect").attr("width", (function(_this) {
+        return function(d) {
+          return _this.scaleX(d.upper);
+        };
+      })(this)).attr("height", 3).attr("x", (function(_this) {
+        return function(d) {
+          return _this.scaleX(d.lower);
+        };
+      })(this)).attr("y", (function(_this) {
+        return function(d, i) {
+          return _this.scaleY(i);
+        };
+      })(this)).style("fill", "#ccc");
+      this.medians = this.chart.selectAll("circle").data(this.data).enter().append("circle").attr("class", "good").attr("r", 6).attr("cx", (function(_this) {
+        return function(d) {
+          return _this.scaleX(d.median);
+        };
+      })(this)).attr("cy", (function(_this) {
+        return function(d, i) {
+          return _this.scaleY(i) + 3;
+        };
+      })(this));
     }
 
-    BoxPlot.prototype.sortBy = function(data, dimension) {
+    BoxPlot.prototype._getScaleX = function() {
+      var domainX, rangeX;
+      domainX = this._getDomain(this.data);
+      rangeX = [0, this.params.width - (this.params.margin.left + this.params.margin.right)];
+      return this.params.scale().domain(domainX).range(rangeX);
+    };
+
+    BoxPlot.prototype._getScaleY = function() {
+      var domainY, rangeY;
+      domainY = [0, this.data.length];
+      rangeY = [0, this.params.height - (this.params.margin.top + this.params.margin.bottom)];
+      return this.params.scale().domain(domainY).range(rangeY);
+    };
+
+    BoxPlot.prototype._sortBy = function(data, dimension) {
       if (dimension == null) {
         dimension = 'median';
       }
       return _.sortBy(data, dimension).reverse();
+    };
+
+    BoxPlot.prototype._getDomain = function(data) {
+      var max, min;
+      max = _.max(_.pluck(data, "upper"));
+      min = _.min(_.pluck(data, "lower"));
+      return [min, max];
     };
 
     return BoxPlot;

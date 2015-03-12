@@ -28,8 +28,8 @@ def city(name='Shanghai'):
       'data': [
         {
           'name': 'Shanghai',
-          'upper': 200,
-          'median': 34,
+          'upper': 170,
+          'median': 94,
           'lower': 29
         },
         {
@@ -58,14 +58,14 @@ def city(name='Shanghai'):
         },
         {
           'name': 'Boston',
-          'upper': 34,
+          'upper': 44,
           'median': 23,
           'lower': 10
         },
         {
           'name': 'San Francisco',
           'upper': 30,
-          'median': 18,
+          'median': 25,
           'lower': 14
         }
       ]
