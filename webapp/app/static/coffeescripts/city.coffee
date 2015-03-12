@@ -17,7 +17,7 @@ config =
         chart: 'ranking'
         dimension: 'airquality_raw'
         scale: d3.scale.linear
-        width:700
+        width: 700
         height: 250
         margin: 
           top: 30

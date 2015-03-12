@@ -20,68 +20,51 @@
     __extends(BoxPlot, _super);
 
     function BoxPlot(_at_app, _at_params, _at_data, _at_helpers) {
+      var that;
       this.app = _at_app;
       this.params = _at_params;
       this.data = _at_data;
       this.helpers = _at_helpers;
+      this.data = this._sortBy(this.data, "median");
       this.el = this.params.el;
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
-      this.data = this._sortBy(this.data, "median");
-      this.plots = this.chart.selectAll("rect").data(this.data).enter().append("rect").attr("width", (function(_this) {
-        return function(d) {
-          return _this.scaleX(d.upper) - _this.scaleX(d.lower);
-        };
-      })(this)).attr("height", 3).attr("x", (function(_this) {
-        return function(d) {
-          return _this.scaleX(d.lower);
-        };
-      })(this)).attr("y", (function(_this) {
+      this.plots = this.chart.selectAll(".plot").data(this.data).enter().append("g").attr("class", "plot").attr("transform", (function(_this) {
         return function(d, i) {
-          return _this.scaleY(i);
-        };
-      })(this)).style("fill", "#ccc");
-      this.lowers = this.chart.selectAll(".lower").data(this.data).enter().append("circle").attr("class", "lower").attr("class", (function(_this) {
-        return function(d) {
-          return _this.helpers.aqiColorClass(d.lower);
-        };
-      })(this)).style("fill", "white").attr("r", 5).attr("cx", (function(_this) {
-        return function(d) {
-          return _this.scaleX(d.lower);
-        };
-      })(this)).attr("cy", (function(_this) {
-        return function(d, i) {
-          return _this.scaleY(i) + 1;
+          return "translate(0, " + (_this.scaleY(i)) + ")";
         };
       })(this));
-      this.medians = this.chart.selectAll(".median").data(this.data).enter().append("circle").attr("class", "median").attr("class", (function(_this) {
-        return function(d) {
-          return _this.helpers.aqiColorClass(d.median);
-        };
-      })(this)).attr("r", 5).attr("cx", (function(_this) {
-        return function(d) {
-          return _this.scaleX(d.median);
-        };
-      })(this)).attr("cy", (function(_this) {
-        return function(d, i) {
-          return _this.scaleY(i) + 1;
-        };
-      })(this));
-      this.uppers = this.chart.selectAll(".upper").data(this.data).enter().append("circle").attr("class", "upper").attr("class", (function(_this) {
-        return function(d) {
-          return _this.helpers.aqiColorClass(d.upper);
-        };
-      })(this)).style("fill", "white").attr("r", 5).attr("cx", (function(_this) {
-        return function(d) {
-          return _this.scaleX(d.upper);
-        };
-      })(this)).attr("cy", (function(_this) {
-        return function(d, i) {
-          return _this.scaleY(i) + 1;
-        };
-      })(this));
+      that = this;
+      this.plots.each(function(d, i) {
+        d3.select(this).append("rect").attr("width", function(d) {
+          return that.scaleX(d.upper) - that.scaleX(d.lower);
+        }).attr("height", 3).attr("x", function(d) {
+          return that.scaleX(d.lower);
+        }).style("fill", "#ccc");
+        d3.select(this).append("circle").attr("class", "lower").attr("class", function(d) {
+          return that.helpers.aqiColorClass(d.lower);
+        }).style("fill", "white").attr("r", 5).attr("cx", function(d) {
+          return that.scaleX(d.lower);
+        }).attr("cy", function(d, i) {
+          return that.scaleY(i) + 1;
+        });
+        d3.select(this).append("circle").attr("class", "median").attr("class", function(d) {
+          return that.helpers.aqiColorClass(d.median);
+        }).attr("r", 5).attr("cx", function(d) {
+          return that.scaleX(d.median);
+        }).attr("cy", function(d, i) {
+          return that.scaleY(i) + 1;
+        });
+        return d3.select(this).append("circle").attr("class", "upper").attr("class", function(d) {
+          return that.helpers.aqiColorClass(d.upper);
+        }).style("fill", "white").attr("r", 5).attr("cx", function(d) {
+          return that.scaleX(d.upper);
+        }).attr("cy", function(d, i) {
+          return that.scaleY(i) + 1;
+        });
+      });
     }
 
     BoxPlot.prototype._getScaleX = function() {

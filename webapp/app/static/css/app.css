@@ -17,16 +17,24 @@
   /*font-family: 'Tinos', serif;*/
   font-weight:400;
   font-size:30px; 
-  margin-top:26px;
-  margin-bottom:16px;
+  margin-top:18px;
+  margin-bottom:26px;
 }
 
 .header-3 {
   /*font-family: 'Tinos', serif;*/
   font-weight:700;
   font-size:16px; 
-  margin-top:16px;
-  margin-bottom:22px;
+  margin-top:28px;
+  margin-bottom:24px;
+}
+
+.chart-header {
+  /*font-family: 'Tinos', serif;*/
+  font-weight:700;
+  font-size:16px; 
+  margin-top:28px;
+  margin-bottom:4px;
 }
 
 .header-5 {
@@ -56,4 +64,8 @@
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px; 
+}
+
+.small-text {
+  font-size: 11px; 
 }
