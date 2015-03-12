@@ -13,10 +13,17 @@ config =
   ]
 
 class App
-  constructor: (@config) ->
+  constructor: (@config, @data) ->
     @charts = []
+
     for chart in @config.charts
-      @charts.push new APP.charts[chart.type] @, chart.params
+      data = _.findWhere(@data, 
+        {
+          dimension: chart.params.dimension, 
+          chart: chart.params.chart
+        }
+      )
+      @charts.push new APP.charts[chart.type] @, chart.params, data.data
 
 
-@app = new App config
+@app = new App config, data

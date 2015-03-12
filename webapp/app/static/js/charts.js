@@ -17,10 +17,22 @@
   BoxPlot = (function(_super) {
     __extends(BoxPlot, _super);
 
-    function BoxPlot(_at_app, _at_params) {
+    function BoxPlot(_at_app, _at_params, _at_data) {
       this.app = _at_app;
       this.params = _at_params;
+      this.data = _at_data;
+      this.el = this.params.el;
+      this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
+      this.data = this.sortBy(this.data, "median");
+      this.svg.append("rect").attr("width", 100).attr("height", 100).style("fill", "red");
     }
+
+    BoxPlot.prototype.sortBy = function(data, dimension) {
+      if (dimension == null) {
+        dimension = 'median';
+      }
+      return _.sortBy(data, dimension).reverse();
+    };
 
     return BoxPlot;
 

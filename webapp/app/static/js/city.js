@@ -19,14 +19,19 @@
   };
 
   App = (function() {
-    function App(_at_config) {
-      var chart, _i, _len, _ref;
+    function App(_at_config, _at_data) {
+      var chart, data, _i, _len, _ref;
       this.config = _at_config;
+      this.data = _at_data;
       this.charts = [];
       _ref = this.config.charts;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         chart = _ref[_i];
-        this.charts.push(new APP.charts[chart.type](this, chart.params));
+        data = _.findWhere(this.data, {
+          dimension: chart.params.dimension,
+          chart: chart.params.chart
+        });
+        this.charts.push(new APP.charts[chart.type](this, chart.params, data.data));
       }
     }
 
@@ -34,6 +39,6 @@
 
   })();
 
-  this.app = new App(config);
+  this.app = new App(config, data);
 
 }).call(this);
