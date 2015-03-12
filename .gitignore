@@ -1,4 +1,7 @@
+env/
 .ipynb_checkpoints/
 *.dat
 *.pyc
-data/datacanvas/*
+data/datacanvas/
+webapp/bower_components/
+
