@@ -5,9 +5,11 @@
     __hasProp = {}.hasOwnProperty;
 
   Chart = (function() {
-    function Chart(_at_app, _at_params) {
+    function Chart(_at_app, _at_params, _at_data, _at_helpers) {
       this.app = _at_app;
       this.params = _at_params;
+      this.data = _at_data;
+      this.helpers = _at_helpers;
     }
 
     return Chart;
@@ -17,10 +19,11 @@
   BoxPlot = (function(_super) {
     __extends(BoxPlot, _super);
 
-    function BoxPlot(_at_app, _at_params, _at_data) {
+    function BoxPlot(_at_app, _at_params, _at_data, _at_helpers) {
       this.app = _at_app;
       this.params = _at_params;
       this.data = _at_data;
+      this.helpers = _at_helpers;
       this.el = this.params.el;
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
@@ -29,7 +32,7 @@
       this.data = this._sortBy(this.data, "median");
       this.plots = this.chart.selectAll("rect").data(this.data).enter().append("rect").attr("width", (function(_this) {
         return function(d) {
-          return _this.scaleX(d.upper);
+          return _this.scaleX(d.upper) - _this.scaleX(d.lower);
         };
       })(this)).attr("height", 3).attr("x", (function(_this) {
         return function(d) {
@@ -40,13 +43,43 @@
           return _this.scaleY(i);
         };
       })(this)).style("fill", "#ccc");
-      this.medians = this.chart.selectAll("circle").data(this.data).enter().append("circle").attr("class", "good").attr("r", 6).attr("cx", (function(_this) {
+      this.lowers = this.chart.selectAll(".lower").data(this.data).enter().append("circle").attr("class", "lower").attr("class", (function(_this) {
+        return function(d) {
+          return _this.helpers.aqiColorClass(d.lower);
+        };
+      })(this)).style("fill", "white").attr("r", 5).attr("cx", (function(_this) {
+        return function(d) {
+          return _this.scaleX(d.lower);
+        };
+      })(this)).attr("cy", (function(_this) {
+        return function(d, i) {
+          return _this.scaleY(i) + 1;
+        };
+      })(this));
+      this.medians = this.chart.selectAll(".median").data(this.data).enter().append("circle").attr("class", "median").attr("class", (function(_this) {
+        return function(d) {
+          return _this.helpers.aqiColorClass(d.median);
+        };
+      })(this)).attr("r", 5).attr("cx", (function(_this) {
         return function(d) {
           return _this.scaleX(d.median);
         };
       })(this)).attr("cy", (function(_this) {
         return function(d, i) {
-          return _this.scaleY(i) + 3;
+          return _this.scaleY(i) + 1;
+        };
+      })(this));
+      this.uppers = this.chart.selectAll(".upper").data(this.data).enter().append("circle").attr("class", "upper").attr("class", (function(_this) {
+        return function(d) {
+          return _this.helpers.aqiColorClass(d.upper);
+        };
+      })(this)).style("fill", "white").attr("r", 5).attr("cx", (function(_this) {
+        return function(d) {
+          return _this.scaleX(d.upper);
+        };
+      })(this)).attr("cy", (function(_this) {
+        return function(d, i) {
+          return _this.scaleY(i) + 1;
         };
       })(this));
     }

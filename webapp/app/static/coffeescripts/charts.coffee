@@ -1,11 +1,11 @@
 class Chart
 
-  constructor: (@app, @params) ->
+  constructor: (@app, @params, @data, @helpers) ->
 
   
 class BoxPlot extends Chart
 
-  constructor: (@app, @params, @data) ->
+  constructor: (@app, @params, @data, @helpers) ->
     @el = @params.el
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
@@ -22,20 +22,43 @@ class BoxPlot extends Chart
       .data(@data)
       .enter()
       .append("rect")
-      .attr("width", (d) => @scaleX(d.upper))
+      .attr("width", (d) => @scaleX(d.upper) - @scaleX(d.lower))
       .attr("height", 3)
       .attr("x", (d) => @scaleX(d.lower))
       .attr("y", (d, i) => @scaleY(i))
       .style("fill", "#ccc")
 
-    @medians = @chart.selectAll("circle")
+    @lowers = @chart.selectAll(".lower")
       .data(@data)
-      .enter() 
+      .enter()
       .append("circle")
-      .attr("class", "good")
-      .attr("r", 6)
+      .attr("class", "lower")
+      .attr("class", (d) => @helpers.aqiColorClass(d.lower))
+      .style("fill", "white")
+      .attr("r", 5)
+      .attr("cx", (d) => @scaleX(d.lower))
+      .attr("cy", (d, i) => @scaleY(i) + 1)
+
+    @medians = @chart.selectAll(".median")
+      .data(@data)
+      .enter()
+      .append("circle")
+      .attr("class", "median")
+      .attr("class", (d) => @helpers.aqiColorClass(d.median))
+      .attr("r", 5)
       .attr("cx", (d) => @scaleX(d.median))
-      .attr("cy", (d, i) => @scaleY(i) + 3)
+      .attr("cy", (d, i) => @scaleY(i) + 1)
+
+    @uppers = @chart.selectAll(".upper")
+      .data(@data)
+      .enter()
+      .append("circle")
+      .attr("class", "upper")
+      .attr("class", (d) => @helpers.aqiColorClass(d.upper))
+      .style("fill", "white")
+      .attr("r", 5)
+      .attr("cx", (d) => @scaleX(d.upper))
+      .attr("cy", (d, i) => @scaleY(i) + 1)
 
   _getScaleX: ->
     domainX = @_getDomain(@data)

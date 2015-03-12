@@ -1,3 +1,13 @@
+helpers = 
+  aqiColorClass: (value) ->
+    switch
+      when value <= 50 then return 'good' 
+      when value <= 100 then return 'moderate'
+      when value <= 150 then return 'unhealthy-mild'
+      when value <= 200 then return 'unhealthy' 
+      when value <= 300 then return 'unhealthy-very' 
+      else return 'hazardous'
+
 config = 
   charts: [
     {
@@ -18,7 +28,7 @@ config =
   ]
 
 class App
-  constructor: (@config, @data) ->
+  constructor: (@config, @data, helpers) ->
     @charts = []
 
     for chart in @config.charts
@@ -28,7 +38,7 @@ class App
           chart: chart.params.chart
         }
       )
-      @charts.push new APP.charts[chart.type] @, chart.params, data.data
+      @charts.push new APP.charts[chart.type] @, chart.params, data.data, helpers
 
 
-@app = new App config, data
+@app = new App config, data, helpers
