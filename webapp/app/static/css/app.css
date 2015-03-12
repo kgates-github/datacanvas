@@ -59,8 +59,6 @@
 
 .btn-compact { padding: 2px 22px 2px 22px; font-size:11px; }
 
-
-
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px; 
@@ -69,3 +67,19 @@ body {
 .small-text {
   font-size: 11px; 
 }
+
+.header {
+  list-style-type: none; /*to remove bullets*/
+  margin: 0 auto;
+  padding: 0px;
+  overflow: hidden;
+}
+
+.header li{
+  float:left;
+}
+
+
+
+
+

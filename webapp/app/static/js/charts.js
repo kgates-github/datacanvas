@@ -19,50 +19,73 @@
   BoxPlot = (function(_super) {
     __extends(BoxPlot, _super);
 
-    function BoxPlot(_at_app, _at_params, _at_data, _at_helpers) {
-      var that;
+    function BoxPlot(_at_app, _at_params, _at_data, _at_city, _at_helpers) {
+      var self;
       this.app = _at_app;
       this.params = _at_params;
       this.data = _at_data;
+      this.city = _at_city;
       this.helpers = _at_helpers;
-      this.data = this._sortBy(this.data, "median");
+      self = this;
+      this.data = _.sortBy(this.data, "median");
       this.el = this.params.el;
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
+      $("#airquality_raw-sort button").on("click", function() {
+        return self._sortBy($(this).val());
+      });
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
+      this.chart.selectAll(".plot").data(this.data).enter().append("text").attr("text-anchor", "bottom").text(function(d, i) {
+        return i + 1;
+      }).attr("x", -this.params.margin.left + 4).attr("y", (function(_this) {
+        return function(d, i) {
+          return _this.scaleY(i) + 6;
+        };
+      })(this));
       this.plots = this.chart.selectAll(".plot").data(this.data).enter().append("g").attr("class", "plot").attr("transform", (function(_this) {
         return function(d, i) {
           return "translate(0, " + (_this.scaleY(i)) + ")";
         };
       })(this));
-      that = this;
       this.plots.each(function(d, i) {
+        if (self.city === d.name) {
+          d3.select(this).append("rect").attr("width", 120).attr("height", 24).attr("x", function(d) {
+            return -self.params.margin.left + 20;
+          }).attr("y", -11).style("fill", "#333").style("stroke", "#333");
+        }
+        d3.select(this).append("text").text(d.name).attr("x", -self.params.margin.left + 32).attr("y", 6).attr("fill", function(d) {
+          if (self.city === d.name) {
+            return "white";
+          } else {
+            return "black";
+          }
+        });
         d3.select(this).append("rect").attr("width", function(d) {
-          return that.scaleX(d.upper) - that.scaleX(d.lower);
+          return self.scaleX(d.upper) - self.scaleX(d.lower);
         }).attr("height", 3).attr("x", function(d) {
-          return that.scaleX(d.lower);
+          return self.scaleX(d.lower);
         }).style("fill", "#ccc");
-        d3.select(this).append("circle").attr("class", "lower").attr("class", function(d) {
-          return that.helpers.aqiColorClass(d.lower);
+        d3.select(this).append("circle").attr("class", function(d) {
+          return "lower " + (self.helpers.aqiColorClass(d.lower));
         }).style("fill", "white").attr("r", 5).attr("cx", function(d) {
-          return that.scaleX(d.lower);
+          return self.scaleX(d.lower);
         }).attr("cy", function(d, i) {
-          return that.scaleY(i) + 1;
+          return self.scaleY(i) + 1;
         });
-        d3.select(this).append("circle").attr("class", "median").attr("class", function(d) {
-          return that.helpers.aqiColorClass(d.median);
+        d3.select(this).append("circle").attr("class", function(d) {
+          return "median " + (self.helpers.aqiColorClass(d.median));
         }).attr("r", 5).attr("cx", function(d) {
-          return that.scaleX(d.median);
+          return self.scaleX(d.median);
         }).attr("cy", function(d, i) {
-          return that.scaleY(i) + 1;
+          return self.scaleY(i) + 1;
         });
-        return d3.select(this).append("circle").attr("class", "upper").attr("class", function(d) {
-          return that.helpers.aqiColorClass(d.upper);
+        return d3.select(this).append("circle").attr("class", function(d) {
+          return "upper " + (self.helpers.aqiColorClass(d.upper));
         }).style("fill", "white").attr("r", 5).attr("cx", function(d) {
-          return that.scaleX(d.upper);
+          return self.scaleX(d.upper);
         }).attr("cy", function(d, i) {
-          return that.scaleY(i) + 1;
+          return self.scaleY(i) + 1;
         });
       });
     }
@@ -81,11 +104,20 @@
       return this.params.scale().domain(domainY).range(rangeY);
     };
 
-    BoxPlot.prototype._sortBy = function(data, dimension) {
+    BoxPlot.prototype._sortBy = function(dimension) {
       if (dimension == null) {
         dimension = 'median';
       }
-      return _.sortBy(data, dimension).reverse();
+      this.data = _.sortBy(this.data, dimension);
+      return this.plots.data(this.data, function(d) {
+        return d.name;
+      }).transition().delay(function(d, i) {
+        return i * 60;
+      }).duration(300).ease("linear").attr("transform", (function(_this) {
+        return function(d, i) {
+          return "translate(0, " + (_this.scaleY(i)) + ")";
+        };
+      })(this));
     };
 
     BoxPlot.prototype._getDomain = function(data) {

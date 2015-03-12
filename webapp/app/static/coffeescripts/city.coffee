@@ -23,12 +23,12 @@ config =
           top: 30
           right: 50
           bottom: 30
-          left: 150
+          left: 165
     }
   ]
 
 class App
-  constructor: (@config, @data, helpers) ->
+  constructor: (@config, @data, city, helpers) ->
     @charts = []
 
     for chart in @config.charts
@@ -38,7 +38,7 @@ class App
           chart: chart.params.chart
         }
       )
-      @charts.push new APP.charts[chart.type] @, chart.params, data.data, helpers
+      @charts.push new APP.charts[chart.type] @, chart.params, data.data, city, helpers
 
 
-@app = new App config, data, helpers
+@app = new App config, data, city, helpers

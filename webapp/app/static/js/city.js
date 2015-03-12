@@ -36,7 +36,7 @@
             top: 30,
             right: 50,
             bottom: 30,
-            left: 150
+            left: 165
           }
         }
       }
@@ -44,7 +44,7 @@
   };
 
   App = (function() {
-    function App(_at_config, _at_data, helpers) {
+    function App(_at_config, _at_data, city, helpers) {
       var chart, data, _i, _len, _ref;
       this.config = _at_config;
       this.data = _at_data;
@@ -56,7 +56,7 @@
           dimension: chart.params.dimension,
           chart: chart.params.chart
         });
-        this.charts.push(new APP.charts[chart.type](this, chart.params, data.data, helpers));
+        this.charts.push(new APP.charts[chart.type](this, chart.params, data.data, city, helpers));
       }
     }
 
@@ -64,6 +64,6 @@
 
   })();
 
-  this.app = new App(config, data, helpers);
+  this.app = new App(config, data, city, helpers);
 
 }).call(this);

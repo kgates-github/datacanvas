@@ -7,7 +7,7 @@
       <span style="font-weight:bold; margin-left:10px;" class="header-5">Visualizing Cities</span>
     </div>
     <div style="border:1px solid #ccc; width:210px; height:500px; position:fixed; top:60px; border-radius: 6px; padding:10px;">
-      <div class="btn-group-vertical" role="group" aria-label="...">
+      <div class="btn-group-vertical" role="group" aria-label="">
         <button type="button" class="btn btn-default btn-sm btn-compact">Jan</button>
         <button type="button" class="btn btn-default btn-sm btn-compact">Feb</button>
         <button type="button" class="btn btn-default btn-sm btn-compact">Mar</button>
@@ -52,7 +52,20 @@
         <p>
           From <strong>January</strong> to <strong>March</strong>, only using data collected between <strong>4PM</strong> and <strong>6PM</strong>, Shanghai's air average air quality score ranked <strong>7th</strong> out of the <strong>7</strong> cities being tracked. Its average air quality index score was <strong>54</strong>, which is moderately harmful. 
        
-        <div class="chart-header">Air Quality Comparison</div>
+        <ul class='inline-list header' style="width:100%;">
+          <li style="width:50%;">
+            <div class="chart-header">Air Quality Comparison</div>
+          </li>
+          <li style="width:50%; text-align:right; padding-top:26px;">
+            <span class="small-text">Sort by</span>&nbsp;
+            <div class="btn-group"  id="airquality_raw-sort" role="group" aria-label="">
+              <button type="button" name="sort" value="lower" class="btn btn-default btn-sm btn-compact">Low</button>
+              <button type="button" name="sort" value="median" class="btn btn-default btn-sm btn-compact">Average</button>
+              <button type="button" name="sort" value="upper" class="btn btn-default btn-sm btn-compact">High</button>
+            </div>
+          </li>
+        </ul>  
+        
         <div id="ranking-airquality_raw" class="chart-container"></div>
         <div style="font-size:11px; line-height:18px;">
           <strong>Air quality index key:</strong>&nbsp;
@@ -65,17 +78,13 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="header-3" style="padding-top:10px;">Daily Air Quality</div> 
-        <div style="height:300px; background:#eee;"></div>
-    </div>
   </div>
 </div>
 {% endblock body %}
 {% block js %}
   <script type='text/javascript'>
   var data = {{data | safe}};
+  var city = "{{city | safe}}";
   </script>
   <script type="text/javascript" src="{{url_for('static', filename='js/charts.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/city.js')}}"></script>
