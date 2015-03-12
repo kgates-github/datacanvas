@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{%block title %} Index Title{%endblock title %}
+{% block body %}
+<div class="row">
+  <div class="col-sm-3">
+    <div style="margin-top:10px;">
+      <span style="font-weight:bold; margin-left:10px;" class="header-5">Visualizing Cities</span>
+    </div>
+    <div style="border:1px solid #ccc; width:210px; height:500px; position:fixed; top:60px; border-radius: 6px; padding:10px;">
+      <div class="btn-group-vertical" role="group" aria-label="...">
+        <button type="button" class="btn btn-default btn-sm btn-compact" style="padding:2px;">Jan</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact">Feb</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact">Mar</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Apr</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact disabled">May</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Jun</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Jul</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Aug</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Sep</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Oct</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Nov</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Dec</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-9">
+    <div style="margin-top:10px;">
+      <span style="font-weight:bold;">Shanghai</span> - <a href="{{url_for('city', name='Singapore')}}">Singapore</a> - Bangalore - Geneva - Rio de Janeiro - Boston - San Francisco
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-9">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="header-1">{{city}}</div>
+        <p>
+          Using 14 batteries of sensors set up throughout {{city}}, we can get a picture of the city through data. With this, we can start to answer questions that reflect the quality of life: What time of day does the air quality tend to be bad? How noisy is it at night? Below are interactive charts that depict information about air quality, noise, dust, light levels, temperature and humidity, that can answer these questions and more. 
+        <div class="header-2">Air Quality</div>
+        <p>
+          Air quality is measured with the air quality index, or AQI, a standard maintained by the U.S. Environmental Protection Agency. It takes into consideration five major air pollutants: ground-level ozone, particle pollution, carbon monoxide, sulfur dioxide, and nitrogen dioxide. AQI values span from 0 to 500, with 0 being clean and 500 being extremely hazardous.
+      </div>
+    </div>
+    
+  </div>
+</div>
+{% endblock body %}
+{% block js %}
+  <script type='text/javascript'>
+  var data = {{data | safe}};
+  </script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/city.js')}}"></script>
+{% endblock js %}
+

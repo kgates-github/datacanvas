@@ -3,3 +3,10 @@
 {% block body %}
 <h2>Index Body</h2>
 {% endblock body %}
+{% block js %}
+  <script type='text/javascript'>
+  var data = {{data | safe}};
+  </script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/home.js')}}"></script>
+{% endblock js %}
+
