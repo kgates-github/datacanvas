@@ -3,17 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  {% block meta %}
-      <meta name="description" content="">
-      <meta name="author" content="">
-  {% endblock %}
   <title>{% block title %}Data Canvas App{% endblock %}</title>
-  <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="{{url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="{{url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap-theme.min.css')}}">
-  <!-- Custom CSS -->
-  {% block style %}{% endblock %}
+  <link rel="stylesheet" href="{{url_for('static', filename='css/app.css')}}">
 </head>
 
 <body>
