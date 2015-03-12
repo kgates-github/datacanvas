@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{%block title %} Index Title{%endblock title %}
+{%block title %} Visualizing Cities: {{city}}{%endblock title %}
 {% block body %}
 <div class="row">
   <div class="col-sm-3">
@@ -8,7 +8,7 @@
     </div>
     <div style="border:1px solid #ccc; width:210px; height:500px; position:fixed; top:60px; border-radius: 6px; padding:10px;">
       <div class="btn-group-vertical" role="group" aria-label="...">
-        <button type="button" class="btn btn-default btn-sm btn-compact" style="padding:2px;">Jan</button>
+        <button type="button" class="btn btn-default btn-sm btn-compact">Jan</button>
         <button type="button" class="btn btn-default btn-sm btn-compact">Feb</button>
         <button type="button" class="btn btn-default btn-sm btn-compact">Mar</button>
         <button type="button" class="btn btn-default btn-sm btn-compact disabled">Apr</button>
@@ -36,20 +36,71 @@
       <div class="col-sm-12">
         <div class="header-1">{{city}}</div>
         <p>
-          Using 14 batteries of sensors set up throughout {{city}}, we can get a picture of the city through data. With this, we can start to answer questions that reflect the quality of life: What time of day does the air quality tend to be bad? How noisy is it at night? Below are interactive charts that depict information about air quality, noise, dust, light levels, temperature and humidity, that can answer these questions and more. 
-        <div class="header-2">Air Quality</div>
+          Using 14 batteries of sensors set up throughout {{city}}, we can get a picture of the city's air quality through data. With this information, we can start to answer questions that reflect the quality of life: How often is the air hazardous? What time of day does the air tend to be bad? How does {{city}}'s air quality stack up against other cities?
         <p>
-          Air quality is measured with the air quality index, or AQI, a standard maintained by the U.S. Environmental Protection Agency. It takes into consideration five major air pollutants: ground-level ozone, particle pollution, carbon monoxide, sulfur dioxide, and nitrogen dioxide. AQI values span from 0 to 500, with 0 being clean and 500 being extremely hazardous.
+          Below are interactive charts that depict information about air quality, noise, dust, light levels, temperature and humidity, that can answer these questions and more. 
+        <div class="header-2">Air Quality Index</div>
+        <p>
+          Air quality is measured by the air quality index, or AQI, a standard maintained by the U.S. Environmental Protection Agency. It takes into consideration five major air pollutants: ground-level ozone, particle pollution, carbon monoxide, sulfur dioxide, and nitrogen dioxide. AQI values span from 0 to 500, with 0 being clean and 500 being extremely hazardous.
       </div>
     </div>
-    
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="header-3">Air Quality Ranking</div>
+        <p>
+          From <strong>January</strong> to <strong>March</strong>, only using data collected between <strong>4PM</strong> and <strong>6PM</strong>, Shanghai's air average air quality score ranked <strong>7th</strong> out of the <strong>7</strong> cities being tracked. Its average air quality index score was <strong>54</strong>, which is moderately harmful. 
+       
+        <div class="header-3" style="padding-top:10px;">Air Quality Comparison</div>
+        <div id="ranking-airquality_raw" style="height:300px; background:#eee;"></div>
+        <div style="font-size:11px; line-height:18px;">
+          <strong>Air quality index key:</strong>&nbsp;
+          <span contenteditable='false' class='dot good'>2</span> 0 to 50 good&nbsp;
+          <span contenteditable='false' class='dot moderate'>2</span> 51 to 100 moderate&nbsp;
+          <span contenteditable='false' class='dot unhealthy-mild'>2</span> 101 to 150 unhealth for sensitive groups&nbsp;
+          <span contenteditable='false' class='dot unhealthy'>2</span> 151 to 200 unhealthy&nbsp;
+          <span contenteditable='false' class='dot unhealthy-very'>2</span> 201 to 300 very unhealthy&nbsp;
+          <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500 hazardous.
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="header-3" style="padding-top:10px;">Daily Air Quality</div> 
+        <div style="height:300px; background:#eee;"></div>
+    </div>
   </div>
+  <div class="row">
+      <div class="col-sm-12">
+        <div class="header-2">Noise Level</div>
+        <p>
+          Noise is a measurment of abient sound generated from traffic, contruction and other sources measured in decibels. A decibel level of 50 would be the sound level of a quiet suburb, 80 decibels the sound of a freight train, and 150 would cause ear drum rupture.
+        <div class="header-3">Noise Level Ranking</div>
+        <div style="height:300px; background:#eee;"></div>
+        <div style="padding-left:20px; padding-right:20px; font-size:11px; line-height:18px; width:610px;">
+          <strong>Noise level key</strong>&nbsp;
+          0 to 50 good;&nbsp;
+          51 to 100 moderate;&nbsp;
+          101 to 150 unhealth for sensitive groups;&nbsp;
+          151 to 200 unhealthy;&nbsp;
+          201 to 300 very unhealthy;&nbsp;
+          301 to 500 hazardous.
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="header-3" style="padding-top:10px;">Daily Air Quality</div> 
+        <div style="height:300px; background:#eee;"></div>
+    </div>
+  </div>
+
 </div>
 {% endblock body %}
 {% block js %}
   <script type='text/javascript'>
   var data = {{data | safe}};
   </script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/charts.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/city.js')}}"></script>
 {% endblock js %}
 
