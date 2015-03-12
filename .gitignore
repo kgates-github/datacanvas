@@ -3,5 +3,4 @@
 env/
 .ipynb_checkpoints/
 data/datacanvas/
-bower_components/
-
+notebooks/*.csv
