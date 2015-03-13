@@ -1,5 +1,5 @@
 
-class BoxPlot
+class BoxPlot extends APP.charts['Chart']
 
   constructor: (@app, @params, @data, @city, @helpers) ->
 
@@ -279,7 +279,5 @@ class BoxPlot
 
     @_sortBy('median', 1000)  
             
-window.APP ?= {}
-APP.charts =
-  BoxPlot: BoxPlot
+APP.charts['BoxPlot'] = BoxPlot
    
