@@ -47,10 +47,10 @@ config =
         dimension: 'airquality_raw'
         scale: d3.scale.linear
         width: 700
-        height: 240
+        height: 250
         qualitative: helpers.aqiQualitative
         margin: 
-          top: 30
+          top: 40
           right: 50
           bottom: 30
           left: 165

@@ -32,10 +32,22 @@
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
       this.qualitative = this.params.qualitative || [];
+      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
       $("#" + this.params.dimension + "-sort button").on("click", function() {
         return self._sortBy($(this).val());
       });
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
+      this.svg.append("g").attr("class", "x axis").attr("transform", ("translate(" + this.params.margin.left + ",") + (this.params.height - 20) + ")").call(this.xAxis);
+      this.tip = d3.tip().attr('class', 'd3-tip').offset((function(_this) {
+        return function(d) {
+          return [-30, _this.scaleX(d.median) - _this.params.margin.left - 18];
+        };
+      })(this)).html(function(d) {
+        var html;
+        html = "<div style='color:white; margin-bottom:10px;'>" + d.name + "'s air quality scores</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + (self.helpers.getColorClass(d.lower, self.qualitative)) + "\" style=\"color:white; text-align:center;\">\n        " + d.lower + "\n      </td>\n      <td class=\"" + (self.helpers.getColorClass(d.median, self.qualitative)) + "\" style=\"color:white; text-align:center;\">\n        " + d.median + "\n      </td>\n      <td class=\"" + (self.helpers.getColorClass(d.upper, self.qualitative)) + "\" style=\"color:white; text-align:center;\">\n        " + d.upper + "\n      </td>\n    </tr>\n  </tbody>\n</table>";
+        return html;
+      });
+      this.svg.call(this.tip);
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
       this.qualatativeTicks = this.chart.selectAll("line").data(this.qualitative).enter().append("g").attr("transform", (function(_this) {
         return function(d, i) {
@@ -44,13 +56,13 @@
       })(this));
       this.qualatativeTicks.each(function(d, i) {
         var y2;
-        y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) + 10;
-        d3.select(this).append("line").attr("y1", 0).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 1.5).attr("class", function(d) {
+        y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) - 4;
+        d3.select(this).append("line").attr("y1", -24).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 1.5).attr("class", function(d) {
           return d["class"];
         });
         return d3.select(this).append("text").attr("text-anchor", "end").text(function(d) {
           return d.name;
-        }).attr("x", -6).attr("y", y2).attr("class", function(d) {
+        }).attr("x", -6).attr("y", -18).attr("class", function(d) {
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
       });
@@ -81,30 +93,33 @@
         });
         d3.select(this).append("rect").attr("width", function(d) {
           return self.scaleX(d.upper) - self.scaleX(d.lower);
-        }).attr("height", 3).attr("x", function(d) {
+        }).attr("height", 2).attr("x", function(d) {
           return self.scaleX(d.lower);
-        }).style("fill", "#ccc");
-        d3.select(this).append("circle").attr("class", function(d) {
+        }).style("fill", "#777");
+        d3.select(this).append("rect").attr("class", function(d) {
           return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));
-        }).style("fill", "white").attr("r", 5).attr("cx", function(d) {
+        }).style("fill", "white").attr("height", 15).attr("width", 5).attr("x", function(d) {
           return self.scaleX(d.lower);
-        }).attr("cy", function(d, i) {
-          return self.scaleY(i) + 1;
+        }).attr("y", function(d, i) {
+          return self.scaleY(i) - 6;
         });
-        d3.select(this).append("circle").attr("class", function(d) {
+        d3.select(this).append("rect").attr("class", function(d) {
           return "median " + (self.helpers.getColorClass(d.median, self.qualitative));
-        }).attr("r", 5).attr("cx", function(d) {
+        }).attr("height", 15).attr("width", 5).attr("x", function(d) {
           return self.scaleX(d.median);
-        }).attr("cy", function(d, i) {
-          return self.scaleY(i) + 1;
+        }).attr("y", function(d, i) {
+          return self.scaleY(i) - 6;
         });
-        return d3.select(this).append("circle").attr("class", function(d) {
+        d3.select(this).append("rect").attr("class", function(d) {
           return "upper " + (self.helpers.getColorClass(d.upper, self.qualitative));
-        }).style("fill", "white").attr("r", 5).attr("cx", function(d) {
+        }).style("fill", "white").attr("height", 15).attr("width", 5).attr("x", function(d) {
           return self.scaleX(d.upper);
-        }).attr("cy", function(d, i) {
-          return self.scaleY(i) + 1;
+        }).attr("y", function(d, i) {
+          return self.scaleY(i) - 6;
         });
+        return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length).attr("width", self.params.width).attr("x", -self.params.margin.left).attr("y", function(d, i) {
+          return self.scaleY(i) - 6;
+        }).on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });
     }
 
@@ -119,7 +134,7 @@
       var domainY, rangeY;
       domainY = [0, this.data.length];
       rangeY = [0, this.params.height - (this.params.margin.top + this.params.margin.bottom)];
-      return this.params.scale().domain(domainY).range(rangeY);
+      return d3.scale.linear().domain(domainY).range(rangeY);
     };
 
     BoxPlot.prototype._sortBy = function(dimension) {

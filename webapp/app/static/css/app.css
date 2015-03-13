@@ -50,12 +50,12 @@
   text-align:center;
 }
 
-.good { background:#33cc33; color:#33cc33; fill:#33cc33; stroke :#33cc33; stroke-width:2px;}
-.moderate { background:#eebb00; color:#eebb00; fill:#eebb00; stroke:#eebb00; stroke-width:2px; }
-.unhealthy-mild { background:rgb(255, 126, 0); color:rgb(255, 126, 0); fill:rgb(255, 126, 0); stroke:rgb(255, 126, 0); stroke-width:2px;}
-.unhealthy { background:#cc0000; color:#cc0000; fill:#cc0000; stroke:#cc0000; stroke-width:2px; }
-.unhealthy-very { background:rgb(153, 0, 76); color:rgb(153, 0, 76); fill:rgb(153, 0, 76); stroke:rgb(153, 0, 76); stroke-width:2px; }
-.hazardous { background:rgb(126, 0, 35); color:rgb(126, 0, 35); fill:rgb(126, 0, 35); stroke:rgb(126, 0, 35); stroke-width:2px; }
+.good { background:#33cc33; color:#33cc33; fill:#33cc33; stroke :#33cc33; stroke-width:1px;}
+.moderate { background:#eebb00; color:#eebb00; fill:#eebb00; stroke:#eebb00; stroke-width:1px; }
+.unhealthy-mild { background:rgb(255, 126, 0); color:rgb(255, 126, 0); fill:rgb(255, 126, 0); stroke:rgb(255, 126, 0); stroke-width:1px;}
+.unhealthy { background:#cc0000; color:#cc0000; fill:#cc0000; stroke:#cc0000; stroke-width:1px; }
+.unhealthy-very { background:rgb(153, 0, 76); color:rgb(153, 0, 76); fill:rgb(153, 0, 76); stroke:rgb(153, 0, 76); stroke-width:1px; }
+.hazardous { background:rgb(126, 0, 35); color:rgb(126, 0, 35); fill:rgb(126, 0, 35); stroke:rgb(126, 0, 35); stroke-width:1px; }
 
 .btn-compact { padding: 2px 22px 2px 22px; font-size:11px; }
 
@@ -77,6 +77,75 @@ body {
 
 .header li{
   float:left;
+}
+
+.plot {
+  cursor: pointer;
+}
+
+/* Axis styles */
+.axis {
+  shape-rendering: crispEdges;
+}
+
+.x.axis line {
+  stroke: #999;
+}
+
+.x.axis text {
+  fill: #999;
+  font-size: 11px;
+}
+
+.x.axis .minor {
+  stroke-opacity: .5;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.y.axis line, .y.axis path {
+  fill: none;
+  stroke: #000;
+}
+
+/* Tooltip */
+.d3-tip {
+  line-height: 1;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 20px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+table td {
+    border-top: none;
+}
+
+.borderless td, .borderless th {
+  border: none;
+  border-top: none;
 }
 
 

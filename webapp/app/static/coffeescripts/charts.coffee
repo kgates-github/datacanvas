@@ -13,6 +13,7 @@ class BoxPlot extends Chart
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
     @qualitative = @params.qualitative or []
+    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
     
     # Sorting controls
     $("##{@params.dimension}-sort button").on("click", ->
@@ -22,6 +23,54 @@ class BoxPlot extends Chart
     @svg = d3.select("##{@el}").append("svg")
       .attr("width", @params.width)
       .attr("height", @params.height)
+
+    # X axis
+    @svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(#{@params.margin.left}," + (@params.height - 20) + ")")
+      .call(@xAxis);
+
+    # Tooltip
+    @tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset((d) =>
+        [-30, @scaleX(d.median) - @params.margin.left - 18]
+      )
+      .html((d) ->
+        html = """
+          <div style='color:white; margin-bottom:10px;'>#{d.name}'s air quality scores</div>
+          <table class="table borderless">
+            <tbody>
+              <tr>
+                <td>
+                  <div>Low</div>
+                  <div style="font-size:11px; color:#bbb;">10th<br>percentile</div>
+                </td>
+                <td style="text-align:center;">
+                  <div>Median</div>
+                </td>
+                <td style="text-align:right;">
+                  <div>High</div>
+                  <div style="font-size:11px; color:#bbb;">90th<br>percentile</div></td>
+              </tr>
+              <tr style="font-size:26px;">
+                <td class="#{self.helpers.getColorClass(d.lower, self.qualitative)}" style="color:white; text-align:center;">
+                  #{d.lower}
+                </td>
+                <td class="#{self.helpers.getColorClass(d.median, self.qualitative)}" style="color:white; text-align:center;">
+                  #{d.median}
+                </td>
+                <td class="#{self.helpers.getColorClass(d.upper, self.qualitative)}" style="color:white; text-align:center;">
+                  #{d.upper}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        """
+        html
+      )
+
+    @svg.call(@tip)
 
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
@@ -35,10 +84,10 @@ class BoxPlot extends Chart
       )
 
     @qualatativeTicks.each((d, i) ->
-      y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) + 10
+      y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) - 4
       d3.select(@)
         .append("line")
-        .attr("y1", 0)
+        .attr("y1", -24)
         .attr("y2", y2)
         .attr("stroke-dasharray", "3,5")
         .style("stroke-width", 1.5)
@@ -49,7 +98,7 @@ class BoxPlot extends Chart
         .attr("text-anchor", "end")
         .text((d) -> d.name)
         .attr("x", -6)
-        .attr("y", y2)
+        .attr("y", -18)
         .attr("class", (d) -> d.class)
         .style("stroke", "none")
         .style("font-size", "11")
@@ -92,29 +141,42 @@ class BoxPlot extends Chart
 
       d3.select(@).append("rect")
         .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
-        .attr("height", 3)
+        .attr("height", 2)
         .attr("x", (d) -> self.scaleX(d.lower))
-        .style("fill", "#ccc")
+        .style("fill", "#777")
 
-      d3.select(@).append("circle")
+      d3.select(@).append("rect")
         .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
         .style("fill", "white")
-        .attr("r", 5)
-        .attr("cx", (d) -> self.scaleX(d.lower))
-        .attr("cy", (d, i) -> self.scaleY(i) + 1)
+        .attr("height", 15)
+        .attr("width", 5)
+        .attr("x", (d) -> self.scaleX(d.lower))
+        .attr("y", (d, i) -> self.scaleY(i) - 6)
 
-      d3.select(@).append("circle")
+      d3.select(@).append("rect")
         .attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
-        .attr("r", 5)
-        .attr("cx", (d) -> self.scaleX(d.median))
-        .attr("cy", (d, i) -> self.scaleY(i) + 1)
+        .attr("height", 15)
+        .attr("width", 5)
+        .attr("x", (d) -> self.scaleX(d.median))
+        .attr("y", (d, i) -> self.scaleY(i) - 6)
 
-      d3.select(@).append("circle")
+      d3.select(@).append("rect")
         .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
         .style("fill", "white")
-        .attr("r", 5)
-        .attr("cx", (d) -> self.scaleX(d.upper))
-        .attr("cy", (d, i) -> self.scaleY(i) + 1)
+        .attr("height", 15)
+        .attr("width", 5)
+        .attr("x", (d) -> self.scaleX(d.upper))
+        .attr("y", (d, i) -> self.scaleY(i) - 6)
+
+      d3.select(@).append("rect")
+        .style("fill", "#none")
+        .style("opacity", 0.0)
+        .attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length)
+        .attr("width", self.params.width)
+        .attr("x", -self.params.margin.left)
+        .attr("y", (d, i) -> self.scaleY(i) - 6)
+        .on('mouseover', self.tip.show)
+        .on('mouseout', self.tip.hide)
     )
 
   _getScaleX: ->
@@ -131,7 +193,7 @@ class BoxPlot extends Chart
     rangeY = [
         0, @params.height - (@params.margin.top + @params.margin.bottom)
       ]
-    @params.scale()
+    d3.scale.linear()
       .domain(domainY)
       .range(rangeY)
 
