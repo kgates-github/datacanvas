@@ -12,7 +12,19 @@ class BoxPlot extends Chart
     @el = @params.el
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
-
+    @qualitative = [
+      {
+        name: 'Moderate'
+        class: 'moderate'
+        value: 50
+      },
+      {
+        name: 'Mildly unhealthy'
+        class: 'unhealthy-mild'
+        value: 100
+      }
+    ]
+    
     # Sorting controls
     $("#airquality_raw-sort button").on("click", ->
       self._sortBy($(this).val())
@@ -25,11 +37,39 @@ class BoxPlot extends Chart
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
 
+    @qualatativeTicks = @chart.selectAll("line")
+      .data(@qualitative)
+      .enter()
+      .append("g")
+      .attr("transform", (d, i) =>
+        "translate(#{@scaleX(d.value)}, 0)"
+      )
+
+    @qualatativeTicks.each((d, i) ->
+      y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) + 10
+      d3.select(@)
+        .append("line")
+        .attr("y1", 0)
+        .attr("y2", y2)
+        .attr("stroke-dasharray", "3,5")
+        .style("stroke-width", 1.5)
+        .attr("class", (d) -> d.class)
+
+      d3.select(@)
+        .append("text")
+        .attr("text-anchor", "start")
+        .text((d) -> d.name)
+        .attr("x", 6)
+        .attr("y", y2)
+        .attr("class", (d) -> d.class)
+        .style("stroke", "none")
+        .style("font-size", "11")
+    )
+    
     @chart.selectAll(".plot")
       .data(@data)
       .enter()
       .append("text")
-      .attr("text-anchor", "bottom")
       .text((d, i) -> i + 1)
       .attr("x", -@params.margin.left + 4)
       .attr("y", (d, i) => @scaleY(i) + 6)
@@ -47,9 +87,9 @@ class BoxPlot extends Chart
       if self.city is d.name
         d3.select(@).append("rect")
           .attr("width", 120)
-          .attr("height", 24)
+          .attr("height", 21)
           .attr("x", (d) -> -self.params.margin.left + 20)
-          .attr("y", -11)
+          .attr("y", -9)
           .style("fill", "#333")
           .style("stroke", "#333")
 

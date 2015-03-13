@@ -31,12 +31,40 @@
       this.el = this.params.el;
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
+      this.qualitative = [
+        {
+          name: 'Moderate',
+          "class": 'moderate',
+          value: 50
+        }, {
+          name: 'Mildly unhealthy',
+          "class": 'unhealthy-mild',
+          value: 100
+        }
+      ];
       $("#airquality_raw-sort button").on("click", function() {
         return self._sortBy($(this).val());
       });
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
-      this.chart.selectAll(".plot").data(this.data).enter().append("text").attr("text-anchor", "bottom").text(function(d, i) {
+      this.qualatativeTicks = this.chart.selectAll("line").data(this.qualitative).enter().append("g").attr("transform", (function(_this) {
+        return function(d, i) {
+          return "translate(" + (_this.scaleX(d.value)) + ", 0)";
+        };
+      })(this));
+      this.qualatativeTicks.each(function(d, i) {
+        var y2;
+        y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) + 10;
+        d3.select(this).append("line").attr("y1", 0).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 1.5).attr("class", function(d) {
+          return d["class"];
+        });
+        return d3.select(this).append("text").attr("text-anchor", "start").text(function(d) {
+          return d.name;
+        }).attr("x", 6).attr("y", y2).attr("class", function(d) {
+          return d["class"];
+        }).style("stroke", "none").style("font-size", "11");
+      });
+      this.chart.selectAll(".plot").data(this.data).enter().append("text").text(function(d, i) {
         return i + 1;
       }).attr("x", -this.params.margin.left + 4).attr("y", (function(_this) {
         return function(d, i) {
@@ -50,9 +78,9 @@
       })(this));
       this.plots.each(function(d, i) {
         if (self.city === d.name) {
-          d3.select(this).append("rect").attr("width", 120).attr("height", 24).attr("x", function(d) {
+          d3.select(this).append("rect").attr("width", 120).attr("height", 21).attr("x", function(d) {
             return -self.params.margin.left + 20;
-          }).attr("y", -11).style("fill", "#333").style("stroke", "#333");
+          }).attr("y", -9).style("fill", "#333").style("stroke", "#333");
         }
         d3.select(this).append("text").text(d.name).attr("x", -self.params.margin.left + 32).attr("y", 6).attr("fill", function(d) {
           if (self.city === d.name) {

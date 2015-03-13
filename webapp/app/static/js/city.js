@@ -31,7 +31,7 @@
           dimension: 'airquality_raw',
           scale: d3.scale.linear,
           width: 700,
-          height: 250,
+          height: 240,
           margin: {
             top: 30,
             right: 50,
