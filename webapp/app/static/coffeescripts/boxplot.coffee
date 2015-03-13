@@ -1,9 +1,5 @@
-class Chart
 
-  constructor: (@app, @params, @data, @helpers) ->
-
-  
-class BoxPlot extends Chart
+class BoxPlot
 
   constructor: (@app, @params, @data, @city, @helpers) ->
 
