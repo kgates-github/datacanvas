@@ -3,22 +3,48 @@
   var App, config, helpers;
 
   helpers = {
-    aqiColorClass: function(value) {
-      switch (false) {
-        case !(value <= 50):
-          return 'good';
-        case !(value <= 100):
-          return 'moderate';
-        case !(value <= 150):
-          return 'unhealthy-mild';
-        case !(value <= 200):
-          return 'unhealthy';
-        case !(value <= 300):
-          return 'unhealthy-very';
-        default:
-          return 'hazardous';
+    getColorClass: function(value, qualitative) {
+      var setting, _i, _len;
+      if (value == null) {
+        value = Infinity;
       }
-    }
+      if (qualitative == null) {
+        qualitative = [];
+      }
+      for (_i = 0, _len = qualitative.length; _i < _len; _i++) {
+        setting = qualitative[_i];
+        if (value <= setting.value) {
+          return setting["class"];
+        }
+      }
+      return false;
+    },
+    aqiQualitative: [
+      {
+        name: 'Good',
+        "class": 'good',
+        value: 50
+      }, {
+        name: 'Moderate',
+        "class": 'moderate',
+        value: 100
+      }, {
+        name: 'Mildly unhealthy',
+        "class": 'unhealthy-mild',
+        value: 150
+      }
+    ],
+    soundQualitative: [
+      {
+        name: 'Quiet suburb',
+        "class": 'moderate',
+        value: 50
+      }, {
+        name: 'Rock concert',
+        "class": 'unhealthy-mild',
+        value: 100
+      }
+    ]
   };
 
   config = {
@@ -32,6 +58,7 @@
           scale: d3.scale.linear,
           width: 700,
           height: 240,
+          qualitative: helpers.aqiQualitative,
           margin: {
             top: 30,
             right: 50,

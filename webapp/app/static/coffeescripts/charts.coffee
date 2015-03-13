@@ -12,21 +12,10 @@ class BoxPlot extends Chart
     @el = @params.el
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
-    @qualitative = [
-      {
-        name: 'Moderate'
-        class: 'moderate'
-        value: 50
-      },
-      {
-        name: 'Mildly unhealthy'
-        class: 'unhealthy-mild'
-        value: 100
-      }
-    ]
+    @qualitative = @params.qualitative or []
     
     # Sorting controls
-    $("#airquality_raw-sort button").on("click", ->
+    $("##{@params.dimension}-sort button").on("click", ->
       self._sortBy($(this).val())
     )
 
@@ -57,9 +46,9 @@ class BoxPlot extends Chart
 
       d3.select(@)
         .append("text")
-        .attr("text-anchor", "start")
+        .attr("text-anchor", "end")
         .text((d) -> d.name)
-        .attr("x", 6)
+        .attr("x", -6)
         .attr("y", y2)
         .attr("class", (d) -> d.class)
         .style("stroke", "none")
@@ -108,20 +97,20 @@ class BoxPlot extends Chart
         .style("fill", "#ccc")
 
       d3.select(@).append("circle")
-        .attr("class", (d) -> "lower #{self.helpers.aqiColorClass(d.lower)}")
+        .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
         .style("fill", "white")
         .attr("r", 5)
         .attr("cx", (d) -> self.scaleX(d.lower))
         .attr("cy", (d, i) -> self.scaleY(i) + 1)
 
       d3.select(@).append("circle")
-        .attr("class", (d) -> "median #{self.helpers.aqiColorClass(d.median)}")
+        .attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
         .attr("r", 5)
         .attr("cx", (d) -> self.scaleX(d.median))
         .attr("cy", (d, i) -> self.scaleY(i) + 1)
 
       d3.select(@).append("circle")
-        .attr("class", (d) -> "upper #{self.helpers.aqiColorClass(d.upper)}")
+        .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
         .style("fill", "white")
         .attr("r", 5)
         .attr("cx", (d) -> self.scaleX(d.upper))
@@ -153,7 +142,7 @@ class BoxPlot extends Chart
       .data(@data, (d) -> d.name)
       .transition()
       .delay((d, i) -> i * 60)
-      .duration(300)
+      .duration(230)
       .ease("linear")
       .attr("transform", (d, i) =>
         "translate(0, #{@scaleY(i)})"

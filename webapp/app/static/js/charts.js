@@ -31,18 +31,8 @@
       this.el = this.params.el;
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
-      this.qualitative = [
-        {
-          name: 'Moderate',
-          "class": 'moderate',
-          value: 50
-        }, {
-          name: 'Mildly unhealthy',
-          "class": 'unhealthy-mild',
-          value: 100
-        }
-      ];
-      $("#airquality_raw-sort button").on("click", function() {
+      this.qualitative = this.params.qualitative || [];
+      $("#" + this.params.dimension + "-sort button").on("click", function() {
         return self._sortBy($(this).val());
       });
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
@@ -58,9 +48,9 @@
         d3.select(this).append("line").attr("y1", 0).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 1.5).attr("class", function(d) {
           return d["class"];
         });
-        return d3.select(this).append("text").attr("text-anchor", "start").text(function(d) {
+        return d3.select(this).append("text").attr("text-anchor", "end").text(function(d) {
           return d.name;
-        }).attr("x", 6).attr("y", y2).attr("class", function(d) {
+        }).attr("x", -6).attr("y", y2).attr("class", function(d) {
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
       });
@@ -95,21 +85,21 @@
           return self.scaleX(d.lower);
         }).style("fill", "#ccc");
         d3.select(this).append("circle").attr("class", function(d) {
-          return "lower " + (self.helpers.aqiColorClass(d.lower));
+          return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));
         }).style("fill", "white").attr("r", 5).attr("cx", function(d) {
           return self.scaleX(d.lower);
         }).attr("cy", function(d, i) {
           return self.scaleY(i) + 1;
         });
         d3.select(this).append("circle").attr("class", function(d) {
-          return "median " + (self.helpers.aqiColorClass(d.median));
+          return "median " + (self.helpers.getColorClass(d.median, self.qualitative));
         }).attr("r", 5).attr("cx", function(d) {
           return self.scaleX(d.median);
         }).attr("cy", function(d, i) {
           return self.scaleY(i) + 1;
         });
         return d3.select(this).append("circle").attr("class", function(d) {
-          return "upper " + (self.helpers.aqiColorClass(d.upper));
+          return "upper " + (self.helpers.getColorClass(d.upper, self.qualitative));
         }).style("fill", "white").attr("r", 5).attr("cx", function(d) {
           return self.scaleX(d.upper);
         }).attr("cy", function(d, i) {
@@ -141,7 +131,7 @@
         return d.name;
       }).transition().delay(function(d, i) {
         return i * 60;
-      }).duration(300).ease("linear").attr("transform", (function(_this) {
+      }).duration(230).ease("linear").attr("transform", (function(_this) {
         return function(d, i) {
           return "translate(0, " + (_this.scaleY(i)) + ")";
         };

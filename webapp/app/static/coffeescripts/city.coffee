@@ -1,12 +1,41 @@
 helpers = 
-  aqiColorClass: (value) ->
-    switch
-      when value <= 50 then return 'good' 
-      when value <= 100 then return 'moderate'
-      when value <= 150 then return 'unhealthy-mild'
-      when value <= 200 then return 'unhealthy' 
-      when value <= 300 then return 'unhealthy-very' 
-      else return 'hazardous'
+  getColorClass: (value=Infinity, qualitative=[]) ->
+    for setting in qualitative
+      if value <= setting.value
+        return setting.class 
+
+    false
+
+  aqiQualitative: [
+      {
+        name: 'Good'
+        class: 'good'
+        value: 50
+      },
+      {
+        name: 'Moderate'
+        class: 'moderate'
+        value: 100
+      },
+      {
+        name: 'Mildly unhealthy'
+        class: 'unhealthy-mild'
+        value: 150
+      }
+    ]
+
+  soundQualitative: [
+      {
+        name: 'Quiet suburb'
+        class: 'moderate'
+        value: 50
+      },
+      {
+        name: 'Rock concert'
+        class: 'unhealthy-mild'
+        value: 100
+      }
+    ] 
 
 config = 
   charts: [
@@ -19,6 +48,7 @@ config =
         scale: d3.scale.linear
         width: 700
         height: 240
+        qualitative: helpers.aqiQualitative
         margin: 
           top: 30
           right: 50
