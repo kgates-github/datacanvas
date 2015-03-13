@@ -25,6 +25,10 @@ def city(name='Shanghai'):
     {
       'dimension': 'airquality_raw',
       'chart': 'ranking',
+      'date_from': '2015-01-01',
+      'date_to': '2015-03-15',
+      'time_from': 'T17:00:00.000Z',
+      'time_to': 'T19:00:00.000Z',
       'data': [
         {
           'name': 'Shanghai',
