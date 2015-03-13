@@ -32,6 +32,18 @@
         name: 'Mildly unhealthy',
         "class": 'unhealthy-mild',
         value: 150
+      }, {
+        name: 'Unhealthy',
+        "class": 'unhealthy',
+        value: 200
+      }, {
+        name: 'Very unhealthy',
+        "class": 'unhealthy-very',
+        value: 300
+      }, {
+        name: 'Hazardous',
+        "class": 'hazardous',
+        value: 500
       }
     ],
     soundQualitative: [
@@ -87,10 +99,32 @@
       }
     }
 
+    App.prototype.update = function(_at_data) {
+      var chart, data, _i, _len, _ref, _results;
+      this.data = _at_data;
+      _ref = this.charts;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        chart = _ref[_i];
+        data = _.findWhere(this.data, {
+          dimension: chart.params.dimension,
+          chart: chart.params.chart
+        });
+        _results.push(chart.update(data.data));
+      }
+      return _results;
+    };
+
     return App;
 
   })();
 
   this.app = new App(config, data, city, helpers);
+
+  $("#filters").on("click", (function(_this) {
+    return function(e) {
+      return _this.app.update(fakeData);
+    };
+  })(this));
 
 }).call(this);

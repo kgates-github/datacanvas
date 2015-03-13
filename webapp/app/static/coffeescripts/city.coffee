@@ -21,6 +21,21 @@ helpers =
         name: 'Mildly unhealthy'
         class: 'unhealthy-mild'
         value: 150
+      },
+      {
+        name: 'Unhealthy'
+        class: 'unhealthy'
+        value: 200
+      },
+      {
+        name: 'Very unhealthy'
+        class: 'unhealthy-very'
+        value: 300
+      },
+      {
+        name: 'Hazardous'
+        class: 'hazardous'
+        value: 500
       }
     ]
 
@@ -70,5 +85,33 @@ class App
       )
       @charts.push new APP.charts[chart.type] @, chart.params, data.data, city, helpers
 
+  update: (@data) ->
+    for chart in @charts
+      data = _.findWhere(@data, 
+        {
+          dimension: chart.params.dimension, 
+          chart: chart.params.chart
+        }
+      )
+      chart.update data.data
 
 @app = new App config, data, city, helpers
+
+$("#filters").on("click", (e) =>
+  @app.update fakeData
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

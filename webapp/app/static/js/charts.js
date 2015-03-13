@@ -66,6 +66,7 @@
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
       });
+      this.chart.append("text").attr("class", "x label").style("fill", "#999").style("font-weight", "400").attr("text-anchor", "end").attr("x", 0).attr("y", this.params.height - 49).text("Air quality index");
       this.chart.selectAll(".plot").data(this.data).enter().append("text").text(function(d, i) {
         return i + 1;
       }).attr("x", -this.params.margin.left + 4).attr("y", (function(_this) {
@@ -93,7 +94,7 @@
         });
         d3.select(this).append("rect").attr("width", function(d) {
           return self.scaleX(d.upper) - self.scaleX(d.lower);
-        }).attr("height", 2).attr("x", function(d) {
+        }).attr("height", 2).attr("class", "bar").attr("x", function(d) {
           return self.scaleX(d.lower);
         }).style("fill", "#777");
         d3.select(this).append("rect").attr("class", function(d) {
@@ -117,7 +118,7 @@
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
         });
-        return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length).attr("width", self.params.width).attr("x", -self.params.margin.left).attr("y", function(d, i) {
+        return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("class", "overlay").attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length).attr("width", self.params.width).attr("x", -self.params.margin.left).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
         }).on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });
@@ -137,15 +138,18 @@
       return d3.scale.linear().domain(domainY).range(rangeY);
     };
 
-    BoxPlot.prototype._sortBy = function(dimension) {
+    BoxPlot.prototype._sortBy = function(dimension, delay) {
       if (dimension == null) {
         dimension = 'median';
+      }
+      if (delay == null) {
+        delay = 0;
       }
       this.data = _.sortBy(this.data, dimension);
       return this.plots.data(this.data, function(d) {
         return d.name;
       }).transition().delay(function(d, i) {
-        return i * 60;
+        return (i * 60) + delay;
       }).duration(230).ease("linear").attr("transform", (function(_this) {
         return function(d, i) {
           return "translate(0, " + (_this.scaleY(i)) + ")";
@@ -158,6 +162,49 @@
       max = _.max(_.pluck(data, "upper"));
       min = _.min(_.pluck(data, "lower"));
       return [min, max];
+    };
+
+    BoxPlot.prototype.update = function(data) {
+      var self;
+      self = this;
+      this.data = data;
+      this.scaleX = this._getScaleX();
+      this.plots.data(this.data, function(d) {
+        return d.name;
+      });
+      this.plots.each(function(d, i) {
+        d3.select(this).select(".bar").transition().duration(1000).attr("width", function(d) {
+          return self.scaleX(d.upper) - self.scaleX(d.lower);
+        }).attr("x", function(d) {
+          return self.scaleX(d.lower);
+        });
+        d3.select(this).select(".lower").attr("class", function(d) {
+          return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));
+        }).transition().duration(1000).attr("x", function(d) {
+          return self.scaleX(d.lower);
+        });
+        d3.select(this).select(".median").attr("class", function(d) {
+          return "median " + (self.helpers.getColorClass(d.median, self.qualitative));
+        }).transition().duration(1000).attr("x", function(d) {
+          return self.scaleX(d.median);
+        });
+        d3.select(this).select(".upper").attr("class", function(d) {
+          return "upper " + (self.helpers.getColorClass(d.upper, self.qualitative));
+        }).transition().duration(1000).attr("x", function(d) {
+          return self.scaleX(d.upper);
+        });
+        return d3.select(this).select(".overlay").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
+      });
+      this.qualatativeTicks.each(function(d, i) {
+        return d3.select(this).transition().duration(1000).attr("transform", (function(_this) {
+          return function(d, i) {
+            return "translate(" + (self.scaleX(d.value)) + ", 0)";
+          };
+        })(this));
+      });
+      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
+      this.svg.selectAll("g.x.axis").transition().duration(1000).call(this.xAxis);
+      return this._sortBy('median', 1000);
     };
 
     return BoxPlot;

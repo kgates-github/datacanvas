@@ -103,6 +103,15 @@ class BoxPlot extends Chart
         .style("stroke", "none")
         .style("font-size", "11")
     )
+
+    @chart.append("text")
+      .attr("class", "x label")
+      .style("fill", "#999")
+      .style("font-weight", "400")
+      .attr("text-anchor", "end")
+      .attr("x", 0)
+      .attr("y", @params.height - 49)
+      .text("Air quality index")
     
     @chart.selectAll(".plot")
       .data(@data)
@@ -142,6 +151,7 @@ class BoxPlot extends Chart
       d3.select(@).append("rect")
         .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
         .attr("height", 2)
+        .attr("class", "bar")
         .attr("x", (d) -> self.scaleX(d.lower))
         .style("fill", "#777")
 
@@ -171,6 +181,7 @@ class BoxPlot extends Chart
       d3.select(@).append("rect")
         .style("fill", "#none")
         .style("opacity", 0.0)
+        .attr("class", "overlay")
         .attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length)
         .attr("width", self.params.width)
         .attr("x", -self.params.margin.left)
@@ -197,13 +208,13 @@ class BoxPlot extends Chart
       .domain(domainY)
       .range(rangeY)
 
-  _sortBy: (dimension='median') ->
+  _sortBy: (dimension='median', delay=0) ->
     @data = _.sortBy(@data, dimension)
 
     @plots
       .data(@data, (d) -> d.name)
       .transition()
-      .delay((d, i) -> i * 60)
+      .delay((d, i) -> (i * 60) + delay)
       .duration(230)
       .ease("linear")
       .attr("transform", (d, i) =>
@@ -215,8 +226,62 @@ class BoxPlot extends Chart
     min = _.min(_.pluck(data, "lower"))
     [min, max]
 
+  update: (data) ->
+    self = @
+    @data = data
+    @scaleX = @_getScaleX()
     
-        
+    @plots
+      .data(@data, (d) -> d.name)
+
+    @plots.each((d, i) ->
+      d3.select(@).select(".bar")
+        .transition()
+        .duration(1000)
+        .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
+        .attr("x", (d) -> self.scaleX(d.lower))
+
+      d3.select(@).select(".lower")
+        .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
+        .transition()
+        .duration(1000)
+        .attr("x", (d) -> self.scaleX(d.lower))
+
+      d3.select(@).select(".median")
+        .attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
+        .transition()
+        .duration(1000)
+        .attr("x", (d) -> self.scaleX(d.median))
+
+      d3.select(@).select(".upper")
+        .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
+        .transition()
+        .duration(1000)
+        .attr("x", (d) -> self.scaleX(d.upper))
+
+      d3.select(@).select(".overlay")
+        .on('mouseover', self.tip.show)
+        .on('mouseout', self.tip.hide)
+    )
+
+    @qualatativeTicks.each((d, i) ->
+      d3.select(@)
+        .transition()
+        .duration(1000)
+        .attr("transform", (d, i) =>
+          "translate(#{self.scaleX(d.value)}, 0)"
+        )
+    ) 
+
+    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
+    
+    # Update x axis
+    @svg.selectAll("g.x.axis")
+      .transition()
+      .duration(1000)
+      .call(@xAxis);
+
+    @_sortBy('median', 1000)  
             
 window.APP ?= {}
 APP.charts =
