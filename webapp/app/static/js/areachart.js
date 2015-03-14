@@ -88,6 +88,54 @@
       return this.params.scaleY().domain(domainY).range(rangeY);
     };
 
+    AreaChart.prototype.update = function(data) {
+      this.data = data;
+      this.scaleX = this._getScaleX();
+      this.scaleY = this._getScaleY();
+      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6);
+      this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
+      this.areaMax = d3.svg.area().x((function(_this) {
+        return function(d) {
+          return _this.scaleX(new Date(d.date));
+        };
+      })(this)).y0((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.min);
+        };
+      })(this)).y1((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.max);
+        };
+      })(this));
+      this.areaPercentile = d3.svg.area().x((function(_this) {
+        return function(d) {
+          return _this.scaleX(new Date(d.date));
+        };
+      })(this)).y0((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.lower);
+        };
+      })(this)).y1((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.upper);
+        };
+      })(this));
+      this.line = d3.svg.line().x((function(_this) {
+        return function(d) {
+          return _this.scaleX(new Date(d.date));
+        };
+      })(this)).y((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.median);
+        };
+      })(this));
+      this.areaMaxPlot.datum(this.data).transition().duration(1000).attr("d", this.areaMax);
+      this.areaPercentilePlot.datum(this.data).transition().duration(1000).attr("d", this.areaPercentile);
+      this.areaMedianPlot.datum(this.data).transition().duration(1000).attr("d", this.line);
+      this.svg.selectAll("g.x.axis").transition().duration(1000).call(this.xAxis);
+      return this.svg.selectAll("g.y.axis").transition().duration(1000).call(this.yAxis);
+    };
+
     return AreaChart;
 
   })(APP.charts['Chart']);

@@ -67,8 +67,6 @@ class AreaChart extends APP.charts['Chart']
       .attr("class", "line")
       .attr("d", @line)
 
-   
-
   _getDomain: (data) ->
     max = _.max(_.pluck(data, "max"))
     min = _.min(_.pluck(data, "min"))
@@ -84,7 +82,6 @@ class AreaChart extends APP.charts['Chart']
       .range(rangeX)
       .domain([new Date(domainX[0]), new Date(domainX[1])])
     
-    
   _getScaleY: ->
     domainY = @_getDomain(@data)
     rangeY = [
@@ -93,6 +90,58 @@ class AreaChart extends APP.charts['Chart']
     @params.scaleY()
       .domain(domainY)
       .range(rangeY)
-            
+  
+  update: (data) ->
+    @data = data
+    @scaleX = @_getScaleX()
+    @scaleY = @_getScaleY() 
+    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6)
+    @yAxis = d3.svg.axis().scale(@scaleY).orient("left")
+
+    # Recalculate areas
+    @areaMax = d3.svg.area()
+      .x((d) => @scaleX(new Date(d.date)))
+      .y0((d) =>  @scaleY(d.min))
+      .y1((d) => @scaleY(d.max))
+
+    @areaPercentile = d3.svg.area()
+      .x((d) => @scaleX(new Date(d.date)))
+      .y0((d) =>  @scaleY(d.lower))
+      .y1((d) => @scaleY(d.upper))
+
+    @line = d3.svg.line()
+      .x((d) => @scaleX(new Date(d.date)))
+      .y((d) => @scaleY(d.median))
+
+    @areaMaxPlot
+      .datum(@data)
+      .transition()
+      .duration(1000)
+      .attr("d", @areaMax)
+
+    @areaPercentilePlot
+      .datum(@data)
+      .transition()
+      .duration(1000)
+      .attr("d", @areaPercentile)
+
+    @areaMedianPlot
+      .datum(@data)
+      .transition()
+      .duration(1000)
+      .attr("d", @line)
+
+    # Update x axis
+    @svg.selectAll("g.x.axis")
+      .transition()
+      .duration(1000)
+      .call(@xAxis)
+
+    @svg.selectAll("g.y.axis")
+      .transition()
+      .duration(1000)
+      .call(@yAxis);
+
+
 APP.charts['AreaChart'] = AreaChart
    
