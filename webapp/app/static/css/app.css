@@ -110,8 +110,21 @@ body {
 
 .y.axis line, .y.axis path {
   fill: none;
-  stroke: #000;
+  stroke: #999;
 }
+
+.y.axis text {
+  fill: #999;
+  font-size: 11px;
+}
+
+/* Area chart style */
+.line {
+  fill: none;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
 
 /* Tooltip */
 .d3-tip {

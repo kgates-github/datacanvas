@@ -62,7 +62,7 @@ config =
         dimension: 'airquality_raw'
         scale: d3.scale.linear
         width: 700
-        height: 370
+        height: 330
         qualitative: helpers.aqiQualitative
         margin: 
           top: 40
@@ -79,12 +79,12 @@ config =
         scaleX: d3.time.scale
         scaleY: d3.scale.linear
         width: 700
-        height: 370
+        height: 330
         qualitative: helpers.aqiQualitative
         margin: 
           top: 10
-          right: 150
-          bottom: 30
+          right: 0
+          bottom: 40
           left: 30
     }
   ]

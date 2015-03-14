@@ -19,9 +19,11 @@
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
       this.qualitative = this.params.qualitative || [];
-      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
+      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6);
+      this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.svg.append("g").attr("class", "x axis").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.height + ")").call(this.xAxis);
+      this.svg.append("g").attr("class", "x axis").attr("transform", "translate(" + this.params.margin.left + ", " + (this.params.height - this.params.margin.bottom + 20) + ")").call(this.xAxis);
+      this.svg.append("g").attr("class", "y axis").attr("transform", "translate(" + (this.params.margin.left - 1) + ", " + this.params.margin.top + ")").call(this.yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", "0.8em").style("text-anchor", "end").style("font-size", "11px").text("Air quality index");
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
       this.areaMax = d3.svg.area().x((function(_this) {
         return function(d) {
@@ -36,8 +38,8 @@
           return _this.scaleY(d.max);
         };
       })(this));
-      this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#eee").attr("d", this.areaMax);
-      this.areaPercentiles = d3.svg.area().x((function(_this) {
+      this.areaMaxPlot = this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#eee").attr("d", this.areaMax);
+      this.areaPercentile = d3.svg.area().x((function(_this) {
         return function(d) {
           return _this.scaleX(new Date(d.date));
         };
@@ -50,7 +52,17 @@
           return _this.scaleY(d.upper);
         };
       })(this));
-      this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#ddd").attr("d", this.areaPercentiles);
+      this.areaPercentilePlot = this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#ddd").attr("d", this.areaPercentile);
+      this.line = d3.svg.line().x((function(_this) {
+        return function(d) {
+          return _this.scaleX(new Date(d.date));
+        };
+      })(this)).y((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.median);
+        };
+      })(this));
+      this.areaMedianPlot = this.chart.append("path").datum(this.data).attr("class", "line").attr("d", this.line);
     }
 
     AreaChart.prototype._getDomain = function(data) {
@@ -66,7 +78,6 @@
         return d.date;
       });
       rangeX = [0, this.params.width - (this.params.margin.left + this.params.margin.right)];
-      console.log(rangeX);
       return d3.time.scale().range(rangeX).domain([new Date(domainX[0]), new Date(domainX[1])]);
     };
 

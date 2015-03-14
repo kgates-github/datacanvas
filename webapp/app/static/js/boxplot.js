@@ -20,13 +20,12 @@
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
       this.qualitative = this.params.qualitative || [];
-      console.log(this.params.qualitative);
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
       $("#" + this.params.dimension + "-sort button").on("click", function() {
         return self._sortBy($(this).val());
       });
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.svg.append("g").attr("class", "x axis").attr("transform", ("translate(" + this.params.margin.left + ",") + (this.params.height - 20) + ")").call(this.xAxis);
+      this.svg.append("g").attr("class", "x axis").attr("transform", ("translate(" + this.params.margin.left + ",") + (this.params.height - 30) + ")").call(this.xAxis);
       this.tip = d3.tip().attr('class', 'd3-tip').offset((function(_this) {
         return function(d) {
           return [-20, _this.scaleX(d.median) - _this.params.margin.left - 18];
@@ -50,7 +49,16 @@
       });
       this.svg.call(this.tip);
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
-      this.chart.append("line").attr("y1", this.params.height - this.params.margin.top - this.params.margin.bottom + 12).attr("y2", this.params.height - this.params.margin.top - this.params.margin.bottom + 12).attr("x1", -this.params.margin.left).attr("x2", this.params.width).style("stroke-width", 0.5).style("stroke", "#999");
+
+      /*
+      @chart.append("line")
+        .attr("y1", @params.height - @params.margin.top - @params.margin.bottom + 12)
+        .attr("y2", @params.height - @params.margin.top - @params.margin.bottom + 12)
+        .attr("x1", -@params.margin.left)
+        .attr("x2", @params.width)
+        .style("stroke-width", 0.5)
+        .style("stroke", "#999")
+       */
       this.qualatativeTicks = this.chart.selectAll(".qualitative").data(this.qualitative).enter().append("g").attr("class", "qualitative").attr("transform", (function(_this) {
         return function(d, i) {
           return "translate(" + (_this.scaleX(d.value)) + ", 0)";

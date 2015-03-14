@@ -9,7 +9,6 @@ class BoxPlot extends APP.charts['Chart']
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
     @qualitative = @params.qualitative or []
-    console.log @params.qualitative 
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
     
     # Sorting controls
@@ -24,7 +23,7 @@ class BoxPlot extends APP.charts['Chart']
     # X axis
     @svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(#{@params.margin.left}," + (@params.height - 20) + ")")
+      .attr("transform", "translate(#{@params.margin.left}," + (@params.height - 30) + ")")
       .call(@xAxis);
 
     # Tooltip
@@ -81,6 +80,7 @@ class BoxPlot extends APP.charts['Chart']
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
 
+    ###
     @chart.append("line")
       .attr("y1", @params.height - @params.margin.top - @params.margin.bottom + 12)
       .attr("y2", @params.height - @params.margin.top - @params.margin.bottom + 12)
@@ -88,6 +88,7 @@ class BoxPlot extends APP.charts['Chart']
       .attr("x2", @params.width)
       .style("stroke-width", 0.5)
       .style("stroke", "#999")
+    ###
 
     @qualatativeTicks = @chart.selectAll(".qualitative")
       .data(@qualitative)

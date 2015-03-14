@@ -8,7 +8,8 @@ class AreaChart extends APP.charts['Chart']
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY() 
     @qualitative = @params.qualitative or []
-    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
+    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6)
+    @yAxis = d3.svg.axis().scale(@scaleY ).orient("left")
 
     @svg = d3.select("##{@el}").append("svg")
       .attr("width", @params.width)
@@ -17,8 +18,20 @@ class AreaChart extends APP.charts['Chart']
     # X axis
     @svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(#{@params.margin.left}, #{@params.height})")
-      .call(@xAxis);
+      .attr("transform", "translate(#{@params.margin.left}, #{@params.height - @params.margin.bottom + 20})")
+      .call(@xAxis)
+
+    @svg.append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(#{@params.margin.left - 1}, #{@params.margin.top})")
+      .call(@yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "0.8em")
+      .style("text-anchor", "end")
+      .style("font-size", "11px")
+      .text("Air quality index")
 
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
@@ -28,23 +41,33 @@ class AreaChart extends APP.charts['Chart']
       .y0((d) =>  @scaleY(d.min))
       .y1((d) => @scaleY(d.max))
 
-    @chart.append("path")
+    @areaMaxPlot = @chart.append("path")
       .datum(@data)
       .attr("class", "area")
       .style("fill", "#eee")
       .attr("d", @areaMax)
 
-    @areaPercentiles = d3.svg.area()
+    @areaPercentile = d3.svg.area()
       .x((d) => @scaleX(new Date(d.date)))
       .y0((d) =>  @scaleY(d.lower))
       .y1((d) => @scaleY(d.upper))
 
-    @chart.append("path")
+    @areaPercentilePlot = @chart.append("path")
       .datum(@data)
       .attr("class", "area")
       .style("fill", "#ddd")
-      .attr("d", @areaPercentiles)
-    
+      .attr("d", @areaPercentile)
+
+    @line = d3.svg.line()
+      .x((d) => @scaleX(new Date(d.date)))
+      .y((d) => @scaleY(d.median))
+
+    @areaMedianPlot = @chart.append("path")
+      .datum(@data)
+      .attr("class", "line")
+      .attr("d", @line)
+
+   
 
   _getDomain: (data) ->
     max = _.max(_.pluck(data, "max"))
@@ -56,8 +79,6 @@ class AreaChart extends APP.charts['Chart']
     rangeX = [
         0, @params.width - (@params.margin.left + @params.margin.right)
       ]
-
-    console.log rangeX
 
     d3.time.scale()
       .range(rangeX)

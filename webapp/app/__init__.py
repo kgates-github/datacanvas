@@ -88,17 +88,17 @@ def city(name='Shanghai'):
         },
         {
           'date': '2015-01-08',
-          'max': 250,
+          'max': 180,
           'upper': 90,
-          'median': 125,
+          'median': 65,
           'lower': 14,
           'min': 20
         },
         {
           'date': '2015-01-09',
-          'max': 250,
+          'max': 186,
           'upper': 80,
-          'median': 125,
+          'median': 72,
           'lower': 14,
           'min': 20
         },
@@ -106,7 +106,7 @@ def city(name='Shanghai'):
           'date': '2015-01-10',
           'max': 250,
           'upper': 90,
-          'median': 125,
+          'median': 79,
           'lower': 14,
           'min': 20
         },
@@ -146,8 +146,8 @@ def city(name='Shanghai'):
           'date': '2015-01-15',
           'max': 120,
           'upper': 64,
-          'median': 20,
-          'lower': 17,
+          'median': 40,
+          'lower': 32,
           'min': 20
         },
         {
@@ -162,30 +162,30 @@ def city(name='Shanghai'):
           'date': '2015-01-17',
           'max': 60,
           'upper': 84,
-          'median': 23,
-          'lower': 20,
+          'median': 43,
+          'lower': 30,
           'min': 20
         },
         {
           'date': '2015-01-18',
           'max': 50,
           'upper': 80,
-          'median':25,
-          'lower': 14,
+          'median':55,
+          'lower': 24,
           'min': 20
         },
         {
           'date': '2015-01-19',
-          'max': 250,
+          'max': 197,
           'upper': 90,
-          'median': 125,
+          'median': 50,
           'lower': 14,
           'min': 20
         },
         {
           'date': '2015-01-20',
-          'max': 250,
-          'upper': 80,
+          'max': 220,
+          'upper': 180,
           'median': 125,
           'lower': 14,
           'min': 20
@@ -194,7 +194,7 @@ def city(name='Shanghai'):
           'date': '2015-01-21',
           'max': 250,
           'upper': 90,
-          'median': 125,
+          'median': 65,
           'lower': 14,
           'min': 20
         },
