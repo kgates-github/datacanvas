@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {%block title %} Visualizing Cities: {{city}}{%endblock title %}
 {% block body %}
+
 <div class="row">
   <div class="col-sm-3">
     <div style="margin-top:10px;">
@@ -36,7 +37,7 @@
       <div class="col-sm-12">
         <div class="header-1">{{city}}</div>
         <p>
-          With a stream of readings from 14 batteries of sensors set up in {{city}}, a picture of the city emerges through data. With this information, questions about the quality of life can start to be answered: How often is the air hazardous? What time of day does the air tend to be bad? How noisy is it at night? 
+          Using readings from 14 batteries of sensors located throughout {{city}}, a picture of the city emerges through data. With this information, questions about the quality of life can start to be answered: How often is the air hazardous? What time of day does the air tend to be bad? How noisy is it at night? 
         <p>
           Below are interactive charts that depict information about air quality, noise, dust, light levels, temperature and humidity, that can answer these questions and more. 
       </div>
@@ -65,7 +66,8 @@
             </div>
           </li>
         </ul>  
-        
+        <p>
+          The chart below shows the low, median, and high AQI scores for each of the seven cities measured. Low scores are the 10th percentile, and high are the 90th. Cities are ranked by median scores.
         <div id="ranking-airquality_raw" class="chart-container"></div>
         <div style="font-size:11px; line-height:18px; margin-top:8px;">
           <strong>Air quality index key:</strong>&nbsp;
@@ -78,7 +80,7 @@
         </div>
         <div class="chart-header">Daily Air Quality Over Time</div>
         
-        <div id="time-airquality_raw" class="chart-container" style="height:500px;"></div>
+        <div id="timeseries-airquality_raw" class="chart-container"></div>
       </div>
     </div>
   </div>

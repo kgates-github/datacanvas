@@ -1,3 +1,6 @@
+a {
+  color: #333 !important;
+}
 .container{
   max-width: none !important;
   width: 970px;
@@ -139,12 +142,8 @@ body {
   left: 0;
 }
 
-table td {
-    border-top: none;
-}
-
 .borderless td, .borderless th {
-  border: none;
+  border: none !important;
   border-top: none;
 }
 

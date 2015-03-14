@@ -69,13 +69,31 @@
           dimension: 'airquality_raw',
           scale: d3.scale.linear,
           width: 700,
-          height: 250,
+          height: 370,
           qualitative: helpers.aqiQualitative,
           margin: {
             top: 40,
             right: 50,
-            bottom: 30,
+            bottom: 40,
             left: 165
+          }
+        }
+      }, {
+        type: 'AreaChart',
+        params: {
+          el: 'timeseries-airquality_raw',
+          chart: 'timeseries',
+          dimension: 'airquality_raw',
+          scaleX: d3.time.scale,
+          scaleY: d3.scale.linear,
+          width: 700,
+          height: 370,
+          qualitative: helpers.aqiQualitative,
+          margin: {
+            top: 10,
+            right: 150,
+            bottom: 30,
+            left: 30
           }
         }
       }

@@ -20,6 +20,7 @@
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
       this.qualitative = this.params.qualitative || [];
+      console.log(this.params.qualitative);
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
       $("#" + this.params.dimension + "-sort button").on("click", function() {
         return self._sortBy($(this).val());
@@ -28,16 +29,29 @@
       this.svg.append("g").attr("class", "x axis").attr("transform", ("translate(" + this.params.margin.left + ",") + (this.params.height - 20) + ")").call(this.xAxis);
       this.tip = d3.tip().attr('class', 'd3-tip').offset((function(_this) {
         return function(d) {
-          return [-30, _this.scaleX(d.median) - _this.params.margin.left - 18];
+          return [-20, _this.scaleX(d.median) - _this.params.margin.left - 18];
         };
       })(this)).html(function(d) {
-        var html;
-        html = "<div style='color:white; margin-bottom:10px;'>" + d.name + "'s air quality scores</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + (self.helpers.getColorClass(d.lower, self.qualitative)) + "\" style=\"color:white; text-align:center;\">\n        " + d.lower + "\n      </td>\n      <td class=\"" + (self.helpers.getColorClass(d.median, self.qualitative)) + "\" style=\"color:white; text-align:center;\">\n        " + d.median + "\n      </td>\n      <td class=\"" + (self.helpers.getColorClass(d.upper, self.qualitative)) + "\" style=\"color:white; text-align:center;\">\n        " + d.upper + "\n      </td>\n    </tr>\n  </tbody>\n</table>";
+        var html, lowerClass, lowerName, medianClass, medianName, upperClass, upperName;
+        lowerClass = self.helpers.getColorClass(d.lower, self.qualitative);
+        lowerName = _.findWhere(self.qualitative, {
+          "class": lowerClass
+        }).name;
+        medianClass = self.helpers.getColorClass(d.median, self.qualitative);
+        medianName = _.findWhere(self.qualitative, {
+          "class": medianClass
+        }).name;
+        upperClass = self.helpers.getColorClass(d.upper, self.qualitative);
+        upperName = _.findWhere(self.qualitative, {
+          "class": upperClass
+        }).name;
+        html = "<div style='color:white; margin-bottom:0px;'>" + d.name + "'s Air Quality Index</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + d.lower + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + d.median + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + d.upper + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
         return html;
       });
       this.svg.call(this.tip);
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
-      this.qualatativeTicks = this.chart.selectAll("line").data(this.qualitative).enter().append("g").attr("transform", (function(_this) {
+      this.chart.append("line").attr("y1", this.params.height - this.params.margin.top - this.params.margin.bottom + 12).attr("y2", this.params.height - this.params.margin.top - this.params.margin.bottom + 12).attr("x1", -this.params.margin.left).attr("x2", this.params.width).style("stroke-width", 0.5).style("stroke", "#999");
+      this.qualatativeTicks = this.chart.selectAll(".qualitative").data(this.qualitative).enter().append("g").attr("class", "qualitative").attr("transform", (function(_this) {
         return function(d, i) {
           return "translate(" + (_this.scaleX(d.value)) + ", 0)";
         };
@@ -87,7 +101,7 @@
         }).style("fill", "#777");
         d3.select(this).append("rect").attr("class", function(d) {
           return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));
-        }).style("fill", "white").attr("height", 15).attr("width", 5).attr("x", function(d) {
+        }).attr("height", 15).attr("width", 1).attr("x", function(d) {
           return self.scaleX(d.lower);
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
@@ -95,13 +109,13 @@
         d3.select(this).append("rect").attr("class", function(d) {
           return "median " + (self.helpers.getColorClass(d.median, self.qualitative));
         }).attr("height", 15).attr("width", 5).attr("x", function(d) {
-          return self.scaleX(d.median);
+          return self.scaleX(d.median) - 2;
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
         });
         d3.select(this).append("rect").attr("class", function(d) {
           return "upper " + (self.helpers.getColorClass(d.upper, self.qualitative));
-        }).style("fill", "white").attr("height", 15).attr("width", 5).attr("x", function(d) {
+        }).attr("height", 15).attr("width", 1).attr("x", function(d) {
           return self.scaleX(d.upper);
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;

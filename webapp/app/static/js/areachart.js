@@ -8,13 +8,74 @@
     __extends(AreaChart, _super);
 
     function AreaChart(_at_app, _at_params, _at_data, _at_city, _at_helpers) {
+      var self;
       this.app = _at_app;
       this.params = _at_params;
       this.data = _at_data;
       this.city = _at_city;
       this.helpers = _at_helpers;
-      null;
+      self = this;
+      this.el = this.params.el;
+      this.scaleX = this._getScaleX();
+      this.scaleY = this._getScaleY();
+      this.qualitative = this.params.qualitative || [];
+      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
+      this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
+      this.svg.append("g").attr("class", "x axis").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.height + ")").call(this.xAxis);
+      this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
+      this.areaMax = d3.svg.area().x((function(_this) {
+        return function(d) {
+          return _this.scaleX(new Date(d.date));
+        };
+      })(this)).y0((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.min);
+        };
+      })(this)).y1((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.max);
+        };
+      })(this));
+      this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#eee").attr("d", this.areaMax);
+      this.areaPercentiles = d3.svg.area().x((function(_this) {
+        return function(d) {
+          return _this.scaleX(new Date(d.date));
+        };
+      })(this)).y0((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.lower);
+        };
+      })(this)).y1((function(_this) {
+        return function(d) {
+          return _this.scaleY(d.upper);
+        };
+      })(this));
+      this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#ddd").attr("d", this.areaPercentiles);
     }
+
+    AreaChart.prototype._getDomain = function(data) {
+      var max, min;
+      max = _.max(_.pluck(data, "max"));
+      min = _.min(_.pluck(data, "min"));
+      return [min, max];
+    };
+
+    AreaChart.prototype._getScaleX = function() {
+      var domainX, rangeX;
+      domainX = d3.extent(this.data, function(d) {
+        return d.date;
+      });
+      rangeX = [0, this.params.width - (this.params.margin.left + this.params.margin.right)];
+      console.log(rangeX);
+      return d3.time.scale().range(rangeX).domain([new Date(domainX[0]), new Date(domainX[1])]);
+    };
+
+    AreaChart.prototype._getScaleY = function() {
+      var domainY, rangeY;
+      domainY = this._getDomain(this.data);
+      rangeY = [this.params.height - (this.params.margin.top + this.params.margin.bottom), 0];
+      return this.params.scaleY().domain(domainY).range(rangeY);
+    };
 
     return AreaChart;
 

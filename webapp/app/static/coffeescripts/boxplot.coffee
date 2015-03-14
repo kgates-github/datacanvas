@@ -9,6 +9,7 @@ class BoxPlot extends APP.charts['Chart']
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
     @qualitative = @params.qualitative or []
+    console.log @params.qualitative 
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
     
     # Sorting controls
@@ -30,11 +31,17 @@ class BoxPlot extends APP.charts['Chart']
     @tip = d3.tip()
       .attr('class', 'd3-tip')
       .offset((d) =>
-        [-30, @scaleX(d.median) - @params.margin.left - 18]
+        [-20, @scaleX(d.median) - @params.margin.left - 18]
       )
       .html((d) ->
+        lowerClass = self.helpers.getColorClass(d.lower, self.qualitative)
+        lowerName = _.findWhere(self.qualitative, {class: lowerClass}).name
+        medianClass = self.helpers.getColorClass(d.median, self.qualitative)
+        medianName = _.findWhere(self.qualitative, {class: medianClass}).name
+        upperClass = self.helpers.getColorClass(d.upper, self.qualitative)
+        upperName = _.findWhere(self.qualitative, {class: upperClass}).name
         html = """
-          <div style='color:white; margin-bottom:10px;'>#{d.name}'s air quality scores</div>
+          <div style='color:white; margin-bottom:0px;'>#{d.name}'s Air Quality Index</div>
           <table class="table borderless">
             <tbody>
               <tr>
@@ -50,14 +57,17 @@ class BoxPlot extends APP.charts['Chart']
                   <div style="font-size:11px; color:#bbb;">90th<br>percentile</div></td>
               </tr>
               <tr style="font-size:26px;">
-                <td class="#{self.helpers.getColorClass(d.lower, self.qualitative)}" style="color:white; text-align:center;">
+                <td class="#{lowerClass}" style="width:70px; color:white; text-align:center;">
                   #{d.lower}
+                  <div style="font-size:11px; color:#fff;">#{lowerName}</div></td>
                 </td>
-                <td class="#{self.helpers.getColorClass(d.median, self.qualitative)}" style="color:white; text-align:center;">
+                <td class="#{medianClass}" style="width:70px; color:white; text-align:center;">
                   #{d.median}
+                  <div style="font-size:11px; color:#fff;">#{medianName}</div></td>
                 </td>
-                <td class="#{self.helpers.getColorClass(d.upper, self.qualitative)}" style="color:white; text-align:center;">
+                <td class="#{upperClass}" style="width:70px; color:white; text-align:center;">
                   #{d.upper}
+                  <div style="font-size:11px; color:#fff;">#{upperName}</div></td>
                 </td>
               </tr>
             </tbody>
@@ -71,10 +81,19 @@ class BoxPlot extends APP.charts['Chart']
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
 
-    @qualatativeTicks = @chart.selectAll("line")
+    @chart.append("line")
+      .attr("y1", @params.height - @params.margin.top - @params.margin.bottom + 12)
+      .attr("y2", @params.height - @params.margin.top - @params.margin.bottom + 12)
+      .attr("x1", -@params.margin.left)
+      .attr("x2", @params.width)
+      .style("stroke-width", 0.5)
+      .style("stroke", "#999")
+
+    @qualatativeTicks = @chart.selectAll(".qualitative")
       .data(@qualitative)
       .enter()
       .append("g")
+      .attr("class", "qualitative")
       .attr("transform", (d, i) =>
         "translate(#{@scaleX(d.value)}, 0)"
       )
@@ -153,9 +172,9 @@ class BoxPlot extends APP.charts['Chart']
 
       d3.select(@).append("rect")
         .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
-        .style("fill", "white")
+        #.style("fill", "white")
         .attr("height", 15)
-        .attr("width", 5)
+        .attr("width", 1)
         .attr("x", (d) -> self.scaleX(d.lower))
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
@@ -163,14 +182,14 @@ class BoxPlot extends APP.charts['Chart']
         .attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
         .attr("height", 15)
         .attr("width", 5)
-        .attr("x", (d) -> self.scaleX(d.median))
+        .attr("x", (d) -> self.scaleX(d.median) - 2)
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
       d3.select(@).append("rect")
         .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
-        .style("fill", "white")
+        #.style("fill", "white")
         .attr("height", 15)
-        .attr("width", 5)
+        .attr("width", 1)
         .attr("x", (d) -> self.scaleX(d.upper))
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
