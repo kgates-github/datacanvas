@@ -43,7 +43,35 @@ class Filter extends APP.charts['Chart']
       .attr("transform", "translate(#{@params.margin.left}," + (@params.height - 30) + ")")
       .call(@xAxis)
     ###
-    
+  
+  _filterCharts: () ->
+    self = @
+    # Get new data set here
+    # TODO: Set spinners for all the charts
+    # TODO: Set filters here
+    $.ajax(
+      {
+        url: "/update/",
+        data: {
+          'filters': [
+            {
+              'type': 'month',
+              'value': 'February'
+            },
+            {
+              'type': 'time_of_day',
+              'value': '5pm to 7pm'
+            }
+          ]
+        }
+      }
+    ).done( (data) ->
+      console.log data
+
+      # Callback to app to update all charts
+      self.app.update(data)
+
+    )
 
   _getScaleX: ->
     domainX = @_getDomain(@data)

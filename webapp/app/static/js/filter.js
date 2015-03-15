@@ -46,6 +46,28 @@
        */
     }
 
+    Filter.prototype._filterCharts = function() {
+      var self;
+      self = this;
+      return $.ajax({
+        url: "/update/",
+        data: {
+          'filters': [
+            {
+              'type': 'month',
+              'value': 'February'
+            }, {
+              'type': 'time_of_day',
+              'value': '5pm to 7pm'
+            }
+          ]
+        }
+      }).done(function(data) {
+        console.log(data);
+        return self.app.update(data);
+      });
+    };
+
     Filter.prototype._getScaleX = function() {
       var domainX, rangeX;
       domainX = this._getDomain(this.data);
