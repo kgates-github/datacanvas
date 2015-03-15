@@ -8,42 +8,51 @@
     __extends(Filter, _super);
 
     function Filter(_at_app, _at_params, _at_data, _at_city, _at_helpers) {
-      var self;
+      var combinedData, self;
       this.app = _at_app;
       this.params = _at_params;
       this.data = _at_data;
       this.city = _at_city;
       this.helpers = _at_helpers;
       self = this;
-      this.data = _.sortBy(this.data, "median");
-      this.el = this.params.el;
-      this.scaleX = this._getScaleX();
-      this.scaleY = this._getScaleY();
-      this.qualitative = this.params.qualitative || [];
-      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
       this.dataMonthly = _.findWhere(this.data, {
         dimension: this.params.dimension,
         chart: 'monthly'
       });
-      this.dataMonthly = this.dataMonthly.data;
-      this.buttonsMonthly = d3.select("#" + this.el).append("div").attr("class", "btn-group-vertical");
-      this.buttonsMonthly.selectAll("button").data(this.dataMonthly).enter().append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact").html(function(d) {
-        return d.date;
+      this.dataTime = _.findWhere(this.data, {
+        dimension: this.params.dimension,
+        chart: 'time_of_day'
       });
-
-      /*
-      <div class="btn-group-vertical" role="group" aria-label="">
-          <button type="button" class="btn btn-default btn-sm btn-compact">Jan</button>
-          <button type="button" class="btn btn-default btn-sm btn-compact">Feb</button>
-          <button type="button" class="btn btn-default btn-sm btn-compact">Mar</button>
-      
-      
-       * X axis
-      @svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(#{@params.margin.left}," + (@params.height - 30) + ")")
-        .call(@xAxis)
-       */
+      this.el = this.params.el;
+      combinedData = this.dataMonthly.data.concat(this.dataTime.data);
+      this.scaleX = this._getScaleX(combinedData);
+      this.monthFormat = d3.time.format("%b");
+      this.dataMonthly = this.dataMonthly.data;
+      this.buttonsMonthly = d3.select("#filter-month-buttons").append("div");
+      this.buttonsMonthly.selectAll("button").data(this.dataMonthly).enter().append("div").append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact").style("width", "65px").style("margin-bottom", "1px").html((function(_this) {
+        return function(d) {
+          return _this.monthFormat(new Date(d.date));
+        };
+      })(this));
+      this.chartMonthly = d3.select("#filter-month-chart").append("div").style("width", "112px");
+      this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataMonthly).enter().append("div").attr("class", "bar").style("height", "16px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
+        return function(d) {
+          return (_this.scaleX(d.median)) + "px";
+        };
+      })(this));
+      this.dataTime = this.dataTime.data;
+      this.buttonsTime = d3.select("#filter-time-buttons").append("div");
+      this.buttonsTime.selectAll("button").data(this.dataTime).enter().append("div").append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact").style("width", "65px").style("margin-bottom", "1px").html((function(_this) {
+        return function(d) {
+          return d.name;
+        };
+      })(this));
+      this.chartMonthly = d3.select("#filter-time-chart").append("div").style("width", "112px");
+      this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataTime).enter().append("div").attr("class", "bar").style("height", "16px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
+        return function(d) {
+          return (_this.scaleX(d.median)) + "px";
+        };
+      })(this));
     }
 
     Filter.prototype._filterCharts = function() {
@@ -68,25 +77,17 @@
       });
     };
 
-    Filter.prototype._getScaleX = function() {
+    Filter.prototype._getScaleX = function(data) {
       var domainX, rangeX;
-      domainX = this._getDomain(this.data);
+      domainX = this._getDomain(data);
       rangeX = [0, this.params.width - (this.params.margin.left + this.params.margin.right)];
       return this.params.scale().domain(domainX).range(rangeX);
     };
 
-    Filter.prototype._getScaleY = function() {
-      var domainY, rangeY;
-      domainY = [0, this.data.length];
-      rangeY = [0, this.params.height - (this.params.margin.top + this.params.margin.bottom)];
-      return d3.scale.linear().domain(domainY).range(rangeY);
-    };
-
     Filter.prototype._getDomain = function(data) {
-      var max, min;
-      max = _.max(_.pluck(data, "upper"));
-      min = _.min(_.pluck(data, "lower"));
-      return [min, max];
+      var max;
+      max = _.max(_.pluck(data, "median"));
+      return [0, max];
     };
 
     Filter.prototype.update = function(data) {

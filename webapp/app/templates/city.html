@@ -7,8 +7,29 @@
     <div style="margin-top:10px;">
       <span style="font-weight:bold; margin-left:10px;" class="header-5">Visualizing Cities</span>
     </div>
-    <div id="filter-container" style="border:1px solid #ccc; width:210px; height:500px; position:fixed; top:60px; border-radius: 6px; padding:10px;">
-     
+    <div id="filter-container" style="border:1px solid #ccc; width:210px; height:500px; position:fixed; top:60px; border-radius: 6px; padding:10px 10px 16px 10px;">
+      <div style="font-weight:bold; font-size:18px; margin-bottom:4px;">Filters</div>
+      <table class="filter-list" style="margin-bottom:3px;">
+        <tr>
+          <td style="width:70px; font-size:11px; padding-bottom:4px;">Month</td>
+          <td style="font-size:11px;">Avg. AQI</td>
+        </tr>
+        <tr>
+          <td id="filter-month-buttons"></td>
+          <td id="filter-month-chart" style="text-align:top;"></td>
+        </tr>
+      </table>
+
+      <table class="filter-list" style="margin-bottom:3px; margin-top:20px;">
+        <tr>
+          <td style="width:70px; font-size:11px; padding-bottom:4px;">Time of day</td>
+          <td style="font-size:11px; padding-bottom:4px;">Avg. AQI</td>
+        </tr>
+        <tr>
+          <td id="filter-time-buttons"></td>
+          <td id="filter-time-chart"></td>
+        </tr>
+      </table>
     </div>
   </div>
   <div class="col-sm-9">

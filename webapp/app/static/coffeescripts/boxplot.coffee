@@ -230,8 +230,8 @@ class BoxPlot extends APP.charts['Chart']
     @plots
       .data(@data, (d) -> d.name)
       .transition()
-      .delay((d, i) -> (i * 60) + delay)
-      .duration(230)
+      .delay((d, i) -> (i * 160) + delay)
+      .duration(330)
       .ease("linear")
       .attr("transform", (d, i) =>
         "translate(0, #{@scaleY(i)})"
@@ -246,6 +246,7 @@ class BoxPlot extends APP.charts['Chart']
     self = @
     @data = data
     @scaleX = @_getScaleX()
+    duration = @_getDuration() # Only animate if above the fold
     
     @plots
       .data(@data, (d) -> d.name)
@@ -253,26 +254,26 @@ class BoxPlot extends APP.charts['Chart']
     @plots.each((d, i) ->
       d3.select(@).select(".bar")
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
         .attr("x", (d) -> self.scaleX(d.lower))
 
       d3.select(@).select(".lower")
         .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attr("x", (d) -> self.scaleX(d.lower))
 
       d3.select(@).select(".median")
         .attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attr("x", (d) -> self.scaleX(d.median))
 
       d3.select(@).select(".upper")
         .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attr("x", (d) -> self.scaleX(d.upper))
 
       d3.select(@).select(".overlay")
@@ -283,7 +284,7 @@ class BoxPlot extends APP.charts['Chart']
     @qualatativeTicks.each((d, i) ->
       d3.select(@)
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attr("transform", (d, i) =>
           "translate(#{self.scaleX(d.value)}, 0)"
         )

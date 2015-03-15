@@ -159,8 +159,8 @@
       return this.plots.data(this.data, function(d) {
         return d.name;
       }).transition().delay(function(d, i) {
-        return (i * 60) + delay;
-      }).duration(230).ease("linear").attr("transform", (function(_this) {
+        return (i * 160) + delay;
+      }).duration(330).ease("linear").attr("transform", (function(_this) {
         return function(d, i) {
           return "translate(0, " + (_this.scaleY(i)) + ")";
         };
@@ -175,38 +175,39 @@
     };
 
     BoxPlot.prototype.update = function(data) {
-      var self;
+      var duration, self;
       self = this;
       this.data = data;
       this.scaleX = this._getScaleX();
+      duration = this._getDuration();
       this.plots.data(this.data, function(d) {
         return d.name;
       });
       this.plots.each(function(d, i) {
-        d3.select(this).select(".bar").transition().duration(1000).attr("width", function(d) {
+        d3.select(this).select(".bar").transition().duration(duration).attr("width", function(d) {
           return self.scaleX(d.upper) - self.scaleX(d.lower);
         }).attr("x", function(d) {
           return self.scaleX(d.lower);
         });
         d3.select(this).select(".lower").attr("class", function(d) {
           return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));
-        }).transition().duration(1000).attr("x", function(d) {
+        }).transition().duration(duration).attr("x", function(d) {
           return self.scaleX(d.lower);
         });
         d3.select(this).select(".median").attr("class", function(d) {
           return "median " + (self.helpers.getColorClass(d.median, self.qualitative));
-        }).transition().duration(1000).attr("x", function(d) {
+        }).transition().duration(duration).attr("x", function(d) {
           return self.scaleX(d.median);
         });
         d3.select(this).select(".upper").attr("class", function(d) {
           return "upper " + (self.helpers.getColorClass(d.upper, self.qualitative));
-        }).transition().duration(1000).attr("x", function(d) {
+        }).transition().duration(duration).attr("x", function(d) {
           return self.scaleX(d.upper);
         });
         return d3.select(this).select(".overlay").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });
       this.qualatativeTicks.each(function(d, i) {
-        return d3.select(this).transition().duration(1000).attr("transform", (function(_this) {
+        return d3.select(this).transition().duration(duration).attr("transform", (function(_this) {
           return function(d, i) {
             return "translate(" + (self.scaleX(d.value)) + ", 0)";
           };

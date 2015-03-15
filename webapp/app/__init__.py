@@ -35,13 +35,13 @@ def city(name='Shanghai'):
           'chart': 'monthly',
           'data': [
             {
-              'date': '2015-01-01',
+              'date': '2015-01-02',
               'median': 64
             } ,{
-              'date': '2015-02-01',
+              'date': '2015-02-02',
               'median': 44
             } ,{
-              'date': '2015-03-01',
+              'date': '2015-03-02',
               'median': 34
             }   
           ]
@@ -50,16 +50,40 @@ def city(name='Shanghai'):
           'chart': 'time_of_day',
           'data': [
             {
-              'name': '2am to 4am',
+              'name': '12-2am',
               'median': 24
             } ,{
-              'name': '7am to 9am',
+              'name': '2-4am',
               'median': 44
             } ,{
-              'name': '2pm to 4pm',
+              'name': '4-6am',
               'median': 44
             },{
-              'name': '5pm to 7pm',
+              'name': '6-8am',
+              'median': 54
+            } ,{
+              'name': '8-10am',
+              'median': 24
+            } ,{
+              'name': '10-12pm',
+              'median': 44
+            } ,{
+              'name': '12-2pm',
+              'median': 44
+            },{
+              'name': '2-4pm',
+              'median': 54
+            },{
+              'name': '4-6pm',
+              'median': 24
+            } ,{
+              'name': '6-8pm',
+              'median': 44
+            } ,{
+              'name': '8-10pm',
+              'median': 44
+            },{
+              'name': '10-12am',
               'median': 54
             }
           ]

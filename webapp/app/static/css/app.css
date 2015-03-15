@@ -67,6 +67,14 @@ body {
   font-size: 14px; 
 }
 
+.filter-list li {
+  padding:0px;
+}
+
+.filter-list {
+  padding-left: 6px;
+}
+
 .small-text {
   font-size: 11px; 
 }

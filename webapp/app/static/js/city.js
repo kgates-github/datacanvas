@@ -68,14 +68,14 @@
           chart: 'filter',
           dimension: 'airquality_raw',
           scale: d3.scale.linear,
-          width: 200,
+          width: 110,
           height: 530,
           qualitative: helpers.aqiQualitative,
           margin: {
-            top: 40,
-            right: 50,
-            bottom: 40,
-            left: 165
+            top: 0,
+            right: 10,
+            bottom: 10,
+            left: 5
           }
         }
       }, {
@@ -86,7 +86,7 @@
           dimension: 'airquality_raw',
           scale: d3.scale.linear,
           width: 700,
-          height: 330,
+          height: 290,
           qualitative: helpers.aqiQualitative,
           margin: {
             top: 40,
