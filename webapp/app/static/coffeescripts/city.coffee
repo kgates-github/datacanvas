@@ -130,7 +130,7 @@ class App
 
 @app = new App config, data, city, helpers
 
-$("#filters").on("click", (e) =>
+$("#filter-container").on("click", (e) =>
   @app.update fakeData
 )
 
