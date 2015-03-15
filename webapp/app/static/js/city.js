@@ -62,6 +62,23 @@
   config = {
     charts: [
       {
+        type: 'Filter',
+        params: {
+          el: 'filter-container',
+          chart: 'filter',
+          dimension: 'airquality_raw',
+          scale: d3.scale.linear,
+          width: 200,
+          height: 530,
+          qualitative: helpers.aqiQualitative,
+          margin: {
+            top: 40,
+            right: 50,
+            bottom: 40,
+            left: 165
+          }
+        }
+      }, {
         type: 'BoxPlot',
         params: {
           el: 'ranking-airquality_raw',

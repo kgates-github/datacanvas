@@ -24,6 +24,50 @@ def city(name='Shanghai'):
   data = [
     {
       'dimension': 'airquality_raw',
+      'chart': 'filter',
+      'date_from': '2015-01-01',
+      'date_to': '2015-03-15',
+      'time_from': 'T17:00:00.000Z',
+      'time_to': 'T19:00:00.000Z',
+      'data': [
+        {
+          'dimension': 'airquality_raw',
+          'chart': 'monthly',
+          'data': [
+            {
+              'date': '2015-01-01',
+              'median': 64
+            } ,{
+              'date': '2015-02-01',
+              'median': 44
+            } ,{
+              'date': '2015-03-01',
+              'median': 34
+            }   
+          ]
+        },{
+          'dimension': 'airquality_raw',
+          'chart': 'time_of_day',
+          'data': [
+            {
+              'name': '2am to 4am',
+              'median': 24
+            } ,{
+              'name': '7am to 9am',
+              'median': 44
+            } ,{
+              'name': '2pm to 4pm',
+              'median': 44
+            },{
+              'name': '5pm to 7pm',
+              'median': 54
+            }
+          ]
+        } 
+      ]
+    },
+    {
+      'dimension': 'airquality_raw',
       'chart': 'timeseries',
       'date_from': '2015-01-01',
       'date_to': '2015-03-15',

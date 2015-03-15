@@ -22,7 +22,7 @@
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6);
       this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.svg.append("g").attr("class", "x axis").attr("transform", "translate(" + this.params.margin.left + ", " + (this.params.height - this.params.margin.bottom + 20) + ")").call(this.xAxis);
+      this.svg.append("g").attr("class", "x axis").attr("transform", "translate(20, " + (this.params.height - this.params.margin.bottom + 20) + ")").call(this.xAxis);
       this.svg.append("g").attr("class", "y axis").attr("transform", "translate(" + (this.params.margin.left - 1) + ", " + this.params.margin.top + ")").call(this.yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", "0.8em").style("text-anchor", "end").style("font-size", "11px").text("Air quality index");
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
       this.areaMax = d3.svg.area().x((function(_this) {
@@ -89,6 +89,8 @@
     };
 
     AreaChart.prototype.update = function(data) {
+      var duration;
+      duration = this._getDuration();
       this.data = data;
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
@@ -129,11 +131,11 @@
           return _this.scaleY(d.median);
         };
       })(this));
-      this.areaMaxPlot.datum(this.data).transition().duration(1000).attr("d", this.areaMax);
-      this.areaPercentilePlot.datum(this.data).transition().duration(1000).attr("d", this.areaPercentile);
-      this.areaMedianPlot.datum(this.data).transition().duration(1000).attr("d", this.line);
-      this.svg.selectAll("g.x.axis").transition().duration(1000).call(this.xAxis);
-      return this.svg.selectAll("g.y.axis").transition().duration(1000).call(this.yAxis);
+      this.areaMaxPlot.datum(this.data).transition().duration(duration).attr("d", this.areaMax);
+      this.areaPercentilePlot.datum(this.data).transition().duration(duration).attr("d", this.areaPercentile);
+      this.areaMedianPlot.datum(this.data).transition().duration(duration).attr("d", this.line);
+      this.svg.selectAll("g.x.axis").transition().duration(duration).call(this.xAxis);
+      return this.svg.selectAll("g.y.axis").transition().duration(duration).call(this.yAxis);
     };
 
     return AreaChart;

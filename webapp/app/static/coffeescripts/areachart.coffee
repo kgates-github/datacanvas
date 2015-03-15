@@ -9,7 +9,7 @@ class AreaChart extends APP.charts['Chart']
     @scaleY = @_getScaleY() 
     @qualitative = @params.qualitative or []
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6)
-    @yAxis = d3.svg.axis().scale(@scaleY ).orient("left")
+    @yAxis = d3.svg.axis().scale(@scaleY).orient("left")
 
     @svg = d3.select("##{@el}").append("svg")
       .attr("width", @params.width)
@@ -18,7 +18,7 @@ class AreaChart extends APP.charts['Chart']
     # X axis
     @svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(#{@params.margin.left}, #{@params.height - @params.margin.bottom + 20})")
+      .attr("transform", "translate(20, #{@params.height - @params.margin.bottom + 20})")
       .call(@xAxis)
 
     @svg.append("g")
@@ -92,6 +92,8 @@ class AreaChart extends APP.charts['Chart']
       .range(rangeY)
   
   update: (data) ->
+    duration = @_getDuration() # Only animate if above the fold
+
     @data = data
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY() 
@@ -116,30 +118,30 @@ class AreaChart extends APP.charts['Chart']
     @areaMaxPlot
       .datum(@data)
       .transition()
-      .duration(1000)
+      .duration(duration)
       .attr("d", @areaMax)
 
     @areaPercentilePlot
       .datum(@data)
       .transition()
-      .duration(1000)
+      .duration(duration)
       .attr("d", @areaPercentile)
 
     @areaMedianPlot
       .datum(@data)
       .transition()
-      .duration(1000)
+      .duration(duration)
       .attr("d", @line)
 
     # Update x axis
     @svg.selectAll("g.x.axis")
       .transition()
-      .duration(1000)
+      .duration(duration)
       .call(@xAxis)
 
     @svg.selectAll("g.y.axis")
       .transition()
-      .duration(1000)
+      .duration(duration)
       .call(@yAxis);
 
 

@@ -7,21 +7,8 @@
     <div style="margin-top:10px;">
       <span style="font-weight:bold; margin-left:10px;" class="header-5">Visualizing Cities</span>
     </div>
-    <div id="filters" style="border:1px solid #ccc; width:210px; height:500px; position:fixed; top:60px; border-radius: 6px; padding:10px;">
-      <div class="btn-group-vertical" role="group" aria-label="">
-        <button type="button" class="btn btn-default btn-sm btn-compact">Jan</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact">Feb</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact">Mar</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Apr</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact disabled">May</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Jun</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Jul</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Aug</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Sep</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Oct</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Nov</button>
-        <button type="button" class="btn btn-default btn-sm btn-compact disabled">Dec</button>
-      </div>
+    <div id="filter-container" style="border:1px solid #ccc; width:210px; height:500px; position:fixed; top:60px; border-radius: 6px; padding:10px;">
+     
     </div>
   </div>
   <div class="col-sm-9">
@@ -91,6 +78,50 @@
   var data = {{data | safe}};
   var city = "{{city | safe}}";
   var fakeData = [
+    {
+      'dimension': 'airquality_raw',
+      'chart': 'filter',
+      'date_from': '2015-01-01',
+      'date_to': '2015-03-15',
+      'time_from': 'T17:00:00.000Z',
+      'time_to': 'T19:00:00.000Z',
+      'data': [
+        {
+          'dimension': 'airquality_raw',
+          'chart': 'monthly',
+          'data': [
+            {
+              'date': '2015-01-01',
+              'median': 64
+            } ,{
+              'date': '2015-02-01',
+              'median': 44
+            } ,{
+              'date': '2015-03-01',
+              'median': 34
+            }   
+          ]
+        },{
+          'dimension': 'airquality_raw',
+          'chart': 'time_of_day',
+          'data': [
+            {
+              'name': '2am to 4am',
+              'median': 14
+            } ,{
+              'name': '7am to 9am',
+              'median': 54
+            } ,{
+              'name': '2pm to 4pm',
+              'median': 49
+            },{
+              'name': '5pm to 7pm',
+              'median': 62
+            }
+          ]
+        } 
+      ]
+    },
     {
       'dimension': 'airquality_raw',
       'chart': 'timeseries',
@@ -332,6 +363,7 @@
   ]
   </script>
   <script type="text/javascript" src="{{url_for('static', filename='js/chart.js')}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/filter.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/boxplot.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/areachart.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/city.js')}}"></script>

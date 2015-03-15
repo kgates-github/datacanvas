@@ -12,6 +12,18 @@
       null;
     }
 
+    Chart.prototype._isAboveTheFold = function() {
+      return $(window).scrollTop() + $(window).height() > $("#" + this.el).offset().top;
+    };
+
+    Chart.prototype._getDuration = function() {
+      if (this._isAboveTheFold()) {
+        return 1000;
+      } else {
+        return 0;
+      }
+    };
+
     return Chart;
 
   })();
