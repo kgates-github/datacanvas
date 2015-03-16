@@ -23,68 +23,96 @@ def city(name='Shanghai'):
   #data = df.to_json()
   data = [
     {
-      'dimension': 'airquality_raw',
       'chart': 'filter',
+      'dimension': 'none',
       'date_from': '2015-01-01',
       'date_to': '2015-03-15',
       'time_from': 'T17:00:00.000Z',
       'time_to': 'T19:00:00.000Z',
-      'data': [
+      'data': [ 
         {
           'dimension': 'airquality_raw',
-          'chart': 'monthly',
           'data': [
             {
-              'date': '2015-01-02',
-              'median': 64
-            } ,{
-              'date': '2015-02-02',
-              'median': 44
-            } ,{
-              'date': '2015-03-02',
-              'median': 34
-            }   
+              'chart': 'monthly',
+              'data': [
+                {
+                  'date': '2015-01-02',
+                  'median': 64
+                } ,{
+                  'date': '2015-02-02',
+                  'median': 44
+                } ,{
+                  'date': '2015-03-02',
+                  'median': 34
+                }   
+              ]
+            },{
+              'chart': 'time_of_day',
+              'data': [
+                {
+                  'name': '12-2am',
+                  'median': 24
+                },{
+                  'name': '2-4am',
+                  'median': 44
+                },{
+                  'name': '4-6am',
+                  'median': 44
+                },{
+                  'name': '8-10am',
+                  'median': 24
+                },{
+                  'name': '10-12pm',
+                  'median': 44
+                },{
+                  'name': '12-2pm',
+                  'median': 44
+                }
+              ]
+            }
           ]
         },{
-          'dimension': 'airquality_raw',
-          'chart': 'time_of_day',
+          'dimension': 'sound',
           'data': [
             {
-              'name': '12-2am',
-              'median': 24
-            } ,{
-              'name': '2-4am',
-              'median': 44
-            } ,{
-              'name': '4-6am',
-              'median': 44
+              
+              'chart': 'monthly',
+              'data': [
+                {
+                  'date': '2015-01-02',
+                  'median': 64
+                } ,{
+                  'date': '2015-02-02',
+                  'median': 44
+                } ,{
+                  'date': '2015-03-02',
+                  'median': 34
+                }   
+              ]
             },{
-              'name': '6-8am',
-              'median': 54
-            } ,{
-              'name': '8-10am',
-              'median': 24
-            } ,{
-              'name': '10-12pm',
-              'median': 44
-            } ,{
-              'name': '12-2pm',
-              'median': 44
-            },{
-              'name': '2-4pm',
-              'median': 54
-            },{
-              'name': '4-6pm',
-              'median': 24
-            } ,{
-              'name': '6-8pm',
-              'median': 44
-            } ,{
-              'name': '8-10pm',
-              'median': 44
-            },{
-              'name': '10-12am',
-              'median': 54
+              'chart': 'time_of_day',
+              'data': [
+                {
+                  'name': '12-2am',
+                  'median': 24
+                },{
+                  'name': '2-4am',
+                  'median': 44
+                },{
+                  'name': '4-6am',
+                  'median': 44
+                },{
+                  'name': '8-10am',
+                  'median': 24
+                },{
+                  'name': '10-12pm',
+                  'median': 44
+                },{
+                  'name': '12-2pm',
+                  'median': 44
+                }
+              ]
             }
           ]
         } 

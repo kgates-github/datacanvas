@@ -7,6 +7,15 @@
   Filter = (function(_super) {
     __extends(Filter, _super);
 
+    Filter.prototype._getDimensionData = function(dimension) {
+      if (dimension == null) {
+        dimension = 'airquality_raw';
+      }
+      return _.findWhere(this.data, {
+        dimension: dimension
+      });
+    };
+
     function Filter(_at_app, _at_params, _at_data, _at_city, _at_helpers) {
       var combinedData, self;
       this.app = _at_app;
@@ -15,12 +24,12 @@
       this.city = _at_city;
       this.helpers = _at_helpers;
       self = this;
-      this.dataMonthly = _.findWhere(this.data, {
-        dimension: this.params.dimension,
+      this.dimension = 'airquality_raw';
+      this.workingData = this._getDimensionData(this.dimension);
+      this.dataMonthly = _.findWhere(this.workingData.data, {
         chart: 'monthly'
       });
-      this.dataTime = _.findWhere(this.data, {
-        dimension: this.params.dimension,
+      this.dataTime = _.findWhere(this.workingData.data, {
         chart: 'time_of_day'
       });
       this.el = this.params.el;
@@ -29,9 +38,19 @@
       this.monthFormat = d3.time.format("%b");
       this.dataMonthly = this.dataMonthly.data;
       this.buttonsMonthly = d3.select("#filter-month-buttons").append("div");
-      this.buttonsMonthly.selectAll("button").data(this.dataMonthly).enter().append("div").append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact").style("width", "65px").style("margin-bottom", "1px").html((function(_this) {
+      this.buttonsMonthly.selectAll("button").data(this.dataMonthly).enter().append("div").append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact btn-monthly btn-filter").attr("id", function(d) {
+        return "id" + d.date;
+      }).attr("value", (function(_this) {
         return function(d) {
           return _this.monthFormat(new Date(d.date));
+        };
+      })(this)).style("width", "65px").style("margin-bottom", "1px").html((function(_this) {
+        return function(d) {
+          return _this.monthFormat(new Date(d.date));
+        };
+      })(this)).on("click", (function(_this) {
+        return function(d) {
+          return _this._filterCharts(d.date, "btn-monthly");
         };
       })(this));
       this.chartMonthly = d3.select("#filter-month-chart").append("div").style("width", "112px");
@@ -42,9 +61,17 @@
       })(this));
       this.dataTime = this.dataTime.data;
       this.buttonsTime = d3.select("#filter-time-buttons").append("div");
-      this.buttonsTime.selectAll("button").data(this.dataTime).enter().append("div").append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact").style("width", "65px").style("margin-bottom", "1px").html((function(_this) {
+      this.buttonsTime.selectAll("button").data(this.dataTime).enter().append("div").append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact btn-time btn-filter").attr("id", function(d) {
+        return "id" + d.name;
+      }).attr("value", function(d) {
+        return d.name;
+      }).style("width", "65px").style("margin-bottom", "1px").html((function(_this) {
         return function(d) {
           return d.name;
+        };
+      })(this)).on("click", (function(_this) {
+        return function(d) {
+          return _this._filterCharts(d.name, "btn-time");
         };
       })(this));
       this.chartMonthly = d3.select("#filter-time-chart").append("div").style("width", "112px");
@@ -53,26 +80,43 @@
           return (_this.scaleX(d.median)) + "px";
         };
       })(this));
+      d3.select("#reset-filters").on("click", (function(_this) {
+        return function() {
+          return _this._filterCharts(null, null);
+        };
+      })(this));
     }
 
-    Filter.prototype._filterCharts = function() {
-      var self;
+    Filter.prototype._filterCharts = function(filter, btnClass) {
+      var data, self;
+      if (filter) {
+        d3.selectAll("." + btnClass).classed({
+          'on': false
+        });
+        d3.select("#id" + filter).classed({
+          'on': true
+        });
+        data = [
+          {
+            'type': 'month',
+            'value': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] || null
+          }, {
+            'type': 'time_of_day',
+            'value': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] || null
+          }
+        ];
+      } else {
+        d3.selectAll(".btn-filter").classed({
+          'on': false
+        });
+        data = [];
+      }
+      console.log(data);
       self = this;
       return $.ajax({
         url: "/update/",
-        data: {
-          'filters': [
-            {
-              'type': 'month',
-              'value': 'February'
-            }, {
-              'type': 'time_of_day',
-              'value': '5pm to 7pm'
-            }
-          ]
-        }
+        data: data
       }).done(function(data) {
-        console.log(data);
         return self.app.update(data);
       });
     };

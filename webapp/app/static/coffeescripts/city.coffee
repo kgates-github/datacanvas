@@ -59,7 +59,7 @@ config =
       params:
         el: 'filter-container'
         chart: 'filter'
-        dimension: 'airquality_raw'
+        dimension: 'none'
         scale: d3.scale.linear
         width: 110
         height: 530
@@ -108,7 +108,7 @@ config =
 class App
   constructor: (@config, @data, city, helpers) ->
     @charts = []
-
+    
     for chart in @config.charts
       data = _.findWhere(@data, 
         {
@@ -116,6 +116,7 @@ class App
           chart: chart.params.chart
         }
       )
+
       @charts.push new APP.charts[chart.type] @, chart.params, data.data, city, helpers
 
   update: (@data) ->
@@ -128,6 +129,7 @@ class App
       )
       chart.update data.data
 
+#console.log data
 @app = new App config, data, city, helpers
 
 $("#filter-container").on("click", (e) =>

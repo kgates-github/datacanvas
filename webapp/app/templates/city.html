@@ -8,11 +8,24 @@
       <span style="font-weight:bold; margin-left:10px;" class="header-5">Visualizing Cities</span>
     </div>
     <div id="filter-container" style="border:1px solid #ccc; width:210px; height:500px; position:fixed; top:60px; border-radius: 6px; padding:10px 10px 16px 10px;">
-      <div style="font-weight:bold; font-size:18px; margin-bottom:4px;">Filters</div>
+      <div style="font-size:18px; margin-bottom:14px;">Filters</div>
+        
       <table class="filter-list" style="margin-bottom:3px;">
         <tr>
-          <td style="width:70px; font-size:11px; padding-bottom:4px;">Month</td>
-          <td style="font-size:11px;">Avg. AQI</td>
+          <td style="width:70px; font-size:11px; font-weight:bold; padding-bottom:6px;">Month</td>
+          <td style="font-size:11px; padding-bottom:6px;">
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle btn-sm btn-compact" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="border-color:#fff;">
+                Air quality
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Air quality</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Noise</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Dust</a></li>
+              </ul>
+            </div>
+          </td>
         </tr>
         <tr>
           <td id="filter-month-buttons"></td>
@@ -22,14 +35,17 @@
 
       <table class="filter-list" style="margin-bottom:3px; margin-top:20px;">
         <tr>
-          <td style="width:70px; font-size:11px; padding-bottom:4px;">Time of day</td>
-          <td style="font-size:11px; padding-bottom:4px;">Avg. AQI</td>
+          <td style="width:70px; font-size:11px; font-weight:bold; padding-bottom:6px;">Time of day</td>
+          <td style="font-size:11px; padding-bottom:6px;"></td>
         </tr>
         <tr>
           <td id="filter-time-buttons"></td>
           <td id="filter-time-chart"></td>
         </tr>
       </table>
+      <div style="margin-top:30px;">
+        <button id="reset-filters" class="btn btn-default btn-sm" style="width:100%;">Reset filters</button>
+      </div>
     </div>
   </div>
   <div class="col-sm-9">
@@ -45,7 +61,7 @@
       <div class="col-sm-12">
         <div class="header-1">{{city}}</div>
         <p>
-          Using readings from 14 batteries of sensors located throughout {{city}}, a picture of the city emerges through data. With this information, questions about the quality of life can start to be answered: How often is the air hazardous? What time of day does the air tend to be bad? How noisy is it at night? 
+          Using readings from 14 batteries of sensors located throughout {{city}}, a picture of the city emerges through data. With this information, questions about the quality of life can start to be answered: How often is the air unhealthy? What time of day does the air tend to be bad? How noisy is it at night? Is there much sunlight in winter?
         <p>
           Below are interactive charts that depict information about air quality, noise, dust, light levels, temperature and humidity, that can answer these questions and more. 
       </div>
@@ -68,9 +84,9 @@
           <li style="width:50%; text-align:right; padding-top:26px;">
             <span class="small-text">Sort by</span>&nbsp;
             <div class="btn-group"  id="airquality_raw-sort" role="group" aria-label="">
-              <button type="button" name="sort" value="lower" class="btn btn-default btn-sm btn-compact">Low</button>
-              <button type="button" name="sort" value="median" class="btn btn-default btn-sm btn-compact">Median</button>
-              <button type="button" name="sort" value="upper" class="btn btn-default btn-sm btn-compact">High</button>
+              <button type="button" name="sort" value="lower" class="btn btn-default btn-sm btn-compact-2">Low</button>
+              <button type="button" name="sort" value="median" class="btn btn-default btn-sm btn-compact-2">Median</button>
+              <button type="button" name="sort" value="upper" class="btn btn-default btn-sm btn-compact-2">High</button>
             </div>
           </li>
         </ul>  

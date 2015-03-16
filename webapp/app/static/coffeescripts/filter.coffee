@@ -1,17 +1,25 @@
 
 class Filter extends APP.charts['Chart']
 
+  _getDimensionData: (dimension = 'airquality_raw') ->
+    _.findWhere(@data, 
+      {
+        dimension: dimension
+      }
+    )
+
   constructor: (@app, @params, @data, @city, @helpers) ->
     self = @
-    @dataMonthly = _.findWhere(@data, 
-      {
-        dimension: @params.dimension, 
+    @dimension = 'airquality_raw'
+    @workingData = @_getDimensionData(@dimension)
+    
+    @dataMonthly = _.findWhere(@workingData.data, 
+      { 
         chart: 'monthly'
       }
     )
-    @dataTime = _.findWhere(@data, 
+    @dataTime = _.findWhere(@workingData.data, 
       {
-        dimension: @params.dimension, 
         chart: 'time_of_day'
       }
     )
@@ -30,11 +38,16 @@ class Filter extends APP.charts['Chart']
       .append("div")
       .append("button")
       .attr("type", "button")
-      .attr("class", "btn btn-default btn-sm btn-compact")
+      .attr("class", "btn btn-default btn-sm btn-compact btn-monthly btn-filter")
+      .attr("id", (d) -> "id#{d.date}")
+      .attr("value", (d) => @monthFormat(new Date(d.date)))
       .style("width", "65px")
       .style("margin-bottom", "1px")
       .html((d) =>
         @monthFormat(new Date(d.date))
+      )
+      .on("click", (d) =>
+        @_filterCharts(d.date, "btn-monthly")
       )
 
     @chartMonthly = d3.select("#filter-month-chart")
@@ -63,11 +76,16 @@ class Filter extends APP.charts['Chart']
       .append("div")
       .append("button")
       .attr("type", "button")
-      .attr("class", "btn btn-default btn-sm btn-compact")
+      .attr("class", "btn btn-default btn-sm btn-compact btn-time btn-filter")
+      .attr("id", (d) -> "id#{d.name}")
+      .attr("value", (d) -> d.name)
       .style("width", "65px")
       .style("margin-bottom", "1px")
       .html((d) =>
         d.name
+      )
+      .on("click", (d) =>
+        @_filterCharts(d.name, "btn-time")
       )
 
     @chartMonthly = d3.select("#filter-time-chart")
@@ -86,9 +104,32 @@ class Filter extends APP.charts['Chart']
         "#{@scaleX(d.median)}px"
       )
 
-    
-  
-  _filterCharts: () ->
+    d3.select("#reset-filters").on("click", =>
+      @_filterCharts(null, null)
+    )
+
+  _filterCharts: (filter, btnClass) ->
+    if filter
+      d3.selectAll(".#{btnClass}").classed({'on': false})
+      d3.select("#id#{filter}").classed({'on': true})
+
+      data = [
+        {
+          'type': 'month',
+          'value': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] or null
+        },
+        {
+          'type': 'time_of_day',
+          'value': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] or null
+        }
+      ]
+      
+    else
+      d3.selectAll(".btn-filter").classed({'on': false})
+      data = []
+
+    console.log data
+
     self = @
     # Get new data set here
     # TODO: Set spinners for all the charts
@@ -96,21 +137,10 @@ class Filter extends APP.charts['Chart']
     $.ajax(
       {
         url: "/update/",
-        data: {
-          'filters': [
-            {
-              'type': 'month',
-              'value': 'February'
-            },
-            {
-              'type': 'time_of_day',
-              'value': '5pm to 7pm'
-            }
-          ]
-        }
+        data: data
       }
     ).done( (data) ->
-      console.log data
+      #console.log data
 
       # Callback to app to update all charts
       self.app.update(data)

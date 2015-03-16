@@ -66,7 +66,7 @@
         params: {
           el: 'filter-container',
           chart: 'filter',
-          dimension: 'airquality_raw',
+          dimension: 'none',
           scale: d3.scale.linear,
           width: 110,
           height: 530,
