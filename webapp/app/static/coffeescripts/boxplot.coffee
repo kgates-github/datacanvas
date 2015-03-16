@@ -40,7 +40,7 @@ class BoxPlot extends APP.charts['Chart']
         upperClass = self.helpers.getColorClass(d.upper, self.qualitative)
         upperName = _.findWhere(self.qualitative, {class: upperClass}).name
         html = """
-          <div style='color:white; margin-bottom:0px;'>#{d.name}'s Air Quality Index</div>
+          <div style='font-size:11px; color:#bbb; margin-bottom:0px;'>#{d.name}'s Air Quality Index</div>
           <table class="table borderless">
             <tbody>
               <tr>

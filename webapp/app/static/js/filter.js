@@ -54,7 +54,7 @@
         };
       })(this));
       this.chartMonthly = d3.select("#filter-month-chart").append("div").style("width", "112px");
-      this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataMonthly).enter().append("div").attr("class", "bar").style("height", "16px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
+      this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataMonthly).enter().append("div").attr("class", "bar").style("height", "17px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
         return function(d) {
           return (_this.scaleX(d.median)) + "px";
         };
@@ -75,7 +75,7 @@
         };
       })(this));
       this.chartMonthly = d3.select("#filter-time-chart").append("div").style("width", "112px");
-      this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataTime).enter().append("div").attr("class", "bar").style("height", "16px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
+      this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataTime).enter().append("div").attr("class", "bar").style("height", "17px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
         return function(d) {
           return (_this.scaleX(d.median)) + "px";
         };
@@ -96,22 +96,16 @@
         d3.select("#id" + filter).classed({
           'on': true
         });
-        data = [
-          {
-            'type': 'month',
-            'value': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] || null
-          }, {
-            'type': 'time_of_day',
-            'value': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] || null
-          }
-        ];
+        data = {
+          'month': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] || null,
+          'time_of_day': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] || null
+        };
       } else {
         d3.selectAll(".btn-filter").classed({
           'on': false
         });
-        data = [];
+        data = {};
       }
-      console.log(data);
       self = this;
       return $.ajax({
         url: "/update/",

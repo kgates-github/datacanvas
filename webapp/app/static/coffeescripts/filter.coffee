@@ -59,7 +59,7 @@ class Filter extends APP.charts['Chart']
       .enter()
       .append("div")
       .attr("class", "bar")
-      .style("height", "16px")
+      .style("height", "17px")
       .style("background", "#ddd")
       .style("margin-bottom", "5px")
       .style("width", (d) =>
@@ -97,7 +97,7 @@ class Filter extends APP.charts['Chart']
       .enter()
       .append("div")
       .attr("class", "bar")
-      .style("height", "16px")
+      .style("height", "17px")
       .style("background", "#ddd")
       .style("margin-bottom", "5px")
       .style("width", (d) =>
@@ -113,22 +113,16 @@ class Filter extends APP.charts['Chart']
       d3.selectAll(".#{btnClass}").classed({'on': false})
       d3.select("#id#{filter}").classed({'on': true})
 
-      data = [
-        {
-          'type': 'month',
-          'value': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] or null
-        },
-        {
-          'type': 'time_of_day',
-          'value': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] or null
-        }
-      ]
-      
+      data = {
+        'month': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] or null,
+        'time_of_day': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] or null
+      }
     else
       d3.selectAll(".btn-filter").classed({'on': false})
-      data = []
+      data = {}
 
-    console.log data
+    #/update/?month=&time_of_day=02
+    #console.log data
 
     self = @
     # Get new data set here

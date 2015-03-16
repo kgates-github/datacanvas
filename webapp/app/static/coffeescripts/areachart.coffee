@@ -15,6 +15,58 @@ class AreaChart extends APP.charts['Chart']
       .attr("width", @params.width)
       .attr("height", @params.height)
 
+    # Tooltip
+    @tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([0, -30])
+      .html((d) =>  
+        lowerClass = self.helpers.getColorClass(d.lower, self.qualitative)
+        lowerName = _.findWhere(self.qualitative, {class: lowerClass}).name
+        medianClass = self.helpers.getColorClass(d.median, self.qualitative)
+        medianName = _.findWhere(self.qualitative, {class: medianClass}).name
+        upperClass = self.helpers.getColorClass(d.upper, self.qualitative)
+        upperName = _.findWhere(self.qualitative, {class: upperClass}).name
+        html = """
+          <div style='margin-bottom:10px; color:white; font-size:20px; font-weight: 400;'>
+            #{moment(d.date).format('MMM D, YYYY')}
+          </div>
+          <div style='margin-bottom:0px; font-size:11px; color:#bbb;'>#{@city}'s Air Quality Index</div>
+          <table class="table borderless">
+            <tbody>
+              <tr>
+                <td>
+                  <div>Low</div>
+                  <div style="font-size:11px; color:#bbb;">10th<br>percentile</div>
+                </td>
+                <td style="text-align:center;">
+                  <div>Median</div>
+                </td>
+                <td style="text-align:right;">
+                  <div>High</div>
+                  <div style="font-size:11px; color:#bbb;">90th<br>percentile</div></td>
+              </tr>
+              <tr style="font-size:26px;">
+                <td class="#{lowerClass}" style="width:70px; color:white; text-align:center;">
+                  #{d.lower}
+                  <div style="font-size:11px; color:#fff;">#{lowerName}</div></td>
+                </td>
+                <td class="#{medianClass}" style="width:70px; color:white; text-align:center;">
+                  #{d.median}
+                  <div style="font-size:11px; color:#fff;">#{medianName}</div></td>
+                </td>
+                <td class="#{upperClass}" style="width:70px; color:white; text-align:center;">
+                  #{d.upper}
+                  <div style="font-size:11px; color:#fff;">#{upperName}</div></td>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        """
+        html
+      )
+
+    @svg.call(@tip)
+
     # X axis
     @svg.append("g")
       .attr("class", "x axis")
@@ -66,6 +118,22 @@ class AreaChart extends APP.charts['Chart']
       .datum(@data)
       .attr("class", "line")
       .attr("d", @line)
+
+  
+    @chart.selectAll(".overlay")
+      .data(@data)
+      .enter()
+      .append("rect")
+      .style("fill", "#333")
+      .style("opacity", 0.0)
+      .attr("class", "overlay")
+      .attr("height", @params.height - (@params.margin.top + @params.margin.bottom))
+      .attr("width", @params.width / @data.length)
+      .attr("x", (d) => @scaleX(new Date(d.date)))
+      .attr("y", @params.margin.top)
+      .on('mouseover', @tip.show)
+      .on('mouseout', @tip.hide)
+
 
   _getDomain: (data) ->
     max = _.max(_.pluck(data, "max"))

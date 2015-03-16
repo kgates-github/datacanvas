@@ -22,6 +22,26 @@
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6);
       this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
+      this.tip = d3.tip().attr('class', 'd3-tip').offset([0, -30]).html((function(_this) {
+        return function(d) {
+          var html, lowerClass, lowerName, medianClass, medianName, upperClass, upperName;
+          lowerClass = self.helpers.getColorClass(d.lower, self.qualitative);
+          lowerName = _.findWhere(self.qualitative, {
+            "class": lowerClass
+          }).name;
+          medianClass = self.helpers.getColorClass(d.median, self.qualitative);
+          medianName = _.findWhere(self.qualitative, {
+            "class": medianClass
+          }).name;
+          upperClass = self.helpers.getColorClass(d.upper, self.qualitative);
+          upperName = _.findWhere(self.qualitative, {
+            "class": upperClass
+          }).name;
+          html = "<div style='margin-bottom:10px; color:white; font-size:20px; font-weight: 400;'>\n  " + (moment(d.date).format('MMM D, YYYY')) + "\n</div>\n<div style='margin-bottom:0px; font-size:11px; color:#bbb;'>" + _this.city + "'s Air Quality Index</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + d.lower + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + d.median + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + d.upper + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
+          return html;
+        };
+      })(this));
+      this.svg.call(this.tip);
       this.svg.append("g").attr("class", "x axis").attr("transform", "translate(20, " + (this.params.height - this.params.margin.bottom + 20) + ")").call(this.xAxis);
       this.svg.append("g").attr("class", "y axis").attr("transform", "translate(" + (this.params.margin.left - 1) + ", " + this.params.margin.top + ")").call(this.yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", "0.8em").style("text-anchor", "end").style("font-size", "11px").text("Air quality index");
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
@@ -63,6 +83,11 @@
         };
       })(this));
       this.areaMedianPlot = this.chart.append("path").datum(this.data).attr("class", "line").attr("d", this.line);
+      this.chart.selectAll(".overlay").data(this.data).enter().append("rect").style("fill", "#333").style("opacity", 0.0).attr("class", "overlay").attr("height", this.params.height - (this.params.margin.top + this.params.margin.bottom)).attr("width", this.params.width / this.data.length).attr("x", (function(_this) {
+        return function(d) {
+          return _this.scaleX(new Date(d.date));
+        };
+      })(this)).attr("y", this.params.margin.top).on('mouseover', this.tip.show).on('mouseout', this.tip.hide);
     }
 
     AreaChart.prototype._getDomain = function(data) {
