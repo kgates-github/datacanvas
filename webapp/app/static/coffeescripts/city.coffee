@@ -116,8 +116,9 @@ class App
           chart: chart.params.chart
         }
       )
-
-      @charts.push new APP.charts[chart.type] @, chart.params, data.data, city, helpers
+      
+      if data?
+        @charts.push new APP.charts[chart.type] @, chart.params, data.data, city, helpers
 
   update: (@data) ->
     for chart in @charts

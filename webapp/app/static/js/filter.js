@@ -11,8 +11,8 @@
       if (dimension == null) {
         dimension = 'airquality_raw';
       }
-      return _.findWhere(this.data, {
-        dimension: dimension
+      return _.where(this.data, {
+        name: dimension
       });
     };
 
@@ -26,10 +26,10 @@
       self = this;
       this.dimension = 'airquality_raw';
       this.workingData = this._getDimensionData(this.dimension);
-      this.dataMonthly = _.findWhere(this.workingData.data, {
-        chart: 'monthly'
+      this.dataMonthly = _.findWhere(this.workingData, {
+        chart: 'month'
       });
-      this.dataTime = _.findWhere(this.workingData.data, {
+      this.dataTime = _.findWhere(this.workingData, {
         chart: 'time_of_day'
       });
       this.el = this.params.el;
@@ -39,45 +39,45 @@
       this.dataMonthly = this.dataMonthly.data;
       this.buttonsMonthly = d3.select("#filter-month-buttons").append("div");
       this.buttonsMonthly.selectAll("button").data(this.dataMonthly).enter().append("div").append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact btn-monthly btn-filter").attr("id", function(d) {
-        return "id" + d.date;
+        return "id" + d.time;
       }).attr("value", (function(_this) {
         return function(d) {
-          return _this.monthFormat(new Date(d.date));
+          return _this.monthFormat(new Date(d.time));
         };
       })(this)).style("width", "65px").style("margin-bottom", "1px").html((function(_this) {
         return function(d) {
-          return _this.monthFormat(new Date(d.date));
+          return _this.monthFormat(new Date(d.time));
         };
       })(this)).on("click", (function(_this) {
         return function(d) {
-          return _this._filterCharts(d.date, "btn-monthly");
+          return _this._filterCharts(d.time, "btn-monthly");
         };
       })(this));
       this.chartMonthly = d3.select("#filter-month-chart").append("div").style("width", "112px");
       this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataMonthly).enter().append("div").attr("class", "bar").style("height", "17px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
         return function(d) {
-          return (_this.scaleX(d.median)) + "px";
+          return (_this.scaleX(d.value)) + "px";
         };
       })(this));
       this.dataTime = this.dataTime.data;
       this.buttonsTime = d3.select("#filter-time-buttons").append("div");
       this.buttonsTime.selectAll("button").data(this.dataTime).enter().append("div").append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact btn-time btn-filter").attr("id", function(d) {
-        return "id" + d.name;
+        return "id" + d.time;
       }).attr("value", function(d) {
-        return d.name;
+        return d.time;
       }).style("width", "65px").style("margin-bottom", "1px").html((function(_this) {
         return function(d) {
-          return d.name;
+          return d.time;
         };
       })(this)).on("click", (function(_this) {
         return function(d) {
-          return _this._filterCharts(d.name, "btn-time");
+          return _this._filterCharts(d.time + "", "btn-time");
         };
       })(this));
       this.chartMonthly = d3.select("#filter-time-chart").append("div").style("width", "112px");
       this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataTime).enter().append("div").attr("class", "bar").style("height", "17px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
         return function(d) {
-          return (_this.scaleX(d.median)) + "px";
+          return (_this.scaleX(d.value)) + "px";
         };
       })(this));
       d3.select("#reset-filters").on("click", (function(_this) {
@@ -93,7 +93,7 @@
         d3.selectAll("." + btnClass).classed({
           'on': false
         });
-        d3.select("#id" + filter).classed({
+        d3.select("." + btnClass + "#id" + filter).classed({
           'on': true
         });
         data = {
@@ -124,7 +124,7 @@
 
     Filter.prototype._getDomain = function(data) {
       var max;
-      max = _.max(_.pluck(data, "median"));
+      max = _.max(_.pluck(data, "value"));
       return [0, max];
     };
 

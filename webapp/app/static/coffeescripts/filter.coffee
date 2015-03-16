@@ -2,9 +2,9 @@
 class Filter extends APP.charts['Chart']
 
   _getDimensionData: (dimension = 'airquality_raw') ->
-    _.findWhere(@data, 
+    _.where(@data, 
       {
-        dimension: dimension
+        name: dimension
       }
     )
 
@@ -13,17 +13,18 @@ class Filter extends APP.charts['Chart']
     @dimension = 'airquality_raw'
     @workingData = @_getDimensionData(@dimension)
     
-    @dataMonthly = _.findWhere(@workingData.data, 
+    @dataMonthly = _.findWhere(@workingData, 
       { 
-        chart: 'monthly'
+        chart: 'month'
       }
     )
-    @dataTime = _.findWhere(@workingData.data, 
+    @dataTime = _.findWhere(@workingData, 
       {
         chart: 'time_of_day'
       }
     )
     @el = @params.el
+
     # Get scale for all charts
     combinedData = @dataMonthly.data.concat @dataTime.data
     @scaleX = @_getScaleX(combinedData)
@@ -39,15 +40,15 @@ class Filter extends APP.charts['Chart']
       .append("button")
       .attr("type", "button")
       .attr("class", "btn btn-default btn-sm btn-compact btn-monthly btn-filter")
-      .attr("id", (d) -> "id#{d.date}")
-      .attr("value", (d) => @monthFormat(new Date(d.date)))
+      .attr("id", (d) -> "id#{d.time}")
+      .attr("value", (d) => @monthFormat(new Date(d.time)))
       .style("width", "65px")
       .style("margin-bottom", "1px")
       .html((d) =>
-        @monthFormat(new Date(d.date))
+        @monthFormat(new Date(d.time))
       )
       .on("click", (d) =>
-        @_filterCharts(d.date, "btn-monthly")
+        @_filterCharts(d.time, "btn-monthly")
       )
 
     @chartMonthly = d3.select("#filter-month-chart")
@@ -63,7 +64,7 @@ class Filter extends APP.charts['Chart']
       .style("background", "#ddd")
       .style("margin-bottom", "5px")
       .style("width", (d) =>
-        "#{@scaleX(d.median)}px"
+        "#{@scaleX(d.value)}px"
       )
 
     # Time of day
@@ -77,15 +78,15 @@ class Filter extends APP.charts['Chart']
       .append("button")
       .attr("type", "button")
       .attr("class", "btn btn-default btn-sm btn-compact btn-time btn-filter")
-      .attr("id", (d) -> "id#{d.name}")
-      .attr("value", (d) -> d.name)
+      .attr("id", (d) -> "id#{d.time}")
+      .attr("value", (d) -> d.time)
       .style("width", "65px")
       .style("margin-bottom", "1px")
       .html((d) =>
-        d.name
+        d.time
       )
       .on("click", (d) =>
-        @_filterCharts(d.name, "btn-time")
+        @_filterCharts(d.time+"", "btn-time")
       )
 
     @chartMonthly = d3.select("#filter-time-chart")
@@ -101,7 +102,7 @@ class Filter extends APP.charts['Chart']
       .style("background", "#ddd")
       .style("margin-bottom", "5px")
       .style("width", (d) =>
-        "#{@scaleX(d.median)}px"
+        "#{@scaleX(d.value)}px"
       )
 
     d3.select("#reset-filters").on("click", =>
@@ -111,7 +112,7 @@ class Filter extends APP.charts['Chart']
   _filterCharts: (filter, btnClass) ->
     if filter
       d3.selectAll(".#{btnClass}").classed({'on': false})
-      d3.select("#id#{filter}").classed({'on': true})
+      d3.select(".#{btnClass}#id#{filter}").classed({'on': true})
 
       data = {
         'month': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] or null,
@@ -120,9 +121,6 @@ class Filter extends APP.charts['Chart']
     else
       d3.selectAll(".btn-filter").classed({'on': false})
       data = {}
-
-    #/update/?month=&time_of_day=02
-    #console.log data
 
     self = @
     # Get new data set here
@@ -138,7 +136,6 @@ class Filter extends APP.charts['Chart']
 
       # Callback to app to update all charts
       self.app.update(data)
-
     )
 
   _getScaleX: (data) ->
@@ -152,8 +149,7 @@ class Filter extends APP.charts['Chart']
       .range(rangeX)
 
   _getDomain: (data) ->
-    max = _.max(_.pluck(data, "median"))
-    #min = _.min(_.pluck(data, "lower"))
+    max = _.max(_.pluck(data, "value"))
     [0, max]
 
   update: (data) ->

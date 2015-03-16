@@ -17,44 +17,67 @@ def index():
 @app.route('/city2/<name>/')
 @app.route('/city2/')
 def city2(name='Shanghai'):
-    data = [{'chart': 'time_of_day',
-    'city': 'Boston',
-    'data': [{'time': 0, 'value': 24.6057026256},
-    {'time': 2, 'value': 25.1086013401},
-    {'time': 4, 'value': 20.7533277868},
-    {'time': 6, 'value': 19.7628957319},
-    {'time': 8, 'value': 20.6753163885},
-    {'time': 10, 'value': 21.8122107727},
-    {'time': 12, 'value': 21.7004656496},
-    {'time': 14, 'value': 21.6315007934},
-    {'time': 16, 'value': 20.0206864119},
-    {'time': 18, 'value': 19.8306577216},
-    {'time': 20, 'value': 18.2843295551},
-    {'time': 22, 'value': 16.8915329451}],
-    'name': 'airquality_raw'},
-    {'chart': 'month',
-    'city': 'Boston',
-    'data': [{'time': '2015-02-02', 'value': 20.9231023102}],
-    'name': 'airquality_raw'},
-    {'chart': 'time_of_day',
-    'city': 'Boston',
-    'data': [{'time': 0, 'value': 1210.4312546301},
-    {'time': 2, 'value': 1186.6457581494},
-    {'time': 4, 'value': 1165.6996862144},
-    {'time': 6, 'value': 1151.8115355446},
-    {'time': 8, 'value': 1168.9290161807},
-    {'time': 10, 'value': 1169.8307433642},
-    {'time': 12, 'value': 1236.9297997251},
-    {'time': 14, 'value': 1349.4289192612},
-    {'time': 16, 'value': 1709.9247806554},
-    {'time': 18, 'value': 1644.1440076174},
-    {'time': 20, 'value': 1772.1255598759},
-    {'time': 22, 'value': 1689.9513415426}],
-    'name': 'sound'},
-    {'chart': 'month',
-    'city': 'Boston',
-    'data': [{'time': '2015-02-02', 'value': 1371.3210335634}],
-    'name': 'sound'}]
+    data = [
+      {
+        'chart': 'filter',
+        'dimension': 'none',
+        'data': [
+          {
+            'chart': 'time_of_day',
+            'city': 'Boston',
+            'data': [
+              {'time': 0, 'value': 24.6057026256},
+              {'time': 2, 'value': 25.1086013401},
+              {'time': 4, 'value': 20.7533277868},
+              {'time': 6, 'value': 19.7628957319},
+              {'time': 8, 'value': 20.6753163885},
+              {'time': 10, 'value': 21.8122107727},
+              {'time': 12, 'value': 21.7004656496},
+              {'time': 14, 'value': 21.6315007934},
+              {'time': 16, 'value': 20.0206864119},
+              {'time': 18, 'value': 19.8306577216},
+              {'time': 20, 'value': 18.2843295551},
+              {'time': 22, 'value': 16.8915329451}
+            ],
+            'name': 'airquality_raw'
+          },
+          {
+            'chart': 'month',
+            'city': 'Boston',
+            'data': [
+              {'time': '2015-02-02', 'value': 20.9231023102}],
+            'name': 'airquality_raw'
+          },
+          {
+            'chart': 'time_of_day',
+            'city': 'Boston',
+            'data': [
+              {'time': 0, 'value': 1210.4312546301},
+              {'time': 2, 'value': 1186.6457581494},
+              {'time': 4, 'value': 1165.6996862144},
+              {'time': 6, 'value': 1151.8115355446},
+              {'time': 8, 'value': 1168.9290161807},
+              {'time': 10, 'value': 1169.8307433642},
+              {'time': 12, 'value': 1236.9297997251},
+              {'time': 14, 'value': 1349.4289192612},
+              {'time': 16, 'value': 1709.9247806554},
+              {'time': 18, 'value': 1644.1440076174},
+              {'time': 20, 'value': 1772.1255598759},
+              {'time': 22, 'value': 1689.9513415426}
+            ],
+            'name': 'sound'
+          },
+          {
+            'chart': 'month',
+            'city': 'Boston',
+            'data': [
+              {'time': '2015-02-02', 'value': 1371.3210335634}
+            ],
+            'name': 'sound'
+          }
+        ]
+      }
+    ]
     return render_template('city.html', city=name, data=data)
 
 
@@ -97,7 +120,7 @@ def city(name='Shanghai'):
               'chart': 'time_of_day',
               'data': [
                 {
-                  'date': '12-2am',
+                  'name': '12-2am',
                   'value': 24
                 },{
                   'name': '2-4am',

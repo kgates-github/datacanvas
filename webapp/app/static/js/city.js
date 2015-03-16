@@ -130,7 +130,9 @@
           dimension: chart.params.dimension,
           chart: chart.params.chart
         });
-        this.charts.push(new APP.charts[chart.type](this, chart.params, data.data, city, helpers));
+        if (data != null) {
+          this.charts.push(new APP.charts[chart.type](this, chart.params, data.data, city, helpers));
+        }
       }
     }
 
