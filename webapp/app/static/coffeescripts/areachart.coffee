@@ -27,8 +27,8 @@ class AreaChart extends APP.charts['Chart']
         upperClass = self.helpers.getColorClass(d.upper, self.qualitative)
         upperName = _.findWhere(self.qualitative, {class: upperClass}).name
         html = """
-          <div style='margin-bottom:10px; font-size:11px; color:#bbb;'>#{@city}'s Air Quality Index</div>
-          <div style='margin-bottom:4px; color:white; font-size:20px; font-weight: 400;'>
+          <div style='margin-bottom:10px; font-size:11px; color:#bbb;'>#{@city}'s #{@params.name}</div>
+          <div style='margin-top:12px; color:white; font-size:20px; font-weight: 400;'>
             #{moment(d.date).format('MMM D, YYYY')}
           </div>
          
@@ -84,7 +84,7 @@ class AreaChart extends APP.charts['Chart']
       .attr("dy", "0.8em")
       .style("text-anchor", "end")
       .style("font-size", "11px")
-      .text("Air quality index")
+      .text(@params.yAxisLabel)
 
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")

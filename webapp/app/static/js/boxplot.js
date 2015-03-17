@@ -45,7 +45,7 @@
         upperName = _.findWhere(self.qualitative, {
           "class": upperClass
         }).name;
-        html = "<div style='font-size:11px; color:#bbb; margin-bottom:0px;'>" + d.name + "'s Air Quality Index</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.lower, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.median, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.upper, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
+        html = "<div style='font-size:11px; color:#bbb; margin-bottom:0px;'>" + d.city + "'s Air Quality Index</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.lower, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.median, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.upper, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
         return html;
       });
       this.svg.call(this.tip);
@@ -67,7 +67,7 @@
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
       });
-      this.chart.append("text").attr("class", "x label").style("fill", "#999").style("font-weight", "400").attr("text-anchor", "end").attr("x", 0).attr("y", this.params.height - 49).text("Air quality index");
+      this.chart.append("text").attr("class", "x label").style("fill", "#999").style("font-weight", "400").attr("text-anchor", "end").attr("x", 0).attr("y", this.params.height - 60).text(this.params.xAxisLabel);
       this.chart.selectAll(".plot").data(this.data).enter().append("text").text(function(d, i) {
         return i + 1;
       }).attr("x", -this.params.margin.left + 4).attr("y", (function(_this) {
@@ -97,7 +97,7 @@
           return self.scaleX(d.upper) - self.scaleX(d.lower);
         }).attr("height", 2).attr("class", "bar").attr("x", function(d) {
           return self.scaleX(d.lower);
-        }).style("fill", "#777");
+        }).style("fill", "#ccc");
         d3.select(this).append("rect").attr("class", function(d) {
           return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));
         }).attr("height", 15).attr("width", 1).attr("x", function(d) {
@@ -157,7 +157,7 @@
       }
       this.data = _.sortBy(this.data, dimension);
       return this.plots.data(this.data, function(d) {
-        return d.name;
+        return d.city;
       }).transition().delay(function(d, i) {
         return (i * 160) + delay;
       }).duration(330).ease("linear").attr("transform", (function(_this) {

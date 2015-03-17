@@ -57,8 +57,11 @@ def update():
     elif month == 'Feb':
         date_from = '2015-02-01'
         date_to = '2015-02-28'
-    else:
+    elif month == 'Mar':
         date_from = '2015-03-01'
+        date_to = '2015-03-31'
+    else:
+        date_from = '2015-01-01'
         date_to = '2015-03-31'
     data = get_data(date_from, date_to, name, time_of_day)
     return jsonify(data=data)

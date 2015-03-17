@@ -41,7 +41,7 @@ class BoxPlot extends APP.charts['Chart']
         upperClass = self.helpers.getColorClass(d.upper, self.qualitative)
         upperName = _.findWhere(self.qualitative, {class: upperClass}).name
         html = """
-          <div style='font-size:11px; color:#bbb; margin-bottom:0px;'>#{d.name}'s Air Quality Index</div>
+          <div style='font-size:11px; color:#bbb; margin-bottom:0px;'>#{d.city}'s Air Quality Index</div>
           <table class="table borderless">
             <tbody>
               <tr>
@@ -117,8 +117,8 @@ class BoxPlot extends APP.charts['Chart']
       .style("font-weight", "400")
       .attr("text-anchor", "end")
       .attr("x", 0)
-      .attr("y", @params.height - 49)
-      .text("Air quality index")
+      .attr("y", @params.height - 60)
+      .text(@params.xAxisLabel)
     
     @chart.selectAll(".plot")
       .data(@data)
@@ -160,7 +160,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("height", 2)
         .attr("class", "bar")
         .attr("x", (d) -> self.scaleX(d.lower))
-        .style("fill", "#777")
+        .style("fill", "#ccc")
 
       d3.select(@).append("rect")
         .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
@@ -204,6 +204,7 @@ class BoxPlot extends APP.charts['Chart']
     rangeX = [
         0, @params.width - (@params.margin.left + @params.margin.right)
       ]
+
     @params.scale()
       .domain(domainX)
       .range(rangeX)
@@ -219,9 +220,9 @@ class BoxPlot extends APP.charts['Chart']
 
   _sortBy: (dimension='median', delay=0) ->
     @data = _.sortBy(@data, dimension)
-
+    
     @plots
-      .data(@data, (d) -> d.name)
+      .data(@data, (d) -> d.city)
       .transition()
       .delay((d, i) -> (i * 160) + delay)
       .duration(330)
