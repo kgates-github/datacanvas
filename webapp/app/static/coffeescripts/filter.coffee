@@ -83,8 +83,10 @@ class Filter extends APP.charts['Chart']
       .style("width", "65px")
       .style("margin-bottom", "1px")
       .html((d) =>
-        #moment('2015-02-02 #{d.time}').format('hh')
-        d.time
+        date = "2015-03-02T#{d.time}"
+        st = moment(date)
+        et = moment(st).add(2, "hours")
+        st.format('h') + '-' + et.format('ha')
       )
       .on("click", (d) =>
         @_filterCharts(d.time+"", "btn-time")
