@@ -50,16 +50,6 @@
       });
       this.svg.call(this.tip);
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
-
-      /*
-      @chart.append("line")
-        .attr("y1", @params.height - @params.margin.top - @params.margin.bottom + 12)
-        .attr("y2", @params.height - @params.margin.top - @params.margin.bottom + 12)
-        .attr("x1", -@params.margin.left)
-        .attr("x2", @params.width)
-        .style("stroke-width", 0.5)
-        .style("stroke", "#999")
-       */
       this.qualatativeTicks = this.chart.selectAll(".qualitative").data(this.qualitative).enter().append("g").attr("class", "qualitative").attr("transform", (function(_this) {
         return function(d, i) {
           return "translate(" + (_this.scaleX(d.value)) + ", 0)";

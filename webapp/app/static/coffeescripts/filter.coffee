@@ -113,6 +113,7 @@ class Filter extends APP.charts['Chart']
     )
 
   _filterCharts: (filter, btnClass) ->
+    $("#spinner").show()
     if filter
       d3.selectAll(".#{btnClass}").classed({'on': false})
       d3.select(".#{btnClass}#id#{filter}").classed({'on': true})
@@ -126,17 +127,14 @@ class Filter extends APP.charts['Chart']
       data = {}
 
     self = @
-    # Get new data set here
-    # TODO: Set spinners for all the charts
-    # TODO: Set filters here
+   
     $.ajax(
       {
         url: "/update/",
         data: data
       }
     ).done( (data) ->
-      #console.log data
-
+      $("#spinner").hide()
       # Callback to app to update all charts
       self.app.update(data)
     )
