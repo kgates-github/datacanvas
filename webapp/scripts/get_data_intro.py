@@ -22,7 +22,7 @@ def get_datacanvas(directory, from_dt, before_dt, metric='mean', city=None, reso
     raw_json = raw_json['data']
     return pd.DataFrame(raw_json)
     #.to_csv(directory + city + '.csv', index=False)
-    
+
 
 def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resolution='1h'):
     cities = ['Shanghai', 'Singapore', 'Bangalore', 'Geneva', 'Rio de Janeiro', 'Boston', 'San Francisco']
