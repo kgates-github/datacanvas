@@ -14,6 +14,7 @@ def load_cities_data():
     df['date'] = df.index.date
     df['year'] = df.index.year
     df['YearMonth'] = df.index.map(lambda x: str(x.year) + '-' + ('0' + str(x.month))[-2:] + '-02')
+    df['noise'] = df['sound'].map(lambda x: 0.0158 * x + 49.184)
     return df
 
 
