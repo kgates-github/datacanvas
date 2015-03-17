@@ -14,8 +14,8 @@ def index():
     return render_template('index.html', data=df.to_json())
 
 
-def get_data(date_from, date_to, name):
-    df = models.load_cities_data()
+def get_data(date_from, date_to, name, time_of_day=''):
+    df = models.load_cities_data(date_from, date_to, time_of_day)
     city_data = []
     for metric in ['airquality_raw', 'sound', 'dust', 'humidity', 'temperature', 'light', 'noise']:
         # Build Filter Results
@@ -40,7 +40,6 @@ def get_data(date_from, date_to, name):
 @app.route('/city2/<name>/')
 @app.route('/city2/')
 def city(name='Shanghai'):
-    print request.args
     date_from = '2015-01-01'
     date_to = '2015-03-31'
     data = get_data(date_from, date_to, name)
@@ -49,10 +48,9 @@ def city(name='Shanghai'):
 
 @app.route('/update/')
 def update():
-    print request.args
-    name = request.args['city']
-    month = request.args['month']
-    time_of_day = request.args['time_of_day']
+    name = request.args.get('city', 'Shanghai')
+    month = request.args.get('month', '')
+    time_of_day = request.args.get('time_of_day', '')
     if month == 'Jan':
         date_from = '2015-01-01'
         date_to = '2015-01-31'
@@ -62,5 +60,5 @@ def update():
     else:
         date_from = '2015-03-01'
         date_to = '2015-03-31'
-    data = get_data(date_from, date_to, name)
+    data = get_data(date_from, date_to, name, time_of_day)
     return jsonify(data=data)
