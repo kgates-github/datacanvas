@@ -118,8 +118,7 @@
         data: data
       }).done(function(data) {
         $("#spinner").hide();
-        console.log(data);
-        return self.app.update(data);
+        return self.app.update(data.data);
       });
     };
 

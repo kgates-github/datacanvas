@@ -132,12 +132,7 @@ class App
       )
       chart.update data.data
 
-#console.log data
 @app = new App config, data, city, helpers
-
-$("#filter-container").on("click", (e) =>
-  @app.update fakeData
-)
 
 
 

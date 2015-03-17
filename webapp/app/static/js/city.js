@@ -160,10 +160,4 @@
 
   this.app = new App(config, data, city, helpers);
 
-  $("#filter-container").on("click", (function(_this) {
-    return function(e) {
-      return _this.app.update(fakeData);
-    };
-  })(this));
-
 }).call(this);
