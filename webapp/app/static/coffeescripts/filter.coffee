@@ -137,6 +137,7 @@ class Filter extends APP.charts['Chart']
     ).done( (data) ->
       $("#spinner").hide()
       # Callback to app to update all charts
+      console.log data
       self.app.update(data)
     )
 
