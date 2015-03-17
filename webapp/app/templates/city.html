@@ -92,6 +92,9 @@
         <p>
           From <strong>January</strong> to <strong>March</strong>, only using data collected between <strong>4PM</strong> and <strong>6PM</strong>, Shanghai's air average air quality score ranked <strong>7th</strong> out of the <strong>7</strong> cities being tracked. Its average air quality index score was <strong>54</strong>, which is moderately harmful. 
         -->
+        <div class="chart-header">{{city}}'s Daily Air Quality</div>
+        <div id="timeseries-airquality_raw" class="chart-container"></div>
+
         <ul class='inline-list header' style="width:100%;">
           <li style="width:50%;">
             <div class="chart-header">Air Quality Comparison</div>
@@ -117,9 +120,7 @@
           <span contenteditable='false' class='dot unhealthy-very'>2</span> 201 to 300 very unhealthy&nbsp;
           <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500 hazardous.
         </div>
-        <div class="chart-header">{{city}}'s Daily Air Quality</div>
-        
-        <div id="timeseries-airquality_raw" class="chart-container"></div>
+
       </div>
     </div>
   </div>
