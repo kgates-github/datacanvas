@@ -22,7 +22,7 @@ def get_datacanvas(directory, from_dt, before_dt, metric='mean', city=None, reso
     raw_json = raw_json['data']
     return pd.DataFrame(raw_json)
     #.to_csv(directory + city + '.csv', index=False)
-    
+
 
 def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resolution='1h'):
     cities = ['Shanghai', 'Singapore', 'Bangalore', 'Geneva', 'Rio de Janeiro', 'Boston', 'San Francisco']
@@ -40,6 +40,7 @@ def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resoluti
 if __name__ == '__main__':
     if len(sys.argv) < 5:
         print "Need arguments from_dt, before_dt, metric, city, resolution"
+        print "python get_data_intro.py ../data/ 2015-02-01 2015-02-16 mean all 2h"
         print "python get_data_by_city.py '../data/prototype/' '2015-02-15' '2015-02-16' 'mean' 'Shanghai' '2h'"
         #print "For example: '..data/' '2015-02-01', '2015-02-03', 'mean', 'Shanghai', 1h'"
         sys.exit(0)
