@@ -2,12 +2,15 @@ import json
 import pandas as pd
 
 
-def load_cities_data():
+def load_cities_data(date_from, date_to, time_of_day):
     df = pd.read_csv('data/cities.csv', parse_dates=['timestamp'])
     df.set_index('timestamp', inplace=True)
+    df = df[date_from:date_to]
     df['hour'] = df.index.hour.astype(str)
     df['hour'] = '0' + df['hour']
     df['hour'] = df.hour.str.slice(-2)
+    if time_of_day:
+        df = df[df.hour == time_of_day]
     df['month'] = df.index.month.astype(str)
     df['month'] = '0' + df['month']
     df['month'] = df.month.str.slice(-2)
