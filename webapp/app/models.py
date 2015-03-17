@@ -29,7 +29,7 @@ def get_metric_data(df, city, metric, date_from, date_to, group_col='hour'):
     json_data['chart'] = chart_name.get(group_col, group_col)
     data = []
     for dt, val in zip(json_data['index'], json_data['data']):
-        data.append({'time': dt, 'value': val})
+        data.append({'time': dt, 'value': round(val, 2)})
     json_data['data'] = data
     # Remove the index col
     del json_data['index']
