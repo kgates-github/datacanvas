@@ -2,6 +2,10 @@ a {
   color: #333 !important;
 }
 
+a.selected {
+  font-weight:bold;
+}
+
 button.on {
   background:#333 !important;
   color:#fff !important;
