@@ -81,16 +81,6 @@ class BoxPlot extends APP.charts['Chart']
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
 
-    ###
-    @chart.append("line")
-      .attr("y1", @params.height - @params.margin.top - @params.margin.bottom + 12)
-      .attr("y2", @params.height - @params.margin.top - @params.margin.bottom + 12)
-      .attr("x1", -@params.margin.left)
-      .attr("x2", @params.width)
-      .style("stroke-width", 0.5)
-      .style("stroke", "#999")
-    ###
-
     @qualatativeTicks = @chart.selectAll(".qualitative")
       .data(@qualitative)
       .enter()
@@ -174,7 +164,6 @@ class BoxPlot extends APP.charts['Chart']
 
       d3.select(@).append("rect")
         .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
-        #.style("fill", "white")
         .attr("height", 15)
         .attr("width", 1)
         .attr("x", (d) -> self.scaleX(d.lower))
@@ -189,7 +178,6 @@ class BoxPlot extends APP.charts['Chart']
 
       d3.select(@).append("rect")
         .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
-        #.style("fill", "white")
         .attr("height", 15)
         .attr("width", 1)
         .attr("x", (d) -> self.scaleX(d.upper))

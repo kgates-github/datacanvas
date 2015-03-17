@@ -93,6 +93,7 @@
 
     Filter.prototype._filterCharts = function(filter, btnClass) {
       var data, self;
+      $("#spinner").show();
       if (filter) {
         d3.selectAll("." + btnClass).classed({
           'on': false
@@ -115,6 +116,7 @@
         url: "/update/",
         data: data
       }).done(function(data) {
+        $("#spinner").hide();
         return self.app.update(data);
       });
     };
