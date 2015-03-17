@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 import models
 
 
@@ -14,15 +14,10 @@ def index():
     return render_template('index.html', data=df.to_json())
 
 
-@app.route('/city2/<name>/')
-@app.route('/city2/')
-def city(name='Shanghai'):
-
-    date_from = '2015-01-01'
-    date_to = '2015-03-31'
-    city_data = []
+def get_data(date_from, date_to, name):
     df = models.load_cities_data()
-    for metric in ['airquality_raw', 'sound']:
+    city_data = []
+    for metric in ['airquality_raw', 'sound', 'dust', 'humidity', 'temperature', 'light', 'noise']:
         # Build Filter Results
         chart_data = {}
         chart_data['chart'] = 'filter'
@@ -39,4 +34,33 @@ def city(name='Shanghai'):
         city_data.append(chart_data)
         chart_data = models.get_city_agg_data(df, metric, date_from, date_to)
         city_data.append(chart_data)
-    return render_template('city.html', city=name, data=json.dumps(city_data))
+    return city_data
+
+
+@app.route('/city2/<name>/')
+@app.route('/city2/')
+def city(name='Shanghai'):
+    print request.args
+    date_from = '2015-01-01'
+    date_to = '2015-03-31'
+    data = get_data(date_from, date_to, name)
+    return render_template('city.html', city=name, data=json.dumps(data))
+
+
+@app.route('/update/')
+def update():
+    print request.args
+    name = request.args['city']
+    month = request.args['month']
+    time_of_day = request.args['time_of_day']
+    if month == 'Jan':
+        date_from = '2015-01-01'
+        date_to = '2015-01-31'
+    elif month == 'Feb':
+        date_from = '2015-02-01'
+        date_to = '2015-02-28'
+    else:
+        date_from = '2015-03-01'
+        date_to = '2015-03-31'
+    data = get_data(date_from, date_to, name)
+    return jsonify(data=data)
