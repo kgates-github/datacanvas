@@ -81,13 +81,13 @@
         };
       })(this));
       this.plots.each(function(d, i) {
-        if (self.city === d.name) {
+        if (self.city === d.city) {
           d3.select(this).append("rect").attr("width", 120).attr("height", 21).attr("x", function(d) {
             return -self.params.margin.left + 20;
           }).attr("y", -9).style("fill", "#333").style("stroke", "#333");
         }
-        d3.select(this).append("text").text(d.name).attr("x", -self.params.margin.left + 32).attr("y", 6).attr("fill", function(d) {
-          if (self.city === d.name) {
+        d3.select(this).append("text").text(d.city).attr("x", -self.params.margin.left + 32).attr("y", 6).attr("fill", function(d) {
+          if (self.city === d.city) {
             return "white";
           } else {
             return "black";

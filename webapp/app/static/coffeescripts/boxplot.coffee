@@ -138,7 +138,7 @@ class BoxPlot extends APP.charts['Chart']
       )
 
     @plots.each((d, i) ->
-      if self.city is d.name
+      if self.city is d.city
         d3.select(@).append("rect")
           .attr("width", 120)
           .attr("height", 21)
@@ -148,11 +148,11 @@ class BoxPlot extends APP.charts['Chart']
           .style("stroke", "#333")
 
       d3.select(@).append("text")
-        .text(d.name)
+        .text(d.city)
         .attr("x", -self.params.margin.left + 32)
         .attr("y", 6)
         .attr("fill", (d) ->
-          if self.city == d.name then "white" else "black"
+          if self.city == d.city then "white" else "black"
         )
 
       d3.select(@).append("rect")
