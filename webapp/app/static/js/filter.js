@@ -26,7 +26,6 @@
       self = this;
       this.dimension = 'airquality_raw';
       this.workingData = this._getDimensionData(this.dimension);
-      console.log(this.data);
       this.dataMonthly = _.findWhere(this.workingData, {
         chart: 'month'
       });
@@ -104,7 +103,8 @@
         });
         data = {
           'month': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] || null,
-          'time_of_day': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] || null
+          'time_of_day': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] || null,
+          'city': this.city
         };
       } else {
         d3.selectAll(".btn-filter").classed({

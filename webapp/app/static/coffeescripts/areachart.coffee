@@ -48,15 +48,15 @@ class AreaChart extends APP.charts['Chart']
               </tr>
               <tr style="font-size:26px;">
                 <td class="#{lowerClass}" style="width:70px; color:white; text-align:center;">
-                  #{d.lower}
+                  #{d3.round(d.lower, self.params.round)}
                   <div style="font-size:11px; color:#fff;">#{lowerName}</div></td>
                 </td>
                 <td class="#{medianClass}" style="width:70px; color:white; text-align:center;">
-                  #{d.median}
+                  #{d3.round(d.median, self.params.round)}
                   <div style="font-size:11px; color:#fff;">#{medianName}</div></td>
                 </td>
                 <td class="#{upperClass}" style="width:70px; color:white; text-align:center;">
-                  #{d.upper}
+                  #{d3.round(d.upper, self.params.round)}
                   <div style="font-size:11px; color:#fff;">#{upperName}</div></td>
                 </td>
               </tr>

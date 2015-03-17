@@ -76,6 +76,7 @@ config =
         el: 'ranking-airquality_raw'
         chart: 'ranking'
         dimension: 'airquality_raw'
+        round: 0
         scale: d3.scale.linear
         width: 700
         height: 290
@@ -92,6 +93,7 @@ config =
         el: 'timeseries-airquality_raw'
         chart: 'timeseries'
         dimension: 'airquality_raw'
+        round: 0
         scaleX: d3.time.scale
         scaleY: d3.scale.linear
         width: 700

@@ -12,9 +12,6 @@ class Filter extends APP.charts['Chart']
     self = @
     @dimension = 'airquality_raw'
     @workingData = @_getDimensionData(@dimension)
-    
-    console.log @data
-
     @dataMonthly = _.findWhere(@workingData, 
       { 
         chart: 'month'
@@ -123,7 +120,8 @@ class Filter extends APP.charts['Chart']
 
       data = {
         'month': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] or null,
-        'time_of_day': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] or null
+        'time_of_day': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] or null,
+        'city': @city
       }
     else
       d3.selectAll(".btn-filter").classed({'on': false})
