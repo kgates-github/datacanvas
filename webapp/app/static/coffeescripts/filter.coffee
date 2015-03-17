@@ -83,6 +83,7 @@ class Filter extends APP.charts['Chart']
       .style("width", "65px")
       .style("margin-bottom", "1px")
       .html((d) =>
+        #moment('2015-02-02 #{d.time}').format('hh')
         d.time
       )
       .on("click", (d) =>

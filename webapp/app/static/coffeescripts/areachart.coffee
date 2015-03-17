@@ -18,7 +18,7 @@ class AreaChart extends APP.charts['Chart']
     # Tooltip
     @tip = d3.tip()
       .attr('class', 'd3-tip')
-      .offset([0, -30])
+      .offset([-20, -20])
       .html((d) =>  
         lowerClass = self.helpers.getColorClass(d.lower, self.qualitative)
         lowerName = _.findWhere(self.qualitative, {class: lowerClass}).name
@@ -27,10 +27,11 @@ class AreaChart extends APP.charts['Chart']
         upperClass = self.helpers.getColorClass(d.upper, self.qualitative)
         upperName = _.findWhere(self.qualitative, {class: upperClass}).name
         html = """
-          <div style='margin-bottom:10px; color:white; font-size:20px; font-weight: 400;'>
+          <div style='margin-bottom:10px; font-size:11px; color:#bbb;'>#{@city}'s Air Quality Index</div>
+          <div style='margin-bottom:4px; color:white; font-size:20px; font-weight: 400;'>
             #{moment(d.date).format('MMM D, YYYY')}
           </div>
-          <div style='margin-bottom:0px; font-size:11px; color:#bbb;'>#{@city}'s Air Quality Index</div>
+         
           <table class="table borderless">
             <tbody>
               <tr>

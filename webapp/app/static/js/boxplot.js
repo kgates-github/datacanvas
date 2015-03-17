@@ -22,7 +22,8 @@
       this.qualitative = this.params.qualitative || [];
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
       $("#" + this.params.dimension + "-sort button").on("click", function() {
-        return self._sortBy($(this).val());
+        self._sortBy($(this).val());
+        return self._toggleButtons($(this).val());
       });
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
       this.svg.append("g").attr("class", "x axis").attr("transform", ("translate(" + this.params.margin.left + ",") + (this.params.height - 30) + ")").call(this.xAxis);
@@ -133,6 +134,15 @@
         }).on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });
     }
+
+    BoxPlot.prototype._toggleButtons = function(idx) {
+      d3.selectAll("." + btnClass).classed({
+        'on': false
+      });
+      return d3.select(".#idx").classed({
+        'on': true
+      });
+    };
 
     BoxPlot.prototype._getScaleX = function() {
       var domainX, rangeX;
