@@ -136,10 +136,10 @@
     }
 
     BoxPlot.prototype._toggleButtons = function(idx) {
-      d3.selectAll("." + btnClass).classed({
+      d3.selectAll("#" + this.params.dimension + "-sort button").classed({
         'on': false
       });
-      return d3.select(".#idx").classed({
+      return d3.select("#" + idx).classed({
         'on': true
       });
     };

@@ -67,7 +67,11 @@
         return d.time;
       }).style("width", "65px").style("margin-bottom", "1px").html((function(_this) {
         return function(d) {
-          return d.time;
+          var date, et, st;
+          date = "2015-03-02T" + d.time;
+          st = moment(date);
+          et = moment(st).add(2, "hours");
+          return st.format('h') + '-' + et.format('ha');
         };
       })(this)).on("click", (function(_this) {
         return function(d) {

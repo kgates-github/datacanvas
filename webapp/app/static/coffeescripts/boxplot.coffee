@@ -14,7 +14,7 @@ class BoxPlot extends APP.charts['Chart']
     # Sorting controls
     $("##{@params.dimension}-sort button").on("click", ->
       self._sortBy($(@).val())
-      self._toggleButtons $(@).val()
+      self._toggleButtons($(@).val())
     )
 
     @svg = d3.select("##{@el}").append("svg")
@@ -208,8 +208,8 @@ class BoxPlot extends APP.charts['Chart']
     )
 
   _toggleButtons: (idx) ->
-    d3.selectAll(".#{btnClass}").classed({'on': false})
-    d3.select(".#idx").classed({'on': true})
+    d3.selectAll("##{@params.dimension}-sort button").classed({'on': false})
+    d3.select("##{idx}").classed({'on': true})
 
   _getScaleX: ->
     domainX = @_getDomain(@data)

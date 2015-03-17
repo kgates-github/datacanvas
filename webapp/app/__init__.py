@@ -1,4 +1,5 @@
 import sqlite3
+import json
 from flask import Flask, render_template
 import models
 
@@ -13,9 +14,9 @@ def index():
     return render_template('index.html', data=df.to_json())
 
 
-@app.route('/city2/<city_name>/')
+@app.route('/city2/<name>/')
 @app.route('/city2/')
-def city2(city_name='Shanghai'):
+def city(name='Shanghai'):
 
     date_from = '2015-01-01'
     date_to = '2015-03-31'
@@ -27,15 +28,15 @@ def city2(city_name='Shanghai'):
         chart_data['chart'] = 'filter'
         chart_data['dimension'] = 'none'
         chart_data['data'] = []
-        data = models.get_metric_data(df, city_name, metric, date_from, date_to, 'hour')
+        data = models.get_metric_data(df, name, metric, date_from, date_to, 'hour')
         chart_data['data'].append(data)
-        data = models.get_metric_data(df, city_name, metric, date_from, date_to, 'YearMonth')
+        data = models.get_metric_data(df, name, metric, date_from, date_to, 'YearMonth')
         chart_data['data'].append(data)
         city_data.append(chart_data)
 
         # Build TimeSeries Results
-        chart_data = models.get_ts_data(df, city_name, metric, date_from, date_to)
+        chart_data = models.get_ts_data(df, name, metric, date_from, date_to)
         city_data.append(chart_data)
         chart_data = models.get_city_agg_data(df, metric, date_from, date_to)
         city_data.append(chart_data)
-    return render_template('city.html', city=city_name, data=city_data)
+    return render_template('city.html', city=name, data=json.dumps(city_data))
