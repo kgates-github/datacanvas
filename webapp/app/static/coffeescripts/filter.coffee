@@ -13,6 +13,8 @@ class Filter extends APP.charts['Chart']
     @dimension = 'airquality_raw'
     @workingData = @_getDimensionData(@dimension)
     
+    console.log @data
+
     @dataMonthly = _.findWhere(@workingData, 
       { 
         chart: 'month'
@@ -23,6 +25,7 @@ class Filter extends APP.charts['Chart']
         chart: 'time_of_day'
       }
     )
+
     @el = @params.el
 
     # Get scale for all charts

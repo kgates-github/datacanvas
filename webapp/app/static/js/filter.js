@@ -26,6 +26,7 @@
       self = this;
       this.dimension = 'airquality_raw';
       this.workingData = this._getDimensionData(this.dimension);
+      console.log(this.data);
       this.dataMonthly = _.findWhere(this.workingData, {
         chart: 'month'
       });
