@@ -22,7 +22,7 @@
       this.xAxis = d3.svg.axis().scale(this.scaleX).innerTickSize(6).orient("top");
       this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.tip = d3.tip().attr('class', 'd3-tip').offset([-(this.params.width - this.params.margin.left - this.params.margin.right) / this.data.length / 2, -30]).html((function(_this) {
+      this.tip = d3.tip().attr('class', 'd3-tip').offset([-10, -(this.params.width - this.params.margin.left) / this.data.length / 2]).html((function(_this) {
         return function(d) {
           var html, lowerClass, lowerName, maxClass, maxName, medianClass, medianName, minClass, minName, upperClass, upperName;
           minClass = self.helpers.getColorClass(d.min, self.qualitative);
@@ -80,7 +80,7 @@
           return _this.scaleY(d.upper);
         };
       })(this));
-      this.areaPercentilePlot = this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#ddd").attr("d", this.areaPercentile);
+      this.areaPercentilePlot = this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#ccc").attr("d", this.areaPercentile);
       this.line = d3.svg.line().x((function(_this) {
         return function(d) {
           return _this.scaleX(new Date(d.date));

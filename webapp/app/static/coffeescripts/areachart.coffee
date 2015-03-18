@@ -17,7 +17,7 @@ class AreaChart extends APP.charts['Chart']
     # Tooltip
     @tip = d3.tip()
       .attr('class', 'd3-tip')
-      .offset([-(@params.width-@params.margin.left-@params.margin.right) / @data.length / 2, -30])
+      .offset([-10, -(@params.width-@params.margin.left) / @data.length / 2])
       .html((d) =>  
         minClass = self.helpers.getColorClass(d.min, self.qualitative)
         minName = _.findWhere(self.qualitative, {class: minClass}).name
@@ -127,7 +127,7 @@ class AreaChart extends APP.charts['Chart']
     @areaPercentilePlot = @chart.append("path")
       .datum(@data)
       .attr("class", "area")
-      .style("fill", "#ddd")
+      .style("fill", "#ccc")
       .attr("d", @areaPercentile)
 
     @line = d3.svg.line()
