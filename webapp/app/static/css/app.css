@@ -56,8 +56,8 @@ button.on {
 
 .dot {
   border-radius: 50%; 
-  font-size:9px; 
-  padding:0px 3px 0px 4px; 
+  font-size:6px; 
+  padding:2px 3px 0px 4px; 
   background:#009900; 
   color:#009900; 
   text-align:center;

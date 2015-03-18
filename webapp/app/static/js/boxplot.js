@@ -21,6 +21,7 @@
       this.scaleY = this._getScaleY();
       this.qualitative = this.params.qualitative || [];
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
+      $("#" + this.params.dimension + "-sort").hide();
       $("#" + this.params.dimension + "-sort button").on("click", function() {
         self._sortBy($(this).val());
         return self._toggleButtons($(this).val());

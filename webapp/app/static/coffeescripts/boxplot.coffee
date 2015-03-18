@@ -12,6 +12,7 @@ class BoxPlot extends APP.charts['Chart']
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
     
     # Sorting controls
+    $("##{@params.dimension}-sort").hide()
     $("##{@params.dimension}-sort button").on("click", ->
       self._sortBy($(@).val())
       self._toggleButtons($(@).val())
