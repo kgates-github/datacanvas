@@ -95,6 +95,47 @@
           }
         }
       }, {
+        type: 'AreaChart',
+        params: {
+          el: 'timeseries-airquality_raw',
+          chart: 'timeseries',
+          dimension: 'airquality_raw',
+          name: 'air quality',
+          yAxisLabel: 'Air quality index',
+          round: 0,
+          scaleX: d3.time.scale,
+          scaleY: d3.scale.linear,
+          width: 700,
+          height: 390,
+          qualitative: helpers.aqiQualitative,
+          margin: {
+            top: 30,
+            right: 0,
+            bottom: 0,
+            left: 30
+          }
+        }
+      }, {
+        type: 'BoxPlotVertical',
+        params: {
+          el: 'timeseries-temperature',
+          chart: 'timeseries',
+          dimension: 'temperature',
+          name: 'Temperature',
+          yAxisLabel: 'Temperature (degrees c)',
+          round: 0,
+          scaleX: d3.time.scale,
+          scaleY: d3.scale.linear,
+          width: 700,
+          height: 120,
+          margin: {
+            top: 0,
+            right: 0,
+            bottom: 30,
+            left: 30
+          }
+        }
+      }, {
         type: 'BoxPlot',
         params: {
           el: 'ranking-airquality_raw',
@@ -112,27 +153,6 @@
             right: 50,
             bottom: 40,
             left: 165
-          }
-        }
-      }, {
-        type: 'AreaChart',
-        params: {
-          el: 'timeseries-airquality_raw',
-          chart: 'timeseries',
-          dimension: 'airquality_raw',
-          name: 'air quality',
-          yAxisLabel: 'Air quality index',
-          round: 0,
-          scaleX: d3.time.scale,
-          scaleY: d3.scale.linear,
-          width: 700,
-          height: 430,
-          qualitative: helpers.aqiQualitative,
-          margin: {
-            top: 10,
-            right: 0,
-            bottom: 40,
-            left: 30
           }
         }
       }

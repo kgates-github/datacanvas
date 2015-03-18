@@ -8,7 +8,7 @@ class AreaChart extends APP.charts['Chart']
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY() 
     @qualitative = @params.qualitative or []
-    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6)
+    @xAxis = d3.svg.axis().scale(@scaleX).innerTickSize(6).orient("top")
     @yAxis = d3.svg.axis().scale(@scaleY).orient("left")
 
     @svg = d3.select("##{@el}").append("svg")
@@ -71,7 +71,7 @@ class AreaChart extends APP.charts['Chart']
     # X axis
     @svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(20, #{@params.height - @params.margin.bottom + 20})")
+      .attr("transform", "translate(20, #{@params.margin.top - 10})")
       .call(@xAxis)
 
     @svg.append("g")
@@ -120,7 +120,6 @@ class AreaChart extends APP.charts['Chart']
       .attr("class", "line")
       .attr("d", @line)
 
-  
     @chart.selectAll(".overlay")
       .data(@data)
       .enter()

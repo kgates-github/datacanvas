@@ -19,7 +19,7 @@
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
       this.qualitative = this.params.qualitative || [];
-      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6);
+      this.xAxis = d3.svg.axis().scale(this.scaleX).innerTickSize(6).orient("top");
       this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
       this.tip = d3.tip().attr('class', 'd3-tip').offset([-20, -20]).html((function(_this) {
@@ -42,7 +42,7 @@
         };
       })(this));
       this.svg.call(this.tip);
-      this.svg.append("g").attr("class", "x axis").attr("transform", "translate(20, " + (this.params.height - this.params.margin.bottom + 20) + ")").call(this.xAxis);
+      this.svg.append("g").attr("class", "x axis").attr("transform", "translate(20, " + (this.params.margin.top - 10) + ")").call(this.xAxis);
       this.svg.append("g").attr("class", "y axis").attr("transform", "translate(" + (this.params.margin.left - 1) + ", " + this.params.margin.top + ")").call(this.yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", "0.8em").style("text-anchor", "end").style("font-size", "11px").text(this.params.yAxisLabel);
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
       this.areaMax = d3.svg.area().x((function(_this) {

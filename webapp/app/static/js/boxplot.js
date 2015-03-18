@@ -67,7 +67,7 @@
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
       });
-      this.chart.append("text").attr("class", "x label").style("fill", "#999").style("font-weight", "400").attr("text-anchor", "end").attr("x", 0).attr("y", this.params.height - 60).text(this.params.xAxisLabel);
+      this.chart.append("text").attr("class", "x label").style("fill", "#999").style("font-weight", "400").attr("text-anchor", "end").attr("x", -10).attr("y", this.params.height - 60).text(this.params.xAxisLabel);
       this.chart.selectAll(".plot").data(this.data).enter().append("text").text(function(d, i) {
         return i + 1;
       }).attr("x", -this.params.margin.left + 4).attr("y", (function(_this) {

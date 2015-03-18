@@ -1,8 +1,7 @@
 
-class BoxPlot extends APP.charts['Chart']
+class BoxPlotVertical extends APP.charts['Chart']
 
   constructor: (@app, @params, @data, @city, @helpers) ->
-
     self = @
     @data = _.sortBy(@data, "median")
     @el = @params.el
@@ -10,6 +9,7 @@ class BoxPlot extends APP.charts['Chart']
     @scaleY = @_getScaleY()
     @qualitative = @params.qualitative or []
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
+    @yAxis = d3.svg.axis().scale(@scaleY).orient("left").ticks(3)
     
     # Sorting controls
     $("##{@params.dimension}-sort button").on("click", ->
@@ -24,9 +24,14 @@ class BoxPlot extends APP.charts['Chart']
     # X axis
     @svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(#{@params.margin.left}," + (@params.height - 30) + ")")
+      .attr("transform", "translate(#{@params.margin.left}," + (@params.height - 16) + ")")
       .call(@xAxis);
 
+    @svg.append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(#{@params.margin.left - 1}, #{@params.margin.top + 8})")
+      .call(@yAxis)
+    
     # Tooltip
     @tip = d3.tip()
       .attr('class', 'd3-tip')
@@ -79,54 +84,8 @@ class BoxPlot extends APP.charts['Chart']
     @svg.call(@tip)
 
     @chart = @svg.append("g")
-      .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
+      .attr("transform", "translate(#{@params.margin.left + 2}, #{@params.margin.top + 8})")
 
-    @qualatativeTicks = @chart.selectAll(".qualitative")
-      .data(@qualitative)
-      .enter()
-      .append("g")
-      .attr("class", "qualitative")
-      .attr("transform", (d, i) =>
-        "translate(#{@scaleX(d.value)}, 0)"
-      )
-
-    @qualatativeTicks.each((d, i) ->
-      y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) - 4
-      d3.select(@)
-        .append("line")
-        .attr("y1", -24)
-        .attr("y2", y2)
-        .attr("stroke-dasharray", "3,5")
-        .style("stroke-width", 1.5)
-        .attr("class", (d) -> d.class)
-
-      d3.select(@)
-        .append("text")
-        .attr("text-anchor", "end")
-        .text((d) -> d.name)
-        .attr("x", -6)
-        .attr("y", -18)
-        .attr("class", (d) -> d.class)
-        .style("stroke", "none")
-        .style("font-size", "11")
-    )
-
-    @chart.append("text")
-      .attr("class", "x label")
-      .style("fill", "#999")
-      .style("font-weight", "400")
-      .attr("text-anchor", "end")
-      .attr("x", -10)
-      .attr("y", @params.height - 60)
-      .text(@params.xAxisLabel)
-    
-    @chart.selectAll(".plot")
-      .data(@data)
-      .enter()
-      .append("text")
-      .text((d, i) -> i + 1)
-      .attr("x", -@params.margin.left + 4)
-      .attr("y", (d, i) => @scaleY(i) + 6)
 
     @plots = @chart.selectAll(".plot")
       .data(@data)
@@ -134,54 +93,23 @@ class BoxPlot extends APP.charts['Chart']
       .append("g")
       .attr("class", "plot")
       .attr("transform", (d, i) =>
-        "translate(0, #{@scaleY(i)})"
+        "translate(#{@scaleX(new Date(d.date))}, 0)"
       )
 
     @plots.each((d, i) ->
-      if self.city is d.city
-        d3.select(@).append("rect")
-          .attr("width", 120)
-          .attr("height", 21)
-          .attr("x", (d) -> -self.params.margin.left + 20)
-          .attr("y", -9)
-          .style("fill", "#333")
-          .style("stroke", "#333")
-
-      d3.select(@).append("text")
-        .text(d.city)
-        .attr("x", -self.params.margin.left + 32)
-        .attr("y", 6)
-        .attr("fill", (d) ->
-          if self.city == d.city then "white" else "black"
+      
+      d3.select(@).append("rect")
+        .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
+        .attr("height", (d) ->
+          #console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
+          self.scaleY(d.min) - self.scaleY(d.max)
         )
-
-      d3.select(@).append("rect")
-        .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
-        .attr("height", 2)
+        .attr("x", 0)
+        .attr("y", (d) ->
+          self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom
+        )
         .attr("class", "bar")
-        .attr("x", (d) -> self.scaleX(d.lower))
-        .style("fill", "#ccc")
-
-      d3.select(@).append("rect")
-        .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
-        .attr("height", 15)
-        .attr("width", 1)
-        .attr("x", (d) -> self.scaleX(d.lower))
-        .attr("y", (d, i) -> self.scaleY(i) - 6)
-
-      d3.select(@).append("rect")
-        .attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
-        .attr("height", 15)
-        .attr("width", 5)
-        .attr("x", (d) -> self.scaleX(d.median) - 2)
-        .attr("y", (d, i) -> self.scaleY(i) - 6)
-
-      d3.select(@).append("rect")
-        .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
-        .attr("height", 15)
-        .attr("width", 1)
-        .attr("x", (d) -> self.scaleX(d.upper))
-        .attr("y", (d, i) -> self.scaleY(i) - 6)
+        .style("fill", "#ddd")
 
       d3.select(@).append("rect")
         .style("fill", "#none")
@@ -195,26 +123,44 @@ class BoxPlot extends APP.charts['Chart']
         .on('mouseout', self.tip.hide)
     )
 
+    @svg.append("text")
+      .attr("class", "x label")
+      .style("fill", "#999")
+      .style("font-weight", "400")
+      .attr("text-anchor", "start")
+      .attr("x", @params.margin.left + 6)
+      .attr("y", 10)
+      .text(@params.yAxisLabel)
+
   _toggleButtons: (idx) ->
     d3.selectAll("##{@params.dimension}-sort button").classed({'on': false})
     d3.select("##{idx}").classed({'on': true})
 
   _getScaleX: ->
-    domainX = @_getDomain(@data)
+    domainX = d3.extent(@data, (d) -> d.date)
     rangeX = [
         0, @params.width - (@params.margin.left + @params.margin.right)
       ]
 
-    @params.scale()
-      .domain(domainX)
+    d3.time.scale()
       .range(rangeX)
+      .domain([new Date(domainX[0]), new Date(domainX[1])])
+
+  _getDomain: (data) ->
+    max = _.max(_.pluck(data, "max"))
+    min = _.min(_.pluck(data, "min"))
+    [min, max]
 
   _getScaleY: ->
-    domainY = [0, @data.length]
+    domainY = @_getDomain(@data)
     rangeY = [
-        0, @params.height - (@params.margin.top + @params.margin.bottom)
+        (@params.height - @params.margin.top - @params.margin.bottom - 10), 0
       ]
-    d3.scale.linear()
+
+    console.log domainY
+    console.log rangeY
+
+    @params.scaleY()
       .domain(domainY)
       .range(rangeY)
 
@@ -231,58 +177,35 @@ class BoxPlot extends APP.charts['Chart']
         "translate(0, #{@scaleY(i)})"
       )
 
-  _getDomain: (data) ->
-    max = _.max(_.pluck(data, "upper"))
-    min = _.min(_.pluck(data, "lower"))
-    [min, max]
-
   update: (data) ->
     self = @
     @data = data
+    console.log data
     @scaleX = @_getScaleX()
+    @scaleY = @_getScaleY()
     duration = @_getDuration() # Only animate if above the fold
-    
+
     @plots
       .data(@data, (d) -> d.name)
-
+    
     @plots.each((d, i) ->
       d3.select(@).select(".bar")
         .transition()
         .duration(duration)
-        .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
-        .attr("x", (d) -> self.scaleX(d.lower))
-
-      d3.select(@).select(".lower")
-        .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
-        .transition()
-        .duration(duration)
-        .attr("x", (d) -> self.scaleX(d.lower))
-
-      d3.select(@).select(".median")
-        .attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
-        .transition()
-        .duration(duration)
-        .attr("x", (d) -> self.scaleX(d.median))
-
-      d3.select(@).select(".upper")
-        .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
-        .transition()
-        .duration(duration)
-        .attr("x", (d) -> self.scaleX(d.upper))
+        .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
+        .attr("height", (d) ->
+          console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
+          self.scaleY(d.max) - self.scaleY(d.min)
+        )
+        .attr("x", 0)
+        .attr("y", (d) ->
+          self.params.height - self.scaleY(d.max) - self.params.margin.top - self.params.margin.bottom
+        )
 
       d3.select(@).select(".overlay")
         .on('mouseover', self.tip.show)
         .on('mouseout', self.tip.hide)
     )
-
-    @qualatativeTicks.each((d, i) ->
-      d3.select(@)
-        .transition()
-        .duration(duration)
-        .attr("transform", (d, i) =>
-          "translate(#{self.scaleX(d.value)}, 0)"
-        )
-    ) 
 
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
     
@@ -292,7 +215,7 @@ class BoxPlot extends APP.charts['Chart']
       .duration(1000)
       .call(@xAxis);
 
-    @_sortBy('median', 1000)  
+    #@_sortBy('median', 1000)  
             
-APP.charts['BoxPlot'] = BoxPlot
+APP.charts['BoxPlotVertical'] = BoxPlotVertical
    
