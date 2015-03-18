@@ -93,7 +93,7 @@
           <strong>Air quality index key:</strong>&nbsp;
           <span contenteditable='false' class='dot good'>2</span> 0 to 50: good&nbsp;
           <span contenteditable='false' class='dot moderate'>2</span> 51 to 100: moderate&nbsp;
-          <span contenteditable='false' class='dot unhealthy-mild'>2</span> 101 to 150: unhealth for sensitive groups&nbsp;
+          <span contenteditable='false' class='dot unhealthy-mild'>2</span> 101 to 150: unhealthy for sensitive groups&nbsp;
           <span contenteditable='false' class='dot unhealthy'>2</span> 151 to 200: unhealthy&nbsp;
           <span contenteditable='false' class='dot unhealthy-very'>2</span> 201 to 300: very unhealthy&nbsp;
           <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [2]
@@ -121,49 +121,7 @@
           From <strong>January</strong> to <strong>March</strong>, only using data collected between <strong>4PM</strong> and <strong>6PM</strong>, {{city}}'s air average air quality score ranked <strong>7th</strong> out of the <strong>7</strong> cities being tracked. Its average air quality index score was <strong>54</strong>, which is moderately harmful. 
 
         <div class="chart-header">Air Quality Score Card</div>
-        <table id="score-card" style="width:100%; font-size:11px;">
-          <tr class="scores">
-            <td class="good-score">
-              87
-              <div style="font-size:11px;">Good</div>
-            </td>
-            <td class="moderate-score">
-              2
-            </td>
-            <td class="unhealthy-mild-score">
-              0
-            </td>
-            <td class="unhealthy-score">
-              0
-            </td>
-            <td class="unhealthy-very-score">
-              0
-            </td>
-             <td class="hazardous-score">
-              0
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Number of days where highest AQI remained lower than 50
-            </td>
-            <td>
-              Number of days where highest AQI reach moderately unhealthy levels
-            </td>
-            <td>
-              Number of days highest AQI reached healthy levels for sensitive groupd
-            </td>
-            <td>
-              Number of days highest AQI reached unhealthy levels
-            </td>
-            <td>
-              Number of days highest AQI reached very unhealthy levels
-            </td>
-             <td>
-              Number of days highest AQI reached hazardous levels
-            </td>
-          </tr>
-        </table>
+        <div id="scorecard-airquality_raw"></div>
         
         <hr>
 
@@ -190,6 +148,7 @@
   <script type="text/javascript" src="{{url_for('static', filename='js/boxplot.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/boxplotvertical.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/areachart.js')}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/scorecard.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/city.js')}}"></script>
 {% endblock js %}
 

@@ -17,7 +17,10 @@ class AreaChart extends APP.charts['Chart']
     # Tooltip
     @tip = d3.tip()
       .attr('class', 'd3-tip')
-      .offset([-10, -(@params.width-@params.margin.left) / @data.length / 2])
+      .offset((d) =>
+        #@scaleY(d.max) - 
+        [-20, -(@params.width-@params.margin.left) / @data.length / 2]
+      )
       .html((d) =>  
         minClass = self.helpers.getColorClass(d.min, self.qualitative)
         minName = _.findWhere(self.qualitative, {class: minClass}).name

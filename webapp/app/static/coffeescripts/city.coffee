@@ -149,6 +149,21 @@ config =
           bottom: 40
           left: 165
     }
+    {
+      type: 'ScoreCard'
+      params:
+        el: 'scorecard-airquality_raw'
+        chart: 'timeseries'
+        dimension: 'airquality_raw'
+        xAxisLabel: 'Air quality index'
+        round: 0
+        qualitative: helpers.aqiQualitative
+        margin: 
+          top: 40
+          right: 50
+          bottom: 40
+          left: 165
+    }
   ]
 
 class App

@@ -22,7 +22,11 @@
       this.xAxis = d3.svg.axis().scale(this.scaleX).innerTickSize(6).orient("top");
       this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.tip = d3.tip().attr('class', 'd3-tip').offset([-10, -(this.params.width - this.params.margin.left) / this.data.length / 2]).html((function(_this) {
+      this.tip = d3.tip().attr('class', 'd3-tip').offset((function(_this) {
+        return function(d) {
+          return [-20, -(_this.params.width - _this.params.margin.left) / _this.data.length / 2];
+        };
+      })(this)).html((function(_this) {
         return function(d) {
           var html, lowerClass, lowerName, maxClass, maxName, medianClass, medianName, minClass, minName, upperClass, upperName;
           minClass = self.helpers.getColorClass(d.min, self.qualitative);
