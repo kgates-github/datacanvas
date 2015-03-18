@@ -22,9 +22,13 @@
       this.xAxis = d3.svg.axis().scale(this.scaleX).innerTickSize(6).orient("top");
       this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.tip = d3.tip().attr('class', 'd3-tip').offset([-20, -20]).html((function(_this) {
+      this.tip = d3.tip().attr('class', 'd3-tip').offset([-(this.params.width - this.params.margin.left - this.params.margin.right) / this.data.length / 2, -30]).html((function(_this) {
         return function(d) {
-          var html, lowerClass, lowerName, medianClass, medianName, upperClass, upperName;
+          var html, lowerClass, lowerName, maxClass, maxName, medianClass, medianName, minClass, minName, upperClass, upperName;
+          minClass = self.helpers.getColorClass(d.min, self.qualitative);
+          minName = _.findWhere(self.qualitative, {
+            "class": minClass
+          }).name;
           lowerClass = self.helpers.getColorClass(d.lower, self.qualitative);
           lowerName = _.findWhere(self.qualitative, {
             "class": lowerClass
@@ -37,7 +41,11 @@
           upperName = _.findWhere(self.qualitative, {
             "class": upperClass
           }).name;
-          html = "<div style='margin-bottom:10px; font-size:11px; color:#bbb;'>" + _this.city + "'s " + _this.params.name + "</div>\n<div style='margin-top:12px; color:white; font-size:20px; font-weight: 400;'>\n  " + (moment(d.date).format('MMM D, YYYY')) + "\n</div>\n         \n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.lower, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.median, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.upper, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
+          maxClass = self.helpers.getColorClass(d.max, self.qualitative);
+          maxName = _.findWhere(self.qualitative, {
+            "class": maxClass
+          }).name;
+          html = " <div style='margin-bottom:10px; font-size:11px; color:#bbb;'>" + _this.city + "'s " + _this.params.name + "</div>\n <div style='margin-top:12px; color:white; font-size:20px; font-weight: 400;'>\n   " + (moment(d.date).format('MMM D, YYYY')) + "\n </div>\n<hr style=\"margin-bottom:2px; opacity:0.3;\">\n <table class=\"table borderless\">\n   <tbody>\n     <tr>\n       <td>\n         <div>Min</div>\n       </td>\n       <td style=\"text-align:center;\">\n         <div>Low</div>\n         <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n       </td>\n       <td style=\"text-align:center;\">\n         <div>Median</div>\n         <div style=\"font-size:11px; color:#bbb;\">50th<br>percentile</div>\n       </td>\n       <td style=\"text-align:center;\">\n         <div>High</div>\n         <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div>\n       </td>\n       <td style=\"text-align:right;\">\n         <div>Max</div>\n       </td>\n     </tr>\n     <tr style=\"font-size:26px;\">\n       <td class=\"" + minClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.min, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + minName + "</div></td>\n       </td>\n       <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.lower, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n       </td>\n       <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.median, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n       </td>\n       <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.upper, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n       </td>\n       <td class=\"" + maxClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.max, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + maxName + "</div></td>\n       </td>\n     </tr>\n   </tbody>\n </table>";
           return html;
         };
       })(this));
@@ -83,11 +91,18 @@
         };
       })(this));
       this.areaMedianPlot = this.chart.append("path").datum(this.data).attr("class", "line").attr("d", this.line);
+      this.key = this.svg.append("g").attr("id", "area-key").attr("transform", "translate(" + (this.params.margin.left + 50) + ", " + this.params.margin.top + ")");
+      this.key.append("rect").attr("width", 135).attr("height", 140).style("stroke", "#ddd").style("fill", "#fff");
+      this.key.append("image").attr("xlink:href", area_key).attr("width", 119).attr("height", 136).attr("x", 10).attr("y", 2).on("click", (function(_this) {
+        return function() {
+          return _this.key.style("opacity", 0);
+        };
+      })(this));
       this.chart.selectAll(".overlay").data(this.data).enter().append("rect").style("fill", "#333").style("opacity", 0.0).attr("class", "overlay").attr("height", this.params.height - (this.params.margin.top + this.params.margin.bottom)).attr("width", this.params.width / this.data.length).attr("x", (function(_this) {
         return function(d) {
           return _this.scaleX(new Date(d.date));
         };
-      })(this)).attr("y", this.params.margin.top).on('mouseover', this.tip.show).on('mouseout', this.tip.hide);
+      })(this)).attr("y", 0).on('mouseover', this.tip.show).on('mouseout', this.tip.hide);
     }
 
     AreaChart.prototype._getDomain = function(data) {

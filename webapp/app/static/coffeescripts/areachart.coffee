@@ -2,7 +2,6 @@
 class AreaChart extends APP.charts['Chart']
 
   constructor: (@app, @params, @data, @city, @helpers) ->
-    
     self = @
     @el = @params.el
     @scaleX = @_getScaleX()
@@ -18,35 +17,51 @@ class AreaChart extends APP.charts['Chart']
     # Tooltip
     @tip = d3.tip()
       .attr('class', 'd3-tip')
-      .offset([-20, -20])
+      .offset([-(@params.width-@params.margin.left-@params.margin.right) / @data.length / 2, -30])
       .html((d) =>  
+        minClass = self.helpers.getColorClass(d.min, self.qualitative)
+        minName = _.findWhere(self.qualitative, {class: minClass}).name
         lowerClass = self.helpers.getColorClass(d.lower, self.qualitative)
         lowerName = _.findWhere(self.qualitative, {class: lowerClass}).name
         medianClass = self.helpers.getColorClass(d.median, self.qualitative)
         medianName = _.findWhere(self.qualitative, {class: medianClass}).name
         upperClass = self.helpers.getColorClass(d.upper, self.qualitative)
         upperName = _.findWhere(self.qualitative, {class: upperClass}).name
+        maxClass = self.helpers.getColorClass(d.max, self.qualitative)
+        maxName = _.findWhere(self.qualitative, {class: maxClass}).name
         html = """
           <div style='margin-bottom:10px; font-size:11px; color:#bbb;'>#{@city}'s #{@params.name}</div>
           <div style='margin-top:12px; color:white; font-size:20px; font-weight: 400;'>
             #{moment(d.date).format('MMM D, YYYY')}
           </div>
-         
+         <hr style="margin-bottom:2px; opacity:0.3;">
           <table class="table borderless">
             <tbody>
               <tr>
                 <td>
+                  <div>Min</div>
+                </td>
+                <td style="text-align:center;">
                   <div>Low</div>
                   <div style="font-size:11px; color:#bbb;">10th<br>percentile</div>
                 </td>
                 <td style="text-align:center;">
                   <div>Median</div>
+                  <div style="font-size:11px; color:#bbb;">50th<br>percentile</div>
+                </td>
+                <td style="text-align:center;">
+                  <div>High</div>
+                  <div style="font-size:11px; color:#bbb;">90th<br>percentile</div>
                 </td>
                 <td style="text-align:right;">
-                  <div>High</div>
-                  <div style="font-size:11px; color:#bbb;">90th<br>percentile</div></td>
+                  <div>Max</div>
+                </td>
               </tr>
               <tr style="font-size:26px;">
+                <td class="#{minClass}" style="width:70px; color:white; text-align:center;">
+                  #{d3.round(d.min, self.params.round)}
+                  <div style="font-size:11px; color:#fff;">#{minName}</div></td>
+                </td>
                 <td class="#{lowerClass}" style="width:70px; color:white; text-align:center;">
                   #{d3.round(d.lower, self.params.round)}
                   <div style="font-size:11px; color:#fff;">#{lowerName}</div></td>
@@ -58,6 +73,10 @@ class AreaChart extends APP.charts['Chart']
                 <td class="#{upperClass}" style="width:70px; color:white; text-align:center;">
                   #{d3.round(d.upper, self.params.round)}
                   <div style="font-size:11px; color:#fff;">#{upperName}</div></td>
+                </td>
+                <td class="#{maxClass}" style="width:70px; color:white; text-align:center;">
+                  #{d3.round(d.max, self.params.round)}
+                  <div style="font-size:11px; color:#fff;">#{maxName}</div></td>
                 </td>
               </tr>
             </tbody>
@@ -120,6 +139,30 @@ class AreaChart extends APP.charts['Chart']
       .attr("class", "line")
       .attr("d", @line)
 
+    #<image xlink:href="firefox.jpg" x="0" y="0" height="50px" width="50px"/>
+    @key = @svg
+      .append("g")
+      .attr("id", "area-key")
+      .attr("transform", "translate(#{@params.margin.left + 50}, #{@params.margin.top})")
+
+    @key
+      .append("rect")
+      .attr("width", 135)
+      .attr("height", 140)
+      .style("stroke", "#ddd")
+      .style("fill", "#fff")
+
+    @key
+      .append("image")
+      .attr("xlink:href", area_key)
+      .attr("width", 119)
+      .attr("height", 136)
+      .attr("x", 10)
+      .attr("y", 2)
+      .on("click", =>
+        @key.style("opacity", 0) 
+      )
+
     @chart.selectAll(".overlay")
       .data(@data)
       .enter()
@@ -130,7 +173,7 @@ class AreaChart extends APP.charts['Chart']
       .attr("height", @params.height - (@params.margin.top + @params.margin.bottom))
       .attr("width", @params.width / @data.length)
       .attr("x", (d) => @scaleX(new Date(d.date)))
-      .attr("y", @params.margin.top)
+      .attr("y", 0)
       .on('mouseover', @tip.show)
       .on('mouseout', @tip.hide)
 

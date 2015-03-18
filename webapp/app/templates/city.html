@@ -111,14 +111,59 @@
               <button type="button" name="sort" value="upper" id="upper" class="btn btn-default btn-sm btn-compact-2">High</button>
             </div>
           </li>
-        </ul>  
+        </ul>
 
         <p>
-          The chart below shows the low, median, and high AQI scores for each of the seven cities measured. Low scores are the 10th percentile, and high are the 90th. Cities are ranked by median scores.
+          The chart below ranks the seven cities being measured by median AQI score. It also shows the low and high AQI scores for each. Low scores are the 10th percentile, and high are the 90th. 
         <div id="ranking-airquality_raw" class="chart-container"></div>
         
         <p>
           From <strong>January</strong> to <strong>March</strong>, only using data collected between <strong>4PM</strong> and <strong>6PM</strong>, {{city}}'s air average air quality score ranked <strong>7th</strong> out of the <strong>7</strong> cities being tracked. Its average air quality index score was <strong>54</strong>, which is moderately harmful. 
+
+        <div class="chart-header">Air Quality Score Card</div>
+        <table id="score-card" style="width:100%; font-size:11px;">
+          <tr class="scores">
+            <td class="good-score">
+              87
+              <div style="font-size:11px;">Good</div>
+            </td>
+            <td class="moderate-score">
+              2
+            </td>
+            <td class="unhealthy-mild-score">
+              0
+            </td>
+            <td class="unhealthy-score">
+              0
+            </td>
+            <td class="unhealthy-very-score">
+              0
+            </td>
+             <td class="hazardous-score">
+              0
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Number of days where highest AQI remained lower than 50
+            </td>
+            <td>
+              Number of days where highest AQI reach moderately unhealthy levels
+            </td>
+            <td>
+              Number of days highest AQI reached healthy levels for sensitive groupd
+            </td>
+            <td>
+              Number of days highest AQI reached unhealthy levels
+            </td>
+            <td>
+              Number of days highest AQI reached very unhealthy levels
+            </td>
+             <td>
+              Number of days highest AQI reached hazardous levels
+            </td>
+          </tr>
+        </table>
         
         <hr>
 
@@ -136,6 +181,8 @@
   <script type='text/javascript'>
   var data = {{data | safe}};
   var city = "{{city | safe}}";
+  var area_key = "{{url_for('static', filename='images/area_key.jpg')}}";
+  //{{url_for('static', filename='images/spinner.gif')}}
   
   </script>
   <script type="text/javascript" src="{{url_for('static', filename='js/chart.js')}}"></script>

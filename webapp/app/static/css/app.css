@@ -1,3 +1,25 @@
+#score-card td {
+  padding-right:10px;
+  width:16.6%;
+  vertical-align:top;
+   text-align:center;
+}
+
+#score-card .scores td {
+  padding-right:10px;
+  width:16.6%;
+  vertical-align:top;
+  font-size:40px;
+}
+
+.tick line{
+  opacity: 0.2;
+}
+
+#area-key {
+  cursor: pointer;
+}
+
 a {
   color: #333 !important;
 }
@@ -74,6 +96,13 @@ button.on {
 .unhealthy { background:#cc0000; color:#cc0000; fill:#cc0000; stroke:#cc0000; stroke-width:1px; }
 .unhealthy-very { background:rgb(153, 0, 76); color:rgb(153, 0, 76); fill:rgb(153, 0, 76); stroke:rgb(153, 0, 76); stroke-width:1px; }
 .hazardous { background:rgb(126, 0, 35); color:rgb(126, 0, 35); fill:rgb(126, 0, 35); stroke:rgb(126, 0, 35); stroke-width:1px; }
+
+.good-score { color:#33cc33;}
+.moderate-score { color:#eebb00; }
+.unhealthy-mild-score { color:rgb(255, 126, 0); }
+.unhealthy-score { color:#cc0000; }
+.unhealthy-very-score { color:rgb(153, 0, 76); }
+.hazardous-score { color:rgb(126, 0, 35); }
 
 .btn-compact { 
   padding: 1px 2px 1px 2px; 

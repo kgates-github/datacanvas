@@ -20,7 +20,7 @@
       this.qualitative = this.params.qualitative || [];
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
-      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
+      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-this.params.height).tickSubdivide(true);
       $("#" + this.params.dimension + "-sort").hide();
       $("#" + this.params.dimension + "-sort button").on("click", function() {
         self._sortBy($(this).val());
@@ -96,9 +96,11 @@
         });
         d3.select(this).append("rect").attr("width", function(d) {
           return self.scaleX(d.upper) - self.scaleX(d.lower);
-        }).attr("height", 2).attr("class", "bar").attr("x", function(d) {
+        }).attr("height", 15).attr("class", "bar").attr("x", function(d) {
           return self.scaleX(d.lower);
-        }).style("fill", "#ccc");
+        }).attr("y", function(d, i) {
+          return self.scaleY(i) - 6;
+        }).style("fill", "#ddd");
         d3.select(this).append("rect").attr("class", function(d) {
           return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));
         }).attr("height", 15).attr("width", 1).attr("x", function(d) {
@@ -108,8 +110,8 @@
         });
         d3.select(this).append("rect").attr("class", function(d) {
           return "median " + (self.helpers.getColorClass(d.median, self.qualitative));
-        }).attr("height", 15).attr("width", 5).attr("x", function(d) {
-          return self.scaleX(d.median) - 2;
+        }).attr("height", 15).attr("width", 10).attr("x", function(d) {
+          return self.scaleX(d.median) - 5;
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
         });

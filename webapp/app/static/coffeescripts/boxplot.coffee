@@ -9,7 +9,7 @@ class BoxPlot extends APP.charts['Chart']
     @qualitative = @params.qualitative or []
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
-    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
+    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-@params.height).tickSubdivide(true)
     
     # Sorting controls
     $("##{@params.dimension}-sort").hide()
@@ -158,10 +158,11 @@ class BoxPlot extends APP.charts['Chart']
 
       d3.select(@).append("rect")
         .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
-        .attr("height", 2)
+        .attr("height", 15)
         .attr("class", "bar")
         .attr("x", (d) -> self.scaleX(d.lower))
-        .style("fill", "#ccc")
+        .attr("y", (d, i) -> self.scaleY(i) - 6)
+        .style("fill", "#ddd")
 
       d3.select(@).append("rect")
         .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
@@ -173,8 +174,8 @@ class BoxPlot extends APP.charts['Chart']
       d3.select(@).append("rect")
         .attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
         .attr("height", 15)
-        .attr("width", 5)
-        .attr("x", (d) -> self.scaleX(d.median) - 2)
+        .attr("width", 10)
+        .attr("x", (d) -> self.scaleX(d.median) - 5)
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
       d3.select(@).append("rect")
@@ -241,7 +242,7 @@ class BoxPlot extends APP.charts['Chart']
         if max < elem.value
           max = elem.value
           break
-    
+
     [min, max]
 
   update: (data) ->
