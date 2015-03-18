@@ -102,7 +102,7 @@ config =
         scaleX: d3.time.scale
         scaleY: d3.scale.linear
         width: 700
-        height: 390
+        height: 330
         qualitative: helpers.aqiQualitative
         margin: 
           top: 30

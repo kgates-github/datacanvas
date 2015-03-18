@@ -99,8 +99,6 @@
       var domainY, rangeY;
       domainY = this._getDomain(this.data);
       rangeY = [this.params.height - this.params.margin.top - this.params.margin.bottom - 10, 0];
-      console.log(domainY);
-      console.log(rangeY);
       return this.params.scaleY().domain(domainY).range(rangeY);
     };
 

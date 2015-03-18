@@ -6,9 +6,9 @@ class BoxPlot extends APP.charts['Chart']
     self = @
     @data = _.sortBy(@data, "median")
     @el = @params.el
+    @qualitative = @params.qualitative or []
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
-    @qualitative = @params.qualitative or []
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
     
     # Sorting controls
@@ -235,6 +235,13 @@ class BoxPlot extends APP.charts['Chart']
   _getDomain: (data) ->
     max = _.max(_.pluck(data, "upper"))
     min = _.min(_.pluck(data, "lower"))
+
+    if @qualitative.length
+      for elem in @qualitative
+        if max < elem.value
+          max = elem.value
+          break
+    
     [min, max]
 
   update: (data) ->

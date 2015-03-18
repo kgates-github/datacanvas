@@ -17,9 +17,9 @@
       self = this;
       this.data = _.sortBy(this.data, "median");
       this.el = this.params.el;
+      this.qualitative = this.params.qualitative || [];
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
-      this.qualitative = this.params.qualitative || [];
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
       $("#" + this.params.dimension + "-sort").hide();
       $("#" + this.params.dimension + "-sort button").on("click", function() {
@@ -169,9 +169,19 @@
     };
 
     BoxPlot.prototype._getDomain = function(data) {
-      var max, min;
+      var elem, max, min, _i, _len, _ref;
       max = _.max(_.pluck(data, "upper"));
       min = _.min(_.pluck(data, "lower"));
+      if (this.qualitative.length) {
+        _ref = this.qualitative;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          elem = _ref[_i];
+          if (max < elem.value) {
+            max = elem.value;
+            break;
+          }
+        }
+      }
       return [min, max];
     };
 

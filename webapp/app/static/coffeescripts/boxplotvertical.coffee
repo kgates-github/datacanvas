@@ -157,8 +157,8 @@ class BoxPlotVertical extends APP.charts['Chart']
         (@params.height - @params.margin.top - @params.margin.bottom - 10), 0
       ]
 
-    console.log domainY
-    console.log rangeY
+    #console.log domainY
+    #console.log rangeY
 
     @params.scaleY()
       .domain(domainY)
