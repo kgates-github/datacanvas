@@ -55,7 +55,7 @@ def get_sensors(directory, from_dt, before_dt, metric='mean', city=None, resolut
             else:
                 data_df = data_df.append(df)
         #count += 1
-    data_df.to_csv('sensors-' + metric + '-' + from_dt + '-to-' + before_dt + '.csv', index=False)
+    data_df.to_csv(directory + 'sensors-' + metric + '-' + from_dt + '-to-' + before_dt + '.csv', index=False)
 
 
 def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resolution='1h'):
@@ -70,7 +70,7 @@ def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resoluti
         else:
             cities_df = cities_df.append(df)
         #count += 1
-    cities_df.to_csv('cities-' + metric + '-' + from_dt + '-to-' + before_dt + '.csv', index=False)
+    cities_df.to_csv(directory + 'cities-' + metric + '-' + from_dt + '-to-' + before_dt + '.csv', index=False)
 
 if __name__ == '__main__':
     if len(sys.argv) < 5:
