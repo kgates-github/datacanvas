@@ -5,7 +5,9 @@
 <div class="row">
   <div class="col-sm-3">
     <div style="margin-top:10px; position:fixed; top:0px;">
-      <span style="font-weight:bold; margin-left:20px;" class="header-5">Visualizing Air Quality</span>
+      <span style="font-weight:bold; margin-left:20px;" class="header-5">
+        <a href="{{url_for('main.index')}}">Visualizing Air Quality</a>
+      </span>
     </div>
     <div id="filter-container" style="border:1px solid #ccc; width:210px; position:fixed; top:60px; border-radius: 6px; padding:10px 10px 16px 10px;">
      
@@ -109,7 +111,7 @@
         </ul>
 
         <p>
-          The chart below ranks the seven cities being measured by median AQI score. It also shows the low and high AQI scores for each. Low scores are the 10th percentile, and high are the 90th. 
+          The chart below ranks the seven cities being measured by median AQI score. It also shows the low and high AQI scores for each.
         <div style="font-size:11px; line-height:16px; margin-top:20px; padding:0px 20px 5px 20px;">
           <strong>Air quality index key:</strong>&nbsp;
           <span contenteditable='false' class='dot good'>2</span> 0 to 50: good&nbsp;

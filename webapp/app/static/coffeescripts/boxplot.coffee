@@ -35,11 +35,11 @@ class BoxPlot extends APP.charts['Chart']
         [-20, @scaleX(d.median) - @params.margin.left - 18]
       )
       .html((d) ->
-        lowerClass = self.helpers.getColorClass(d.lower, self.qualitative)
+        lowerClass = self.helpers.getColorClass(d.min, self.qualitative)
         lowerName = _.findWhere(self.qualitative, {class: lowerClass}).name
         medianClass = self.helpers.getColorClass(d.median, self.qualitative)
         medianName = _.findWhere(self.qualitative, {class: medianClass}).name
-        upperClass = self.helpers.getColorClass(d.upper, self.qualitative)
+        upperClass = self.helpers.getColorClass(d.max, self.qualitative)
         upperName = _.findWhere(self.qualitative, {class: upperClass}).name
         html = """
           <div style='font-size:11px; color:#bbb; margin-bottom:0px;'>#{d.city}'s Air Quality Index</div>
@@ -67,7 +67,7 @@ class BoxPlot extends APP.charts['Chart']
                   <div style="font-size:11px; color:#fff;">#{medianName}</div></td>
                 </td>
                 <td class="#{upperClass}" style="width:70px; color:white; text-align:center;">
-                  #{d3.round(d.upper, self.params.round)}
+                  #{d3.round(d.max, self.params.round)}
                   <div style="font-size:11px; color:#fff;">#{upperName}</div></td>
                 </td>
               </tr>
@@ -104,7 +104,7 @@ class BoxPlot extends APP.charts['Chart']
       d3.select(@)
         .append("text")
         .attr("text-anchor", "end")
-        .text((d) -> "Everything left of the dashed line is #{d.name.toLowerCase()}")
+        .text((d) -> d.name)
         .attr("x", -6)
         .attr("y", -18)
         .attr("class", (d) -> d.class)
@@ -157,18 +157,18 @@ class BoxPlot extends APP.charts['Chart']
         )
 
       d3.select(@).append("rect")
-        .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
+        .attr("width", (d) -> self.scaleX(d.max) - self.scaleX(d.min))
         .attr("height", 7)
         .attr("class", "bar")
-        .attr("x", (d) -> self.scaleX(d.lower))
+        .attr("x", (d) -> self.scaleX(d.min))
         .attr("y", (d, i) -> self.scaleY(i) - 2)
         .style("fill", "#ddd")
 
       d3.select(@).append("rect")
-        .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
+        .attr("class", (d) -> "min #{self.helpers.getColorClass(d.min, self.qualitative)}")
         .attr("height", 15)
         .attr("width", 1)
-        .attr("x", (d) -> self.scaleX(d.lower))
+        .attr("x", (d) -> self.scaleX(d.min))
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
       d3.select(@).append("rect")
@@ -179,10 +179,10 @@ class BoxPlot extends APP.charts['Chart']
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
       d3.select(@).append("rect")
-        .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
+        .attr("class", (d) -> "max #{self.helpers.getColorClass(d.max, self.qualitative)}")
         .attr("height", 15)
         .attr("width", 1)
-        .attr("x", (d) -> self.scaleX(d.upper))
+        .attr("x", (d) -> self.scaleX(d.max))
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
       d3.select(@).append("rect")
@@ -234,8 +234,8 @@ class BoxPlot extends APP.charts['Chart']
       )
 
   _getDomain: (data) ->
-    max = _.max(_.pluck(data, "upper"))
-    min = _.min(_.pluck(data, "lower"))
+    max = _.max(_.pluck(data, "max"))
+    min = _.min(_.pluck(data, "min"))
 
     if @qualitative.length
       for elem in @qualitative
@@ -250,22 +250,22 @@ class BoxPlot extends APP.charts['Chart']
     @data = data
     @scaleX = @_getScaleX()
     duration = @_getDuration() # Only animate if above the fold
-    
+
     @plots
-      .data(@data, (d) -> d.name)
+      .data(@data, (d) -> d.city)
 
     @plots.each((d, i) ->
       d3.select(@).select(".bar")
         .transition()
         .duration(duration)
-        .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
-        .attr("x", (d) -> self.scaleX(d.lower))
+        .attr("width", (d) -> self.scaleX(d.max) - self.scaleX(d.min))
+        .attr("x", (d) -> self.scaleX(d.min))
 
-      d3.select(@).select(".lower")
-        .attr("class", (d) -> "lower #{self.helpers.getColorClass(d.lower, self.qualitative)}")
+      d3.select(@).select(".min")
+        .attr("class", (d) -> "min #{self.helpers.getColorClass(d.min, self.qualitative)}")
         .transition()
         .duration(duration)
-        .attr("x", (d) -> self.scaleX(d.lower))
+        .attr("x", (d) -> self.scaleX(d.min))
 
       d3.select(@).select(".median")
         .attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
@@ -273,11 +273,11 @@ class BoxPlot extends APP.charts['Chart']
         .duration(duration)
         .attr("x", (d) -> self.scaleX(d.median))
 
-      d3.select(@).select(".upper")
-        .attr("class", (d) -> "upper #{self.helpers.getColorClass(d.upper, self.qualitative)}")
+      d3.select(@).select(".max")
+        .attr("class", (d) -> "max #{self.helpers.getColorClass(d.max, self.qualitative)}")
         .transition()
         .duration(duration)
-        .attr("x", (d) -> self.scaleX(d.upper))
+        .attr("x", (d) -> self.scaleX(d.max))
 
       d3.select(@).select(".overlay")
         .on('mouseover', self.tip.show)

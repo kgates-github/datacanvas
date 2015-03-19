@@ -34,7 +34,7 @@
         };
       })(this)).html(function(d) {
         var html, lowerClass, lowerName, medianClass, medianName, upperClass, upperName;
-        lowerClass = self.helpers.getColorClass(d.lower, self.qualitative);
+        lowerClass = self.helpers.getColorClass(d.min, self.qualitative);
         lowerName = _.findWhere(self.qualitative, {
           "class": lowerClass
         }).name;
@@ -42,11 +42,11 @@
         medianName = _.findWhere(self.qualitative, {
           "class": medianClass
         }).name;
-        upperClass = self.helpers.getColorClass(d.upper, self.qualitative);
+        upperClass = self.helpers.getColorClass(d.max, self.qualitative);
         upperName = _.findWhere(self.qualitative, {
           "class": upperClass
         }).name;
-        html = "<div style='font-size:11px; color:#bbb; margin-bottom:0px;'>" + d.city + "'s Air Quality Index</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.lower, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.median, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.upper, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
+        html = "<div style='font-size:11px; color:#bbb; margin-bottom:0px;'>" + d.city + "'s Air Quality Index</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.lower, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.median, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.max, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
         return html;
       });
       this.svg.call(this.tip);
@@ -63,7 +63,7 @@
           return d["class"];
         });
         return d3.select(this).append("text").attr("text-anchor", "end").text(function(d) {
-          return "Everything left of the dashed line is " + (d.name.toLowerCase());
+          return d.name;
         }).attr("x", -6).attr("y", -18).attr("class", function(d) {
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
@@ -95,16 +95,16 @@
           }
         });
         d3.select(this).append("rect").attr("width", function(d) {
-          return self.scaleX(d.upper) - self.scaleX(d.lower);
+          return self.scaleX(d.max) - self.scaleX(d.min);
         }).attr("height", 7).attr("class", "bar").attr("x", function(d) {
-          return self.scaleX(d.lower);
+          return self.scaleX(d.min);
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 2;
         }).style("fill", "#ddd");
         d3.select(this).append("rect").attr("class", function(d) {
-          return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));
+          return "min " + (self.helpers.getColorClass(d.min, self.qualitative));
         }).attr("height", 15).attr("width", 1).attr("x", function(d) {
-          return self.scaleX(d.lower);
+          return self.scaleX(d.min);
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
         });
@@ -116,9 +116,9 @@
           return self.scaleY(i) - 6;
         });
         d3.select(this).append("rect").attr("class", function(d) {
-          return "upper " + (self.helpers.getColorClass(d.upper, self.qualitative));
+          return "max " + (self.helpers.getColorClass(d.max, self.qualitative));
         }).attr("height", 15).attr("width", 1).attr("x", function(d) {
-          return self.scaleX(d.upper);
+          return self.scaleX(d.max);
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
         });
@@ -172,8 +172,8 @@
 
     BoxPlot.prototype._getDomain = function(data) {
       var elem, max, min, _i, _len, _ref;
-      max = _.max(_.pluck(data, "upper"));
-      min = _.min(_.pluck(data, "lower"));
+      max = _.max(_.pluck(data, "max"));
+      min = _.min(_.pluck(data, "min"));
       if (this.qualitative.length) {
         _ref = this.qualitative;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -194,28 +194,28 @@
       this.scaleX = this._getScaleX();
       duration = this._getDuration();
       this.plots.data(this.data, function(d) {
-        return d.name;
+        return d.city;
       });
       this.plots.each(function(d, i) {
         d3.select(this).select(".bar").transition().duration(duration).attr("width", function(d) {
-          return self.scaleX(d.upper) - self.scaleX(d.lower);
+          return self.scaleX(d.max) - self.scaleX(d.min);
         }).attr("x", function(d) {
-          return self.scaleX(d.lower);
+          return self.scaleX(d.min);
         });
-        d3.select(this).select(".lower").attr("class", function(d) {
-          return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));
+        d3.select(this).select(".min").attr("class", function(d) {
+          return "min " + (self.helpers.getColorClass(d.min, self.qualitative));
         }).transition().duration(duration).attr("x", function(d) {
-          return self.scaleX(d.lower);
+          return self.scaleX(d.min);
         });
         d3.select(this).select(".median").attr("class", function(d) {
           return "median " + (self.helpers.getColorClass(d.median, self.qualitative));
         }).transition().duration(duration).attr("x", function(d) {
           return self.scaleX(d.median);
         });
-        d3.select(this).select(".upper").attr("class", function(d) {
-          return "upper " + (self.helpers.getColorClass(d.upper, self.qualitative));
+        d3.select(this).select(".max").attr("class", function(d) {
+          return "max " + (self.helpers.getColorClass(d.max, self.qualitative));
         }).transition().duration(duration).attr("x", function(d) {
-          return self.scaleX(d.upper);
+          return self.scaleX(d.max);
         });
         return d3.select(this).select(".overlay").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });

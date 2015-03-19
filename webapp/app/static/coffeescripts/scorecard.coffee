@@ -1,16 +1,16 @@
 
 class ScoreCard extends APP.charts['Chart']
 
-
   constructor: (@app, @params, @data, @city, @helpers) ->
-   
+   @_setHTML()
+    
+  _setHTML: ->
     good = _.filter(@data, (d) -> d.max <= 50)
     moderate = _.filter(@data, (d) -> d.max > 50 and d.max <= 100)
     unhealthyMild = _.filter(@data, (d) -> d.max > 100 and d.max <= 150)
     unhealthy = _.filter(@data, (d) -> d.max > 150 and d.max <= 200)
     unhealthyVery = _.filter(@data, (d) -> d.max > 200 and d.max <= 300)
     hazardous = _.filter(@data, (d) -> d.max > 300)
-    
 
     html = """
       <table id="score-card" style="width:100%; font-size:11px;">
@@ -68,7 +68,7 @@ class ScoreCard extends APP.charts['Chart']
   update: (data) ->
     self = @
     @data = data
-    @scaleX = @_getScaleX()
+    @_setHTML()
     
     
             

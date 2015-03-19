@@ -136,6 +136,7 @@
       var duration;
       duration = 0;
       this.data = data;
+      console.log(this.data);
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).orient("top");
