@@ -48,7 +48,7 @@ def get_sensors(directory, from_dt, before_dt, metric='mean', city=None, resolut
             # Convert to local timezone
             df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
             df.set_index('timestamp', inplace=True)
-            df.index = df.index.tz_localize('UTC').tz_convert(city_tz[city])
+            df.index = df.index.tz_localize('UTC').tz_convert(city_tz[city]).tz_localize(None)
             df.reset_index(inplace=True)
             if data_df is None:
                 data_df = df
