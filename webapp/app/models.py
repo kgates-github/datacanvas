@@ -3,7 +3,15 @@ import pandas as pd
 
 
 def load_cities_data(date_from, date_to, time_of_day):
-    df = pd.read_csv('data/cities.csv', parse_dates=['timestamp'])
+    datafiles = []
+    datafiles.append('data/sensors-mean-2015-01-15-to-2015-02-01.csv')
+    datafiles.append('data/sensors-mean-2015-02-01-to-2015-03-01.csv')
+    datafiles.append('data/sensors-mean-2015-03-01-to-2015-03-18.csv')
+    data = []
+    for csv_name in datafiles:
+        df = pd.read_csv(csv_name, parse_dates=['timestamp'])
+        data.append(df)
+    df = pd.concat(data)
     df.set_index('timestamp', inplace=True)
     df = df[date_from:date_to]
     df['hour'] = df.index.hour.astype(str)

@@ -6,12 +6,14 @@ import requests
 import pandas as pd
 
 
-def get_datacanvas(directory, from_dt, before_dt, metric='mean', city=None, resolution='1h'):
-    api_url = 'http://sensor-api.localdata.com/api/v1/aggregations'
-    print api_url
-
+def get_datacanvas(directory, from_dt, before_dt, metric='mean', city=None, sensor=None, resolution='1h'):
     api_params = {}
-    api_params['over.city'] = city
+    api_url = 'http://sensor-api.localdata.com/api/v1/aggregations'
+    if sensor:
+        api_params['each.sources'] = sensor
+        # api_url = 'http://sensor-api.localdata.com/api/v1/sources/' + sensor + '/entries'
+    if city:
+        api_params['over.city'] = city
     api_params['op'] = metric
     api_params['fields'] = 'temperature,light,airquality_raw,sound,humidity,dust'
     api_params['resolution'] = resolution
@@ -22,6 +24,25 @@ def get_datacanvas(directory, from_dt, before_dt, metric='mean', city=None, reso
     raw_json = raw_json['data']
     return pd.DataFrame(raw_json)
     #.to_csv(directory + city + '.csv', index=False)
+
+
+def get_sensors(directory, from_dt, before_dt, metric='mean', city=None, resolution='1h'):
+    # cities = ['Shanghai', 'Singapore', 'Bangalore', 'Geneva', 'Rio de Janeiro', 'Boston', 'San Francisco']
+    #count = 0
+    data_df = None
+    sensors_df = pd.read_csv('../data/sensor_ids.csv')
+    cities = sensors_df.City.unique()
+    sensor_ids = sensors_df.Id.unique()
+    for sensor_id, city in zip(sensor_ids, cities):
+        df = get_datacanvas(directory, from_dt, before_dt, metric, sensor=sensor_id, resolution=resolution)
+        if df is not None:
+            df['city'] = city
+        if data_df is None:
+            data_df = df
+        else:
+            data_df = data_df.append(df)
+        #count += 1
+    data_df.to_csv('sensors-' + metric + '-' + from_dt + '-to-' + before_dt + '.csv', index=False)
 
 
 def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resolution='1h'):
@@ -35,7 +56,7 @@ def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resoluti
         else:
             cities_df = cities_df.append(df)
         #count += 1
-    cities_df.to_csv('cities.csv', index=False)
+    cities_df.to_csv('cities-' + metric + '-' + from_dt + '-to-' + before_dt + '.csv', index=False)
 
 if __name__ == '__main__':
     if len(sys.argv) < 5:
@@ -46,7 +67,7 @@ if __name__ == '__main__':
         sys.exit(0)
     _, directory, from_dt, before_dt, metric, city, resolution  = sys.argv
 
-    get_cities(directory, from_dt, before_dt, metric, city, resolution)
+    get_sensors(directory, from_dt, before_dt, metric, city, resolution)
 
 
 
