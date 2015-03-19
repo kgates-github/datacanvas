@@ -250,6 +250,7 @@ class BoxPlot extends APP.charts['Chart']
     @data = data
     @scaleX = @_getScaleX()
     duration = @_getDuration() # Only animate if above the fold
+    console.log @data
 
     @plots
       .data(@data, (d) -> d.city)

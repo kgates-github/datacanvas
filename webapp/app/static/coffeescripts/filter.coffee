@@ -68,7 +68,9 @@ class Filter extends APP.charts['Chart']
       )
 
     # Time of day
-    @dataTime =  @dataTime.data
+    @dataTime =  _.reject(@dataTime.data, (d) -> 
+      parseInt(d.time) % 2 != 0
+    )
     @buttonsTime = d3.select("#filter-time-buttons").append("div")
     
     @buttonsTime.selectAll("button")

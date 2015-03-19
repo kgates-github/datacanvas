@@ -209,8 +209,8 @@ class AreaChart extends APP.charts['Chart']
     duration = 0 #@_getDuration() # Only animate if above the fold
 
     @data = data
-    console.log @data
-    
+    #console.log @data
+
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY() 
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).orient("top")

@@ -193,6 +193,7 @@
       this.data = data;
       this.scaleX = this._getScaleX();
       duration = this._getDuration();
+      console.log(this.data);
       this.plots.data(this.data, function(d) {
         return d.city;
       });

@@ -59,7 +59,9 @@
           return (_this.scaleX(d.value)) + "px";
         };
       })(this));
-      this.dataTime = this.dataTime.data;
+      this.dataTime = _.reject(this.dataTime.data, function(d) {
+        return parseInt(d.time) % 2 !== 0;
+      });
       this.buttonsTime = d3.select("#filter-time-buttons").append("div");
       this.buttonsTime.selectAll("button").data(this.dataTime).enter().append("div").append("button").attr("type", "button").attr("class", "btn btn-default btn-sm btn-compact btn-time btn-filter").attr("id", function(d) {
         return "id" + d.time;
