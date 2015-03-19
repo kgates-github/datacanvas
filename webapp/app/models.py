@@ -18,7 +18,9 @@ def load_cities_data(date_from, date_to, time_of_day):
     df['hour'] = '0' + df['hour']
     df['hour'] = df.hour.str.slice(-2)
     if time_of_day:
-        df = df[df.hour == time_of_day]
+        next_hour = int(time_of_day) + 1
+        next_hour = ('0' + str(next_hour))[-2:]
+        df = df[(df.hour == time_of_day) | (df.hour == next_hour)]
     df['month'] = df.index.month.astype(str)
     df['month'] = '0' + df['month']
     df['month'] = df.month.str.slice(-2)
