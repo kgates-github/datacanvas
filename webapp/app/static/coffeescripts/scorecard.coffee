@@ -1,16 +1,16 @@
 
 class ScoreCard extends APP.charts['Chart']
 
-
   constructor: (@app, @params, @data, @city, @helpers) ->
-   
+   @_setHTML()
+    
+  _setHTML: ->
     good = _.filter(@data, (d) -> d.max <= 50)
     moderate = _.filter(@data, (d) -> d.max > 50 and d.max <= 100)
     unhealthyMild = _.filter(@data, (d) -> d.max > 100 and d.max <= 150)
     unhealthy = _.filter(@data, (d) -> d.max > 150 and d.max <= 200)
     unhealthyVery = _.filter(@data, (d) -> d.max > 200 and d.max <= 300)
     hazardous = _.filter(@data, (d) -> d.max > 300)
-    
 
     html = """
       <table id="score-card" style="width:100%; font-size:11px;">
@@ -25,7 +25,7 @@ class ScoreCard extends APP.charts['Chart']
             </td>
             <td class="unhealthy-mild-score">
               #{unhealthyMild.length}
-              <div style="font-size:11px; line-height:12px;">Unhealthy for sensitive groups</div>
+              <div style="font-size:11px; line-height:12px;">Mildly unhealthy</div>
             </td>
             <td class="unhealthy-score">
               #{unhealthy.length}
@@ -40,7 +40,7 @@ class ScoreCard extends APP.charts['Chart']
               <div style="font-size:11px;">Hazardous</div>
             </td>
           </tr>
-          <tr>
+          <tr class='score-text'>
             <td>
               Days highest AQI remained lower than 50
             </td>
@@ -48,7 +48,7 @@ class ScoreCard extends APP.charts['Chart']
               Days highest AQI reach moderately unhealthy levels
             </td>
             <td>
-              Days AQI reached unhealthy levels for sensitive groups
+              Days AQI reached mildly unhealthy levels
             </td>
             <td>
               Days AQI reached unhealthy levels
@@ -68,7 +68,7 @@ class ScoreCard extends APP.charts['Chart']
   update: (data) ->
     self = @
     @data = data
-    @scaleX = @_getScaleX()
+    @_setHTML()
     
     
             

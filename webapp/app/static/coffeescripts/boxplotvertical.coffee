@@ -178,9 +178,9 @@ class BoxPlotVertical extends APP.charts['Chart']
       )
 
   update: (data) ->
+    ###
     self = @
     @data = data
-    console.log data
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
     duration = @_getDuration() # Only animate if above the fold
@@ -194,7 +194,7 @@ class BoxPlotVertical extends APP.charts['Chart']
         .duration(duration)
         .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
         .attr("height", (d) ->
-          console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
+          #console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
           self.scaleY(d.max) - self.scaleY(d.min)
         )
         .attr("x", 0)
@@ -216,6 +216,7 @@ class BoxPlotVertical extends APP.charts['Chart']
       .call(@xAxis);
 
     #@_sortBy('median', 1000)  
+    ###
             
 APP.charts['BoxPlotVertical'] = BoxPlotVertical
    

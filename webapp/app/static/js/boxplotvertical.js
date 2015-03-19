@@ -122,27 +122,46 @@
     };
 
     BoxPlotVertical.prototype.update = function(data) {
-      var duration, self;
-      self = this;
-      this.data = data;
-      console.log(data);
-      this.scaleX = this._getScaleX();
-      this.scaleY = this._getScaleY();
-      duration = this._getDuration();
-      this.plots.data(this.data, function(d) {
-        return d.name;
-      });
-      this.plots.each(function(d, i) {
-        d3.select(this).select(".bar").transition().duration(duration).attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", function(d) {
-          console.log(self.scaleY(d.max), self.scaleY(d.min), d.max, d.min);
-          return self.scaleY(d.max) - self.scaleY(d.min);
-        }).attr("x", 0).attr("y", function(d) {
-          return self.params.height - self.scaleY(d.max) - self.params.margin.top - self.params.margin.bottom;
-        });
-        return d3.select(this).select(".overlay").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
-      });
-      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
-      return this.svg.selectAll("g.x.axis").transition().duration(1000).call(this.xAxis);
+
+      /*
+      self = @
+      @data = data
+      @scaleX = @_getScaleX()
+      @scaleY = @_getScaleY()
+      duration = @_getDuration() # Only animate if above the fold
+      
+      @plots
+        .data(@data, (d) -> d.name)
+      
+      @plots.each((d, i) ->
+        d3.select(@).select(".bar")
+          .transition()
+          .duration(duration)
+          .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
+          .attr("height", (d) ->
+            #console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
+            self.scaleY(d.max) - self.scaleY(d.min)
+          )
+          .attr("x", 0)
+          .attr("y", (d) ->
+            self.params.height - self.scaleY(d.max) - self.params.margin.top - self.params.margin.bottom
+          )
+      
+        d3.select(@).select(".overlay")
+          .on('mouseover', self.tip.show)
+          .on('mouseout', self.tip.hide)
+      )
+      
+      @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
+      
+       * Update x axis
+      @svg.selectAll("g.x.axis")
+        .transition()
+        .duration(1000)
+        .call(@xAxis);
+      
+      #@_sortBy('median', 1000)
+       */
     };
 
     return BoxPlotVertical;

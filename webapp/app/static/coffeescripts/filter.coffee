@@ -125,7 +125,9 @@ class Filter extends APP.charts['Chart']
       }
     else
       d3.selectAll(".btn-filter").classed({'on': false})
-      data = {}
+      data = {
+        'city': @city
+      }
 
     self = @
    

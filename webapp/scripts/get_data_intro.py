@@ -47,6 +47,7 @@ def get_sensors(directory, from_dt, before_dt, metric='mean', city=None, resolut
 
 def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resolution='1h'):
     cities = ['Shanghai', 'Singapore', 'Bangalore', 'Geneva', 'Rio de Janeiro', 'Boston', 'San Francisco']
+    cities = [city]
     #count = 0
     cities_df = None
     for city in cities:

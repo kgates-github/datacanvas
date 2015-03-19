@@ -110,7 +110,9 @@
         d3.selectAll(".btn-filter").classed({
           'on': false
         });
-        data = {};
+        data = {
+          'city': this.city
+        };
       }
       self = this;
       return $.ajax({

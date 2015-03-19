@@ -23,26 +23,32 @@
       {
         name: 'Good',
         "class": 'good',
+        lower: 0,
         value: 50
       }, {
         name: 'Moderate',
         "class": 'moderate',
+        lower: 51,
         value: 100
       }, {
         name: 'Mildly unhealthy',
         "class": 'unhealthy-mild',
+        lower: 101,
         value: 150
       }, {
         name: 'Unhealthy',
         "class": 'unhealthy',
+        lower: 151,
         value: 200
       }, {
         name: 'Very unhealthy',
         "class": 'unhealthy-very',
+        lower: 201,
         value: 300
       }, {
         name: 'Hazardous',
         "class": 'hazardous',
+        lower: 301,
         value: 500
       }
     ],

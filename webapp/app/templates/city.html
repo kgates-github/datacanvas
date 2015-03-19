@@ -5,7 +5,9 @@
 <div class="row">
   <div class="col-sm-3">
     <div style="margin-top:10px; position:fixed; top:0px;">
-      <span style="font-weight:bold; margin-left:20px;" class="header-5">Visualizing Air Quality</span>
+      <span style="font-weight:bold; margin-left:20px;" class="header-5">
+        <a href="{{url_for('main.index')}}">Visualizing Air Quality</a>
+      </span>
     </div>
     <div id="filter-container" style="border:1px solid #ccc; width:210px; position:fixed; top:60px; border-radius: 6px; padding:10px 10px 16px 10px;">
      
@@ -75,21 +77,13 @@
     <div class="row">
       <div class="col-sm-12">
         <div class="header-1">{{city}}</div>
-        <p>
-          Using sensors located throughout {{city}}, a picture of the city's air quality emerges through data [1]. With this information, questions about the quality of life can start to be answered: Is the air ever hazardous? If so, how often? What is the air like during commute hours? Below are interactive charts that depict information about air quality that can answer these questions and more. 
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-12">
+        
         <div class="header-2">Measuring Air Quality</div>
         <p>
           Air quality is measured by the air quality index, or AQI, a standard maintained by the U.S. Environmental Protection Agency. It takes into consideration five major air pollutants: ground-level ozone, particle pollution, carbon monoxide, sulfur dioxide, and nitrogen dioxide. AQI values span from 0 to 500, with 0 being clean and 500 being extremely hazardous.
         
         <div class="chart-header">{{city}}'s Daily Air Quality</div>
-        <div id="timeseries-airquality_raw" class="chart-container"></div>
-        <div id="timeseries-temperature" class="chart-container"></div>
-        <div style="font-size:11px; line-height:16px; margin-top:20px; padding:4px 20px 0px 20px;">
+        <div style="font-size:11px; line-height:16px; margin-top:20px; padding:0px 20px 10px 20px;">
           <strong>Air quality index key:</strong>&nbsp;
           <span contenteditable='false' class='dot good'>2</span> 0 to 50: good&nbsp;
           <span contenteditable='false' class='dot moderate'>2</span> 51 to 100: moderate&nbsp;
@@ -98,10 +92,13 @@
           <span contenteditable='false' class='dot unhealthy-very'>2</span> 201 to 300: very unhealthy&nbsp;
           <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [2]
         </div>
+        <div id="timeseries-airquality_raw" class="chart-container"></div>
+        <div id="timeseries-temperature" class="chart-container"></div>
+        
 
         <ul class='inline-list header' style="width:100%;">
           <li style="width:50%;">
-            <div class="chart-header">Air Quality Comparison</div>
+            <div class="chart-header">{{city}}'s Air Quality Compared to Other Cities</div>
           </li>
           <li style="width:50%; text-align:right; padding-top:26px;">
             <!--<span class="small-text">Sort by</span>&nbsp;-->
@@ -114,16 +111,27 @@
         </ul>
 
         <p>
-          The chart below ranks the seven cities being measured by median AQI score. It also shows the low and high AQI scores for each. Low scores are the 10th percentile, and high are the 90th. 
+          The chart below ranks the seven cities being measured by median AQI score. It also shows the low and high AQI scores for each.
+        <div style="font-size:11px; line-height:16px; margin-top:20px; padding:0px 20px 5px 20px;">
+          <strong>Air quality index key:</strong>&nbsp;
+          <span contenteditable='false' class='dot good'>2</span> 0 to 50: good&nbsp;
+          <span contenteditable='false' class='dot moderate'>2</span> 51 to 100: moderate&nbsp;
+          <span contenteditable='false' class='dot unhealthy-mild'>2</span> 101 to 150: unhealthy for sensitive groups&nbsp;
+          <span contenteditable='false' class='dot unhealthy'>2</span> 151 to 200: unhealthy&nbsp;
+          <span contenteditable='false' class='dot unhealthy-very'>2</span> 201 to 300: very unhealthy&nbsp;
+          <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [2]
+        </div>
         <div id="ranking-airquality_raw" class="chart-container"></div>
         
         <p>
           From <strong>January</strong> to <strong>March</strong>, only using data collected between <strong>4PM</strong> and <strong>6PM</strong>, {{city}}'s air average air quality score ranked <strong>7th</strong> out of the <strong>7</strong> cities being tracked. Its average air quality index score was <strong>54</strong>, which is moderately harmful. 
 
         <div class="chart-header">Air Quality Score Card</div>
+        <p>
+          Below is a score card showing the number of days {{city}} reached each category of the air quality index. Scores are from <strong>January to March 2015</strong>, using only data gathered between <strong>2-4pm</strong>.
         <div id="scorecard-airquality_raw"></div>
-        
-        <hr>
+ 
+        <hr style="margin-top:40px;">
 
         <p style="font-size:11px; color:#999;">
           [1] Notes on measurements: Lorem ipsum dolor sit amet, vis cu clita rationibus, his et ancillae sensibus. Illum saepe disputando id has, deserunt delicata appellantur ius ei, debet corrumpit ius ad. Lorem eloquentiam at pro, mollis propriae quaestio mea ne, ea vix aeterno suavitate. Nec id soluta eligendi.
