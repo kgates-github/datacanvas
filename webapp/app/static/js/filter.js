@@ -25,6 +25,8 @@
       this.helpers = _at_helpers;
       self = this;
       this.dimension = 'airquality_raw';
+      this.monthFilter = null;
+      this.timeOfDayFilter = null;
       this.workingData = this._getDimensionData(this.dimension);
       this.dataMonthly = _.findWhere(this.workingData, {
         chart: 'month'
@@ -103,9 +105,11 @@
         d3.select("." + btnClass + "#id" + filter).classed({
           'on': true
         });
+        this.monthFilter = _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] || null;
+        this.timeOfDayFilter = _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] || null;
         data = {
-          'month': _.pluck(d3.selectAll(".btn-monthly.on")[0], 'value')[0] || null,
-          'time_of_day': _.pluck(d3.selectAll(".btn-time.on")[0], 'value')[0] || null,
+          'month': this.monthFilter,
+          'time_of_day': this.timeOfDayFilter,
           'city': this.city
         };
       } else {
