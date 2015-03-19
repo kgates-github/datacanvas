@@ -208,6 +208,7 @@ body {
 }
 
 /* Creates a small triangle extender for the tooltip */
+/*
 .d3-tip:after {
   box-sizing: border-box;
   display: inline;
@@ -217,15 +218,15 @@ body {
   color: rgba(0, 0, 0, 0.8);
   content: "\25BC";
   position: absolute;
-  text-align: center;
+  text-align: right;
 }
 
-/* Style northward tooltips differently */
 .d3-tip.n:after {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
 }
+*/
 
 .borderless td, .borderless th {
   border: none !important;

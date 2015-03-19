@@ -46,7 +46,7 @@
         upperName = _.findWhere(self.qualitative, {
           "class": upperClass
         }).name;
-        html = "<div style='font-size:11px; color:#bbb; margin-bottom:0px;'>" + d.city + "'s Air Quality Index</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.lower, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.median, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.max, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
+        html = "<div style='font-size:11px; color:#bbb; margin-bottom:0px;'>" + d.city + "'s Air Quality Index</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Min</div>\n        \n      </td>\n      <td style=\"text-align:center;\">\n        <div>Average</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>Max</div>\n        \n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.lower, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.median, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.max, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
         return html;
       });
       this.svg.call(this.tip);
@@ -96,11 +96,11 @@
         });
         d3.select(this).append("rect").attr("width", function(d) {
           return self.scaleX(d.max) - self.scaleX(d.min);
-        }).attr("height", 7).attr("class", "bar").attr("x", function(d) {
+        }).attr("height", 2).attr("class", "bar").attr("x", function(d) {
           return self.scaleX(d.min);
         }).attr("y", function(d, i) {
-          return self.scaleY(i) - 2;
-        }).style("fill", "#ddd");
+          return self.scaleY(i) - 0;
+        }).style("fill", "#ccc");
         d3.select(this).append("rect").attr("class", function(d) {
           return "min " + (self.helpers.getColorClass(d.min, self.qualitative));
         }).attr("height", 15).attr("width", 1).attr("x", function(d) {
@@ -191,12 +191,19 @@
     };
 
     BoxPlot.prototype.update = function(data) {
-      var duration, self;
+      var city, duration, i, newDatum, self;
       self = this;
-      this.data = data;
+      for (i in this.data) {
+        city = this.data[i].city;
+        newDatum = _.find(data, function(d) {
+          return d.city === city;
+        });
+        if (newDatum != null) {
+          this.data[i] = newDatum;
+        }
+      }
       this.scaleX = this._getScaleX();
       duration = this._getDuration();
-      console.log(this.data);
       this.plots.data(this.data, function(d) {
         return d.city;
       });
@@ -230,7 +237,7 @@
           };
         })(this));
       });
-      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
+      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-this.params.height).tickSubdivide(true);
       this.svg.selectAll("g.x.axis").transition().duration(1000).call(this.xAxis);
       return this._sortBy('median', 1000);
     };

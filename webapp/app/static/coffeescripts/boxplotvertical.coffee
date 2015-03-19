@@ -102,7 +102,7 @@ class BoxPlotVertical extends APP.charts['Chart']
         .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
         .attr("height", (d) ->
           #console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
-          self.scaleY(d.min) - self.scaleY(d.max)
+          self.scaleY(d.min) - self.scaleY(d.max) + 2
         )
         .attr("x", 0)
         .attr("y", (d) ->
@@ -178,45 +178,57 @@ class BoxPlotVertical extends APP.charts['Chart']
       )
 
   update: (data) ->
-    ###
     self = @
     @data = data
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY()
-    duration = @_getDuration() # Only animate if above the fold
+    duration = 0 #@_getDuration() # Only animate if above the fold
 
-    @plots
-      .data(@data, (d) -> d.name)
+    @plots.remove()
     
+    @plots = @chart.selectAll(".plot")
+      .data(@data)
+      .enter()
+      .append("g")
+      .attr("class", "plot")
+      .attr("transform", (d, i) =>
+        "translate(#{@scaleX(new Date(d.date))}, 0)"
+      )
+
     @plots.each((d, i) ->
-      d3.select(@).select(".bar")
-        .transition()
-        .duration(duration)
+      
+      d3.select(@).append("rect")
         .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
         .attr("height", (d) ->
           #console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
-          self.scaleY(d.max) - self.scaleY(d.min)
+          self.scaleY(d.min) - self.scaleY(d.max) + 2
         )
         .attr("x", 0)
         .attr("y", (d) ->
-          self.params.height - self.scaleY(d.max) - self.params.margin.top - self.params.margin.bottom
+          self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom
         )
+        .attr("class", "bar")
+        .style("fill", "#ddd")
 
-      d3.select(@).select(".overlay")
+      d3.select(@).append("rect")
+        .style("fill", "#none")
+        .style("opacity", 0.0)
+        .attr("class", "overlay")
+        .attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length)
+        .attr("width", self.params.width)
+        .attr("x", -self.params.margin.left)
+        .attr("y", (d, i) -> self.scaleY(i) - 6)
         .on('mouseover', self.tip.show)
         .on('mouseout', self.tip.hide)
     )
-
+    
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
     
     # Update x axis
     @svg.selectAll("g.x.axis")
-      .transition()
-      .duration(1000)
       .call(@xAxis);
 
-    #@_sortBy('median', 1000)  
-    ###
+   
             
 APP.charts['BoxPlotVertical'] = BoxPlotVertical
    

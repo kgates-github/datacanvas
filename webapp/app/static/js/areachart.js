@@ -22,9 +22,9 @@
       this.xAxis = d3.svg.axis().scale(this.scaleX).innerTickSize(6).orient("top");
       this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.tip = d3.tip().attr('class', 'd3-tip').offset((function(_this) {
+      this.tip = d3.tip().attr('class', 'd3-tip').direction('w').offset((function(_this) {
         return function(d) {
-          return [-20, -(_this.params.width - _this.params.margin.left) / _this.data.length / 2];
+          return [-(_this.params.width - _this.params.margin.left) / _this.data.length / 2, -20];
         };
       })(this)).html((function(_this) {
         return function(d) {
@@ -49,7 +49,7 @@
           maxName = _.findWhere(self.qualitative, {
             "class": maxClass
           }).name;
-          html = " <div style='margin-bottom:10px; font-size:11px; color:#bbb;'>" + _this.city + "'s " + _this.params.name + "</div>\n <div style='margin-top:12px; color:white; font-size:20px; font-weight: 400;'>\n   " + (moment(d.date).format('MMM D, YYYY')) + "\n </div>\n<hr style=\"margin-bottom:2px; opacity:0.3;\">\n <table class=\"table borderless\">\n   <tbody>\n     <tr>\n       <td style=\"text-align:center;\">\n         <div>Min</div>\n       </td>\n       <td style=\"text-align:center;\">\n         <div>Low</div>\n         <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n       </td>\n       <td style=\"text-align:center;\">\n         <div>Median</div>\n         <div style=\"font-size:11px; color:#bbb;\">50th<br>percentile</div>\n       </td>\n       <td style=\"text-align:center;\">\n         <div>High</div>\n         <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div>\n       </td>\n       <td style=\"text-align:center;\">\n         <div>Max</div>\n       </td>\n     </tr>\n     <tr style=\"font-size:26px;\">\n       <td class=\"" + minClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.min, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + minName + "</div></td>\n       </td>\n       <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.lower, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n       </td>\n       <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.median, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n       </td>\n       <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.upper, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n       </td>\n       <td class=\"" + maxClass + "\" style=\"width:70px; color:white; text-align:center;\">\n         " + (d3.round(d.max, self.params.round)) + "\n         <div style=\"font-size:11px; color:#fff;\">" + maxName + "</div></td>\n       </td>\n     </tr>\n   </tbody>\n </table>";
+          html = "<div style='margin-bottom:10px; font-size:11px; color:#bbb;'>Air quality index scores</div>\n<div style='margin-top:12px; margin-bottom:20px; color:white; font-size:20px; font-weight: 400;'>\n  " + (moment(d.date).format('MMM D, YYYY')) + "\n</div>\n         \n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td style=\"text-align:right; vertical-align:center;\">\n        <div>Max</div>\n      </td>\n      <td class=\"" + maxClass + "\" style=\"font-size:26px; line-height:26px; width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.max, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + maxName + "</div></td>\n      </td>\n    </tr>\n    <tr>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">75th<br>percentile</div>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"font-size:26px; line-height:26px; width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.upper, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n    <tr>\n      <td style=\"text-align:right;\">\n        <div>Average</div>\n        \n      </td>\n      <td class=\"" + medianClass + "\" style=\"font-size:26px; line-height:26px; width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.median, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n    </tr>\n    <tr>\n      <td style=\"text-align:right;\">\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">25th<br>percentile</div>\n      </td>\n       <td class=\"" + lowerClass + "\" style=\"font-size:26px; line-height:26px; width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.lower, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n    </tr>\n    <tr>\n      <td style=\"text-align:right;\">\n        <div>Min</div>\n      </td>\n      <td class=\"" + minClass + "\" style=\"font-size:26px; line-height:26px; width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.min, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + minName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
           return html;
         };
       })(this));
@@ -70,7 +70,9 @@
           return _this.scaleY(d.max);
         };
       })(this));
-      this.areaMaxPlot = this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#eee").attr("d", this.areaMax);
+      this.areaMaxPlot = this.chart.append("path").datum(this.data, function(d) {
+        return d.date;
+      }).attr("class", "area").style("fill", "#eee").attr("d", this.areaMax);
       this.areaPercentile = d3.svg.area().x((function(_this) {
         return function(d) {
           return _this.scaleX(new Date(d.date));
@@ -84,7 +86,9 @@
           return _this.scaleY(d.upper);
         };
       })(this));
-      this.areaPercentilePlot = this.chart.append("path").datum(this.data).attr("class", "area").style("fill", "#ccc").attr("d", this.areaPercentile);
+      this.areaPercentilePlot = this.chart.append("path").datum(this.data, function(d) {
+        return d.date;
+      }).attr("class", "area").style("fill", "#ccc").attr("d", this.areaPercentile);
       this.line = d3.svg.line().x((function(_this) {
         return function(d) {
           return _this.scaleX(new Date(d.date));
@@ -94,15 +98,19 @@
           return _this.scaleY(d.median);
         };
       })(this));
-      this.areaMedianPlot = this.chart.append("path").datum(this.data).attr("class", "line").attr("d", this.line);
-      this.key = this.svg.append("g").attr("id", "area-key").attr("transform", "translate(" + (this.params.margin.left + 50) + ", " + this.params.margin.top + ")");
+      this.areaMedianPlot = this.chart.append("path").datum(this.data, function(d) {
+        return d.date;
+      }).attr("class", "line").attr("d", this.line);
+      this.key = this.svg.append("g").attr("id", "area-key").attr("transform", "translate(" + (this.params.width - 140) + ", " + this.params.margin.top + ")");
       this.key.append("rect").attr("width", 135).attr("height", 140).style("stroke", "#ddd").style("fill", "#fff");
       this.key.append("image").attr("xlink:href", area_key).attr("width", 119).attr("height", 136).attr("x", 10).attr("y", 2).on("click", (function(_this) {
         return function() {
           return _this.key.style("opacity", 0);
         };
       })(this));
-      this.chart.selectAll(".overlay").data(this.data).enter().append("rect").style("fill", "#333").style("opacity", 0.0).attr("class", "overlay").attr("height", this.params.height - (this.params.margin.top + this.params.margin.bottom)).attr("width", this.params.width / this.data.length).attr("x", (function(_this) {
+      this.chart.selectAll(".overlay").data(this.data, function(d) {
+        return d.date;
+      }).enter().append("rect").style("fill", "#333").style("opacity", 0.0).attr("class", "overlay").attr("height", this.params.height - (this.params.margin.top + this.params.margin.bottom)).attr("width", this.params.width / this.data.length).attr("x", (function(_this) {
         return function(d) {
           return _this.scaleX(new Date(d.date));
         };
@@ -175,9 +183,23 @@
           return _this.scaleY(d.median);
         };
       })(this));
-      this.areaMaxPlot.datum(this.data).transition().duration(duration).attr("d", this.areaMax);
-      this.areaPercentilePlot.datum(this.data).transition().duration(duration).attr("d", this.areaPercentile);
-      this.areaMedianPlot.datum(this.data).transition().duration(duration).attr("d", this.line);
+      this.areaMaxPlot.datum(this.data, function(d) {
+        return d.date;
+      }).transition().duration(duration).attr("d", this.areaMax);
+      this.areaPercentilePlot.datum(this.data, function(d) {
+        return d.date;
+      }).transition().duration(duration).attr("d", this.areaPercentile);
+      this.areaMedianPlot.datum(this.data, function(d) {
+        return d.date;
+      }).transition().duration(duration).attr("d", this.line);
+      this.chart.selectAll(".overlay").remove();
+      this.chart.selectAll(".overlay").data(this.data, function(d) {
+        return d.date;
+      }).enter().append("rect").style("fill", "#333").style("opacity", 0.0).attr("class", "overlay").attr("height", this.params.height - (this.params.margin.top + this.params.margin.bottom)).attr("width", this.params.width / this.data.length).attr("x", (function(_this) {
+        return function(d) {
+          return _this.scaleX(new Date(d.date));
+        };
+      })(this)).attr("y", 0).on('mouseover', this.tip.show).on('mouseout', this.tip.hide);
       this.svg.selectAll("g.x.axis").transition().duration(duration).call(this.xAxis);
       return this.svg.selectAll("g.y.axis").transition().duration(duration).call(this.yAxis);
     };

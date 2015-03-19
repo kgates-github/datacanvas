@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{%block title %} Visualizing Air Quality: {{city}}{%endblock title %}
+{%block title %} Seeing Air: {{city}}{%endblock title %}
 {% block body %}
 
 <div class="row">
   <div class="col-sm-3">
     <div style="margin-top:10px; position:fixed; top:0px;">
       <span style="font-weight:bold; margin-left:20px;" class="header-5">
-        <a href="{{url_for('main.index')}}">Visualizing Air Quality</a>
+        <a href="{{url_for('main.index')}}">Seeing Air</a>
       </span>
     </div>
     <div id="filter-container" style="border:1px solid #ccc; width:210px; position:fixed; top:60px; border-radius: 6px; padding:10px 10px 16px 10px;">
@@ -25,7 +25,7 @@
       <table class="filter-list" style="margin-bottom:3px;">
         <tr>
           <td style="width:70px; font-size:11px; font-weight:bold; padding-bottom:6px;">Month</td>
-          <td style="font-size:11px; padding-bottom:6px;">Air quality</td>
+          <td style="font-size:11px; padding-bottom:6px;">Average air quality</td>
         </tr>
         <tr>
           <td id="filter-month-buttons"></td>
@@ -72,7 +72,11 @@
         
         <div class="chart-header">{{city}}'s Daily Air Quality</div>
         <div id="timeseries-explanation"></div>
-        <div style="font-size:11px; line-height:16px; margin-top:20px; padding:0px 20px 10px 20px;">
+       
+        <div id="timeseries-airquality_raw" class="chart-container"></div>
+        <div id="timeseries-temperature" class="chart-container"></div>
+        
+         <div style="font-size:11px; line-height:16px; margin-top:20px; padding:0px 20px 10px 20px;">
           <strong>Air quality index key:</strong>&nbsp;
           <span contenteditable='false' class='dot good'>2</span> 0 to 50: good&nbsp;
           <span contenteditable='false' class='dot moderate'>2</span> 51 to 100: moderate&nbsp;
@@ -81,9 +85,6 @@
           <span contenteditable='false' class='dot unhealthy-very'>2</span> 201 to 300: very unhealthy&nbsp;
           <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [2]
         </div>
-        <div id="timeseries-airquality_raw" class="chart-container"></div>
-        <div id="timeseries-temperature" class="chart-container"></div>
-        
 
         <ul class='inline-list header' style="width:100%;">
           <li style="width:50%;">
@@ -101,7 +102,10 @@
 
         <p>
           The chart below ranks the seven cities being measured by median AQI score. It also shows the low and high AQI scores for each.
-        <div style="font-size:11px; line-height:16px; margin-top:20px; padding:0px 20px 5px 20px;">
+        
+        <div id="ranking-airquality_raw" class="chart-container"></div>
+
+        <div style="font-size:11px; line-height:16px; margin-top:0px; padding:0px 20px 20px 20px;">
           <strong>Air quality index key:</strong>&nbsp;
           <span contenteditable='false' class='dot good'>2</span> 0 to 50: good&nbsp;
           <span contenteditable='false' class='dot moderate'>2</span> 51 to 100: moderate&nbsp;
@@ -110,8 +114,7 @@
           <span contenteditable='false' class='dot unhealthy-very'>2</span> 201 to 300: very unhealthy&nbsp;
           <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [2]
         </div>
-        <div id="ranking-airquality_raw" class="chart-container"></div>
-        
+
         <p>
           From <strong>January</strong> to <strong>March</strong>, only using data collected between <strong>4PM</strong> and <strong>6PM</strong>, {{city}}'s air average air quality score ranked <strong>7th</strong> out of the <strong>7</strong> cities being tracked. Its average air quality index score was <strong>54</strong>, which is moderately harmful. 
 

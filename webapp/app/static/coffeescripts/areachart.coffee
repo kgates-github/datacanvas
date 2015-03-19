@@ -17,9 +17,10 @@ class AreaChart extends APP.charts['Chart']
     # Tooltip
     @tip = d3.tip()
       .attr('class', 'd3-tip')
+      .direction('w')
       .offset((d) =>
         #@scaleY(d.max) - 
-        [-20, -(@params.width-@params.margin.left) / @data.length / 2]
+        [-(@params.width-@params.margin.left) / @data.length / 2, -20]
       )
       .html((d) =>  
         minClass = self.helpers.getColorClass(d.min, self.qualitative)
@@ -33,53 +34,59 @@ class AreaChart extends APP.charts['Chart']
         maxClass = self.helpers.getColorClass(d.max, self.qualitative)
         maxName = _.findWhere(self.qualitative, {class: maxClass}).name
         html = """
-          <div style='margin-bottom:10px; font-size:11px; color:#bbb;'>#{@city}'s #{@params.name}</div>
-          <div style='margin-top:12px; color:white; font-size:20px; font-weight: 400;'>
+          <div style='margin-bottom:10px; font-size:11px; color:#bbb;'>Air quality index scores</div>
+          <div style='margin-top:12px; margin-bottom:20px; color:white; font-size:20px; font-weight: 400;'>
             #{moment(d.date).format('MMM D, YYYY')}
           </div>
-         <hr style="margin-bottom:2px; opacity:0.3;">
+         
           <table class="table borderless">
             <tbody>
               <tr>
-                <td style="text-align:center;">
-                  <div>Min</div>
-                </td>
-                <td style="text-align:center;">
-                  <div>Low</div>
-                  <div style="font-size:11px; color:#bbb;">10th<br>percentile</div>
-                </td>
-                <td style="text-align:center;">
-                  <div>Median</div>
-                  <div style="font-size:11px; color:#bbb;">50th<br>percentile</div>
-                </td>
-                <td style="text-align:center;">
-                  <div>High</div>
-                  <div style="font-size:11px; color:#bbb;">90th<br>percentile</div>
-                </td>
-                <td style="text-align:center;">
+                <td style="text-align:right; vertical-align:center;">
                   <div>Max</div>
                 </td>
+                <td class="#{maxClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
+                  #{d3.round(d.max, self.params.round)}
+                  <div style="font-size:11px; color:#fff;">#{maxName}</div></td>
+                </td>
               </tr>
-              <tr style="font-size:26px;">
-                <td class="#{minClass}" style="width:70px; color:white; text-align:center;">
-                  #{d3.round(d.min, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{minName}</div></td>
+              <tr>
+                <td style="text-align:right;">
+                  <div>High</div>
+                  <div style="font-size:11px; color:#bbb;">75th<br>percentile</div>
                 </td>
-                <td class="#{lowerClass}" style="width:70px; color:white; text-align:center;">
-                  #{d3.round(d.lower, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{lowerName}</div></td>
-                </td>
-                <td class="#{medianClass}" style="width:70px; color:white; text-align:center;">
-                  #{d3.round(d.median, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{medianName}</div></td>
-                </td>
-                <td class="#{upperClass}" style="width:70px; color:white; text-align:center;">
+                <td class="#{upperClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
                   #{d3.round(d.upper, self.params.round)}
                   <div style="font-size:11px; color:#fff;">#{upperName}</div></td>
                 </td>
-                <td class="#{maxClass}" style="width:70px; color:white; text-align:center;">
-                  #{d3.round(d.max, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{maxName}</div></td>
+              </tr>
+              <tr>
+                <td style="text-align:right;">
+                  <div>Average</div>
+                  
+                </td>
+                <td class="#{medianClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
+                  #{d3.round(d.median, self.params.round)}
+                  <div style="font-size:11px; color:#fff;">#{medianName}</div></td>
+                </td>
+              </tr>
+              <tr>
+                <td style="text-align:right;">
+                  <div>Low</div>
+                  <div style="font-size:11px; color:#bbb;">25th<br>percentile</div>
+                </td>
+                 <td class="#{lowerClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
+                  #{d3.round(d.lower, self.params.round)}
+                  <div style="font-size:11px; color:#fff;">#{lowerName}</div></td>
+                </td>
+              </tr>
+              <tr>
+                <td style="text-align:right;">
+                  <div>Min</div>
+                </td>
+                <td class="#{minClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
+                  #{d3.round(d.min, self.params.round)}
+                  <div style="font-size:11px; color:#fff;">#{minName}</div></td>
                 </td>
               </tr>
             </tbody>
@@ -117,7 +124,7 @@ class AreaChart extends APP.charts['Chart']
       .y1((d) => @scaleY(d.max))
 
     @areaMaxPlot = @chart.append("path")
-      .datum(@data)
+      .datum(@data, (d) -> d.date)
       .attr("class", "area")
       .style("fill", "#eee")
       .attr("d", @areaMax)
@@ -128,7 +135,7 @@ class AreaChart extends APP.charts['Chart']
       .y1((d) => @scaleY(d.upper))
 
     @areaPercentilePlot = @chart.append("path")
-      .datum(@data)
+      .datum(@data, (d) -> d.date)
       .attr("class", "area")
       .style("fill", "#ccc")
       .attr("d", @areaPercentile)
@@ -138,7 +145,7 @@ class AreaChart extends APP.charts['Chart']
       .y((d) => @scaleY(d.median))
 
     @areaMedianPlot = @chart.append("path")
-      .datum(@data)
+      .datum(@data, (d) -> d.date)
       .attr("class", "line")
       .attr("d", @line)
 
@@ -146,7 +153,7 @@ class AreaChart extends APP.charts['Chart']
     @key = @svg
       .append("g")
       .attr("id", "area-key")
-      .attr("transform", "translate(#{@params.margin.left + 50}, #{@params.margin.top})")
+      .attr("transform", "translate(#{@params.width - 140}, #{@params.margin.top})")
 
     @key
       .append("rect")
@@ -167,7 +174,7 @@ class AreaChart extends APP.charts['Chart']
       )
 
     @chart.selectAll(".overlay")
-      .data(@data)
+      .data(@data, (d) -> d.date)
       .enter()
       .append("rect")
       .style("fill", "#333")
@@ -232,22 +239,39 @@ class AreaChart extends APP.charts['Chart']
       .y((d) => @scaleY(d.median))
 
     @areaMaxPlot
-      .datum(@data)
+      .datum(@data, (d) -> d.date)
       .transition()
       .duration(duration)
       .attr("d", @areaMax)
 
     @areaPercentilePlot
-      .datum(@data)
+      .datum(@data, (d) -> d.date)
       .transition()
       .duration(duration)
       .attr("d", @areaPercentile)
 
     @areaMedianPlot
-      .datum(@data)
+      .datum(@data, (d) -> d.date)
       .transition()
       .duration(duration)
       .attr("d", @line)
+
+    @chart.selectAll(".overlay").remove()
+
+    @chart.selectAll(".overlay")
+      .data(@data, (d) -> d.date)
+      .enter()
+      .append("rect")
+      .style("fill", "#333")
+      .style("opacity", 0.0)
+      .attr("class", "overlay")
+      .attr("height", @params.height - (@params.margin.top + @params.margin.bottom))
+      .attr("width", @params.width / @data.length)
+      .attr("x", (d) => @scaleX(new Date(d.date)))
+      .attr("y", 0)
+      .on('mouseover', @tip.show)
+      .on('mouseout', @tip.hide)
+     
 
     # Update x axis
     @svg.selectAll("g.x.axis")

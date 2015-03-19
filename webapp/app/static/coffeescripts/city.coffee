@@ -123,7 +123,7 @@ config =
         chart: 'timeseries'
         dimension: 'temperature'
         name: 'Temperature'
-        yAxisLabel: 'Temperature (degrees c)'
+        yAxisLabel: 'Daily Temperature Highs and Lows (degrees c)'
         round: 0
         scaleX: d3.time.scale
         scaleY: d3.scale.linear

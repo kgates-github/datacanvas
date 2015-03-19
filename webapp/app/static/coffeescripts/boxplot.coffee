@@ -47,15 +47,15 @@ class BoxPlot extends APP.charts['Chart']
             <tbody>
               <tr>
                 <td>
-                  <div>Low</div>
-                  <div style="font-size:11px; color:#bbb;">10th<br>percentile</div>
+                  <div>Min</div>
+                  
                 </td>
                 <td style="text-align:center;">
-                  <div>Median</div>
+                  <div>Average</div>
                 </td>
                 <td style="text-align:right;">
-                  <div>High</div>
-                  <div style="font-size:11px; color:#bbb;">90th<br>percentile</div></td>
+                  <div>Max</div>
+                  
               </tr>
               <tr style="font-size:26px;">
                 <td class="#{lowerClass}" style="width:70px; color:white; text-align:center;">
@@ -158,11 +158,11 @@ class BoxPlot extends APP.charts['Chart']
 
       d3.select(@).append("rect")
         .attr("width", (d) -> self.scaleX(d.max) - self.scaleX(d.min))
-        .attr("height", 7)
+        .attr("height", 2)
         .attr("class", "bar")
         .attr("x", (d) -> self.scaleX(d.min))
-        .attr("y", (d, i) -> self.scaleY(i) - 2)
-        .style("fill", "#ddd")
+        .attr("y", (d, i) -> self.scaleY(i) - 0)
+        .style("fill", "#ccc")
 
       d3.select(@).append("rect")
         .attr("class", (d) -> "min #{self.helpers.getColorClass(d.min, self.qualitative)}")
@@ -248,10 +248,15 @@ class BoxPlot extends APP.charts['Chart']
 
   update: (data) ->
     self = @
-    @data = data
+
+    # XXXX Hack: some results are a missing city
+    for i of @data
+      city = @data[i].city
+      newDatum = _.find(data, (d) -> d.city == city)
+      @data[i] = newDatum if newDatum?
+
     @scaleX = @_getScaleX()
     duration = @_getDuration() # Only animate if above the fold
-    console.log @data
 
     @plots
       .data(@data, (d) -> d.city)
@@ -295,7 +300,7 @@ class BoxPlot extends APP.charts['Chart']
         )
     ) 
 
-    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
+    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-@params.height).tickSubdivide(true)
     
     # Update x axis
     @svg.selectAll("g.x.axis")

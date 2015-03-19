@@ -59,7 +59,7 @@
       })(this));
       this.plots.each(function(d, i) {
         d3.select(this).append("rect").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", function(d) {
-          return self.scaleY(d.min) - self.scaleY(d.max);
+          return self.scaleY(d.min) - self.scaleY(d.max) + 2;
         }).attr("x", 0).attr("y", function(d) {
           return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom;
         }).attr("class", "bar").style("fill", "#ddd");
@@ -122,46 +122,30 @@
     };
 
     BoxPlotVertical.prototype.update = function(data) {
-
-      /*
-      self = @
-      @data = data
-      @scaleX = @_getScaleX()
-      @scaleY = @_getScaleY()
-      duration = @_getDuration() # Only animate if above the fold
-      
-      @plots
-        .data(@data, (d) -> d.name)
-      
-      @plots.each((d, i) ->
-        d3.select(@).select(".bar")
-          .transition()
-          .duration(duration)
-          .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
-          .attr("height", (d) ->
-            #console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
-            self.scaleY(d.max) - self.scaleY(d.min)
-          )
-          .attr("x", 0)
-          .attr("y", (d) ->
-            self.params.height - self.scaleY(d.max) - self.params.margin.top - self.params.margin.bottom
-          )
-      
-        d3.select(@).select(".overlay")
-          .on('mouseover', self.tip.show)
-          .on('mouseout', self.tip.hide)
-      )
-      
-      @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
-      
-       * Update x axis
-      @svg.selectAll("g.x.axis")
-        .transition()
-        .duration(1000)
-        .call(@xAxis);
-      
-      #@_sortBy('median', 1000)
-       */
+      var duration, self;
+      self = this;
+      this.data = data;
+      this.scaleX = this._getScaleX();
+      this.scaleY = this._getScaleY();
+      duration = 0;
+      this.plots.remove();
+      this.plots = this.chart.selectAll(".plot").data(this.data).enter().append("g").attr("class", "plot").attr("transform", (function(_this) {
+        return function(d, i) {
+          return "translate(" + (_this.scaleX(new Date(d.date))) + ", 0)";
+        };
+      })(this));
+      this.plots.each(function(d, i) {
+        d3.select(this).append("rect").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", function(d) {
+          return self.scaleY(d.min) - self.scaleY(d.max) + 2;
+        }).attr("x", 0).attr("y", function(d) {
+          return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom;
+        }).attr("class", "bar").style("fill", "#ddd");
+        return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("class", "overlay").attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length).attr("width", self.params.width).attr("x", -self.params.margin.left).attr("y", function(d, i) {
+          return self.scaleY(i) - 6;
+        }).on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
+      });
+      this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
+      return this.svg.selectAll("g.x.axis").call(this.xAxis);
     };
 
     return BoxPlotVertical;
