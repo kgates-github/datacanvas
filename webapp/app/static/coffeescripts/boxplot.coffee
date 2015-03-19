@@ -98,13 +98,13 @@ class BoxPlot extends APP.charts['Chart']
         .attr("y1", -24)
         .attr("y2", y2)
         .attr("stroke-dasharray", "3,5")
-        .style("stroke-width", 1.5)
+        .style("stroke-width", 2.5)
         .attr("class", (d) -> d.class)
 
       d3.select(@)
         .append("text")
         .attr("text-anchor", "end")
-        .text((d) -> d.name)
+        .text((d) -> "Everything left of the dashed line is #{d.name.toLowerCase()}")
         .attr("x", -6)
         .attr("y", -18)
         .attr("class", (d) -> d.class)
@@ -158,10 +158,10 @@ class BoxPlot extends APP.charts['Chart']
 
       d3.select(@).append("rect")
         .attr("width", (d) -> self.scaleX(d.upper) - self.scaleX(d.lower))
-        .attr("height", 15)
+        .attr("height", 7)
         .attr("class", "bar")
         .attr("x", (d) -> self.scaleX(d.lower))
-        .attr("y", (d, i) -> self.scaleY(i) - 6)
+        .attr("y", (d, i) -> self.scaleY(i) - 2)
         .style("fill", "#ddd")
 
       d3.select(@).append("rect")

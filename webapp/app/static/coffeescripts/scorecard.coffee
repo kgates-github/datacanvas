@@ -25,7 +25,7 @@ class ScoreCard extends APP.charts['Chart']
             </td>
             <td class="unhealthy-mild-score">
               #{unhealthyMild.length}
-              <div style="font-size:11px; line-height:12px;">Unhealthy for sensitive groups</div>
+              <div style="font-size:11px; line-height:12px;">Mildly unhealthy</div>
             </td>
             <td class="unhealthy-score">
               #{unhealthy.length}
@@ -40,7 +40,7 @@ class ScoreCard extends APP.charts['Chart']
               <div style="font-size:11px;">Hazardous</div>
             </td>
           </tr>
-          <tr>
+          <tr class='score-text'>
             <td>
               Days highest AQI remained lower than 50
             </td>
@@ -48,7 +48,7 @@ class ScoreCard extends APP.charts['Chart']
               Days highest AQI reach moderately unhealthy levels
             </td>
             <td>
-              Days AQI reached unhealthy levels for sensitive groups
+              Days AQI reached mildly unhealthy levels
             </td>
             <td>
               Days AQI reached unhealthy levels

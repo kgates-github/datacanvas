@@ -10,8 +10,9 @@ db = sqlite3.connect('db/datacanvas.db')
 
 @app.route('/')
 def index():
-    df = models.load_cities()
-    return render_template('index.html', data=df.to_json())
+    #df = models.load_cities()
+    #return render_template('index.html', data=df.to_json())
+    return render_template('index.html')
 
 
 def get_data(date_from, date_to, name, time_of_day=''):

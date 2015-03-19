@@ -26,6 +26,7 @@ def get_datacanvas(directory, from_dt, before_dt, metric='mean', city=None, reso
 
 def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resolution='1h'):
     cities = ['Shanghai', 'Singapore', 'Bangalore', 'Geneva', 'Rio de Janeiro', 'Boston', 'San Francisco']
+    cities = [city]
     #count = 0
     cities_df = None
     for city in cities:
@@ -35,7 +36,8 @@ def get_cities(directory, from_dt, before_dt, metric='mean', city=None, resoluti
         else:
             cities_df = cities_df.append(df)
         #count += 1
-    cities_df.to_csv('cities.csv', index=False)
+    #cities_df.to_csv('cities.csv', index=False)
+    print cities_df
 
 if __name__ == '__main__':
     if len(sys.argv) < 5:

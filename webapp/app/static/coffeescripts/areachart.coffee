@@ -41,7 +41,7 @@ class AreaChart extends APP.charts['Chart']
           <table class="table borderless">
             <tbody>
               <tr>
-                <td>
+                <td style="text-align:center;">
                   <div>Min</div>
                 </td>
                 <td style="text-align:center;">
@@ -56,7 +56,7 @@ class AreaChart extends APP.charts['Chart']
                   <div>High</div>
                   <div style="font-size:11px; color:#bbb;">90th<br>percentile</div>
                 </td>
-                <td style="text-align:right;">
+                <td style="text-align:center;">
                   <div>Max</div>
                 </td>
               </tr>
@@ -206,12 +206,12 @@ class AreaChart extends APP.charts['Chart']
       .range(rangeY)
   
   update: (data) ->
-    duration = @_getDuration() # Only animate if above the fold
+    duration = 0 #@_getDuration() # Only animate if above the fold
 
     @data = data
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY() 
-    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6)
+    @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).orient("top")
     @yAxis = d3.svg.axis().scale(@scaleY).orient("left")
 
     # Recalculate areas

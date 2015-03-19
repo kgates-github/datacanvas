@@ -59,11 +59,11 @@
       this.qualatativeTicks.each(function(d, i) {
         var y2;
         y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) - 4;
-        d3.select(this).append("line").attr("y1", -24).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 1.5).attr("class", function(d) {
+        d3.select(this).append("line").attr("y1", -24).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 2.5).attr("class", function(d) {
           return d["class"];
         });
         return d3.select(this).append("text").attr("text-anchor", "end").text(function(d) {
-          return d.name;
+          return "Everything left of the dashed line is " + (d.name.toLowerCase());
         }).attr("x", -6).attr("y", -18).attr("class", function(d) {
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
@@ -96,10 +96,10 @@
         });
         d3.select(this).append("rect").attr("width", function(d) {
           return self.scaleX(d.upper) - self.scaleX(d.lower);
-        }).attr("height", 15).attr("class", "bar").attr("x", function(d) {
+        }).attr("height", 7).attr("class", "bar").attr("x", function(d) {
           return self.scaleX(d.lower);
         }).attr("y", function(d, i) {
-          return self.scaleY(i) - 6;
+          return self.scaleY(i) - 2;
         }).style("fill", "#ddd");
         d3.select(this).append("rect").attr("class", function(d) {
           return "lower " + (self.helpers.getColorClass(d.lower, self.qualitative));

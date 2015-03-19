@@ -1,3 +1,9 @@
+#intro {
+  -webkit-column-count: 3; /* Chrome, Safari, Opera */
+  -moz-column-count: 3; /* Firefox */
+  column-count: 3;
+}
+
 #score-card td {
   padding-right:10px;
   width:16.6%;
@@ -11,6 +17,10 @@
   width:16.6%;
   vertical-align:top;
   font-size:40px;
+}
+
+.score-text {
+  color:#999;
 }
 
 .tick line{
@@ -46,14 +56,14 @@ button.on {
   font-weight:400;
   font-size:60px;
   margin-top:32px; 
-  margin-bottom:32px;
+  margin-bottom:24px;
 }
 
 .header-2 {
   /*font-family: 'Tinos', serif;*/
   font-weight:400;
   font-size:30px; 
-  margin-top:16px;
+  margin-top:0px;
   margin-bottom:24px;
 }
 
