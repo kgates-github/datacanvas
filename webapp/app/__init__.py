@@ -1,68 +1,19 @@
 import sqlite3
-import json
-from flask import Flask, render_template, request, jsonify
-import models
+from flask import Flask
 
 
-app = Flask(__name__)
 db = sqlite3.connect('db/datacanvas.db')
 
 
-@app.route('/')
-def index():
-    #df = models.load_cities()
-    #return render_template('index.html', data=df.to_json())
-    return render_template('index.html')
+def create_app(config_name):
+    '''Retuns flask app object based on config settings.
+        Initializes DB and registers endpoints
+    '''
+    app = Flask(__name__)
+    app.config.from_object(config_name)
 
+    # register API endpoints as blueprints
+    from app.blueprints import main
+    app.register_blueprint(main)
 
-def get_data(date_from, date_to, name, time_of_day=''):
-    df = models.load_cities_data(date_from, date_to, time_of_day)
-    city_data = []
-    for metric in ['airquality_raw', 'sound', 'dust', 'humidity', 'temperature', 'light', 'noise']:
-        # Build Filter Results
-        chart_data = {}
-        chart_data['chart'] = 'filter'
-        chart_data['dimension'] = 'none'
-        chart_data['data'] = []
-        data = models.get_metric_data(df, name, metric, date_from, date_to, 'hour')
-        chart_data['data'].append(data)
-        data = models.get_metric_data(df, name, metric, date_from, date_to, 'YearMonth')
-        chart_data['data'].append(data)
-        city_data.append(chart_data)
-
-        # Build TimeSeries Results
-        chart_data = models.get_ts_data(df, name, metric, date_from, date_to)
-        city_data.append(chart_data)
-        chart_data = models.get_city_agg_data(df, metric, date_from, date_to)
-        city_data.append(chart_data)
-    return city_data
-
-
-@app.route('/city2/<name>/')
-@app.route('/city2/')
-def city(name='Shanghai'):
-    date_from = '2015-01-01'
-    date_to = '2015-03-31'
-    data = get_data(date_from, date_to, name)
-    return render_template('city.html', city=name, data=json.dumps(data))
-
-
-@app.route('/update/')
-def update():
-    name = request.args.get('city', 'Shanghai')
-    month = request.args.get('month', '')
-    time_of_day = request.args.get('time_of_day', '')
-    if month == 'Jan':
-        date_from = '2015-01-01'
-        date_to = '2015-01-31'
-    elif month == 'Feb':
-        date_from = '2015-02-01'
-        date_to = '2015-02-28'
-    elif month == 'Mar':
-        date_from = '2015-03-01'
-        date_to = '2015-03-31'
-    else:
-        date_from = '2015-01-01'
-        date_to = '2015-03-31'
-    data = get_data(date_from, date_to, name, time_of_day)
-    return jsonify(data=data)
+    return app

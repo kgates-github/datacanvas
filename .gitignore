@@ -1,6 +1,8 @@
+logs/
 *.dat
 *.pyc
 env/
 .ipynb_checkpoints/
 data/datacanvas/
 notebooks/*.csv
+
