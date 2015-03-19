@@ -30,6 +30,14 @@ def get_sensors(directory, from_dt, before_dt, metric='mean', city=None, resolut
     # cities = ['Shanghai', 'Singapore', 'Bangalore', 'Geneva', 'Rio de Janeiro', 'Boston', 'San Francisco']
     #count = 0
     data_df = None
+    city_tz = {}
+    city_tz['Shanghai'] = 'Asia/Shanghai'
+    city_tz['Singapore'] = 'Asia/Singapore'
+    city_tz['Bangalore'] = 'Asia/Kolkata'
+    city_tz['Geneva'] = 'Europe/Zurich'
+    city_tz['Rio de Janeiro'] = 'America/Sao_Paulo'
+    city_tz['Boston'] = 'America/New_York'
+    city_tz['San Francisco'] = 'America/Los_Angeles'
     sensors_df = pd.read_csv('../data/sensor_ids.csv')
     cities = sensors_df.City.unique()
     sensor_ids = sensors_df.Id.unique()
@@ -37,10 +45,15 @@ def get_sensors(directory, from_dt, before_dt, metric='mean', city=None, resolut
         df = get_datacanvas(directory, from_dt, before_dt, metric, sensor=sensor_id, resolution=resolution)
         if df is not None:
             df['city'] = city
-        if data_df is None:
-            data_df = df
-        else:
-            data_df = data_df.append(df)
+            # Convert to local timezone
+            df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
+            df.set_index('timestamp', inplace=True)
+            df.index = df.index.tz_localize('UTC').tz_convert(city_tz[city])
+            df.reset_index(inplace=True)
+            if data_df is None:
+                data_df = df
+            else:
+                data_df = data_df.append(df)
         #count += 1
     data_df.to_csv('sensors-' + metric + '-' + from_dt + '-to-' + before_dt + '.csv', index=False)
 
