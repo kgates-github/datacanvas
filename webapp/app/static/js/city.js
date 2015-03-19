@@ -183,10 +183,11 @@
 
   App = (function() {
     function App(_at_config, _at_data, city, helpers) {
-      var chart, data, _i, _len, _ref;
+      var chart, data, newChart, _i, _len, _ref;
       this.config = _at_config;
       this.data = _at_data;
       this.charts = [];
+      this.filterChart;
       _ref = this.config.charts;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         chart = _ref[_i];
@@ -195,7 +196,11 @@
           chart: chart.params.chart
         });
         if (data != null) {
-          this.charts.push(new APP.charts[chart.type](this, chart.params, data.data, city, helpers));
+          newChart = new APP.charts[chart.type](this, chart.params, data.data, city, helpers);
+          this.charts.push(newChart);
+          if (chart.type === 'Filter') {
+            this.filterChart = newChart;
+          }
         }
       }
     }
@@ -214,6 +219,10 @@
         _results.push(chart.update(data.data));
       }
       return _results;
+    };
+
+    App.prototype.getFilterParams = function() {
+      return filterChart.getParams();
     };
 
     return App;

@@ -242,7 +242,8 @@ class BoxPlot extends APP.charts['Chart']
         if max < elem.value
           max = elem.value
           break
-
+    if max < 70
+      max = 70
     [min, max]
 
   update: (data) ->

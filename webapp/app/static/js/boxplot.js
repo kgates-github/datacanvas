@@ -184,6 +184,9 @@
           }
         }
       }
+      if (max < 70) {
+        max = 70;
+      }
       return [min, max];
     };
 

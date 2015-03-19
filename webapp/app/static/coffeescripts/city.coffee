@@ -175,6 +175,7 @@ config =
 class App
   constructor: (@config, @data, city, helpers) ->
     @charts = []
+    @filterChart
     
     for chart in @config.charts
       data = _.findWhere(@data, 
@@ -184,7 +185,10 @@ class App
         }
       )
       if data?
-        @charts.push new APP.charts[chart.type] @, chart.params, data.data, city, helpers
+        newChart = new APP.charts[chart.type] @, chart.params, data.data, city, helpers
+        @charts.push newChart
+        if chart.type == 'Filter'
+          @filterChart = newChart
 
   update: (@data) ->
     for chart in @charts
@@ -195,6 +199,10 @@ class App
         }
       )
       chart.update data.data
+
+  getFilterParams: ->
+    return filterChart.getParams()
+
 
 @app = new App config, data, city, helpers
 

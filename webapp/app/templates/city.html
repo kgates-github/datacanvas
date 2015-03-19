@@ -25,19 +25,7 @@
       <table class="filter-list" style="margin-bottom:3px;">
         <tr>
           <td style="width:70px; font-size:11px; font-weight:bold; padding-bottom:6px;">Month</td>
-          <td style="font-size:11px; padding-bottom:6px;">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle btn-sm btn-compact" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="border-color:#fff;">
-                Air quality
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Air quality</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Noise</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Dust</a></li>
-              </ul>
-            </div>
-          </td>
+          <td style="font-size:11px; padding-bottom:6px;">Air quality</td>
         </tr>
         <tr>
           <td id="filter-month-buttons"></td>
@@ -83,6 +71,7 @@
           Air quality is measured by the air quality index, or AQI, a standard maintained by the U.S. Environmental Protection Agency. It takes into consideration five major air pollutants: ground-level ozone, particle pollution, carbon monoxide, sulfur dioxide, and nitrogen dioxide. AQI values span from 0 to 500, with 0 being clean and 500 being extremely hazardous.
         
         <div class="chart-header">{{city}}'s Daily Air Quality</div>
+        <div id="timeseries-explanation"></div>
         <div style="font-size:11px; line-height:16px; margin-top:20px; padding:0px 20px 10px 20px;">
           <strong>Air quality index key:</strong>&nbsp;
           <span contenteditable='false' class='dot good'>2</span> 0 to 50: good&nbsp;
