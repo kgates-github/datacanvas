@@ -162,14 +162,14 @@ class BoxPlot extends APP.charts['Chart']
         .attr("class", "bar")
         .attr("x", (d) -> self.scaleX(d.min))
         .attr("y", (d, i) -> self.scaleY(i) + 1)
-        .style("fill", "#333")
+        .style("fill", "#666")
 
       d3.select(@).append("rect")
         #.attr("class", (d) -> "min #{self.helpers.getColorClass(d.min, self.qualitative)}")
         .attr("class", (d) -> "min")
         .attr("height", 15)
         .attr("width", 1)
-        .style("fill", "#333")
+        .style("fill", "#666")
         .attr("x", (d) -> self.scaleX(d.min))
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
@@ -178,7 +178,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("class", (d) -> "median")
         .attr("height", 15)
         .attr("width", 6)
-        .style("fill", "#333")
+        .style("fill", "#666")
         .attr("x", (d) -> self.scaleX(d.median) - 3)
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
@@ -187,7 +187,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("class", (d) -> "max")
         .attr("height", 15)
         .attr("width", 1)
-        .style("fill", "#333")
+        .style("fill", "#666")
         .attr("x", (d) -> self.scaleX(d.max))
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 

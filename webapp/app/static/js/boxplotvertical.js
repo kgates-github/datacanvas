@@ -31,23 +31,11 @@
       this.svg.append("g").attr("class", "y axis").attr("transform", "translate(" + (this.params.margin.left - 1) + ", " + (this.params.margin.top + 8) + ")").call(this.yAxis);
       this.tip = d3.tip().attr('class', 'd3-tip').offset((function(_this) {
         return function(d) {
-          return [-20, _this.scaleX(d.median) - _this.params.margin.left - 18];
+          return [-20, 0];
         };
       })(this)).html(function(d) {
-        var html, lowerClass, lowerName, medianClass, medianName, upperClass, upperName;
-        lowerClass = self.helpers.getColorClass(d.lower, self.qualitative);
-        lowerName = _.findWhere(self.qualitative, {
-          "class": lowerClass
-        }).name;
-        medianClass = self.helpers.getColorClass(d.median, self.qualitative);
-        medianName = _.findWhere(self.qualitative, {
-          "class": medianClass
-        }).name;
-        upperClass = self.helpers.getColorClass(d.upper, self.qualitative);
-        upperName = _.findWhere(self.qualitative, {
-          "class": upperClass
-        }).name;
-        html = "<div style='font-size:11px; color:#bbb; margin-bottom:0px;'>" + d.city + "'s Air Quality Index</div>\n<table class=\"table borderless\">\n  <tbody>\n    <tr>\n      <td>\n        <div>Low</div>\n        <div style=\"font-size:11px; color:#bbb;\">10th<br>percentile</div>\n      </td>\n      <td style=\"text-align:center;\">\n        <div>Median</div>\n      </td>\n      <td style=\"text-align:right;\">\n        <div>High</div>\n        <div style=\"font-size:11px; color:#bbb;\">90th<br>percentile</div></td>\n    </tr>\n    <tr style=\"font-size:26px;\">\n      <td class=\"" + lowerClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.lower, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + lowerName + "</div></td>\n      </td>\n      <td class=\"" + medianClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.median, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + medianName + "</div></td>\n      </td>\n      <td class=\"" + upperClass + "\" style=\"width:70px; color:white; text-align:center;\">\n        " + (d3.round(d.upper, self.params.round)) + "\n        <div style=\"font-size:11px; color:#fff;\">" + upperName + "</div></td>\n      </td>\n    </tr>\n  </tbody>\n</table>";
+        var html;
+        html = " <div style='text-align:center; margin-bottom:10px; font-size:11px; color:#bbb;'>Temperatures (degrees c)</div>\n <div style='text-align:center; margin-top:12px; margin-bottom:10px; color:white; font-size:20px; font-weight: 400;'>\n   " + (moment(d.date).format('MMM D, YYYY')) + "\n </div>\n<hr>\n <table class=\"table borderless\">\n   <tbody>\n     <tr>\n       <td style=\"text-align:right; vertical-align:center;\">\n         <div>High</div>\n       </td>\n       <td style=\"font-size:26px; line-height:26px; width:70px; text-align:center;\">\n         " + (d3.round(d.max, self.params.round)) + "\n       </td>\n     </tr>\n     <tr>\n       <td style=\"text-align:right;\">\n         <div>Low</div>\n       </td>\n       <td style=\"font-size:26px; line-height:26px; width:70px; text-align:center;\">\n         " + (d3.round(d.min, self.params.round)) + "\n       </td>\n     </tr>\n   </tbody>\n </table>";
         return html;
       });
       this.svg.call(this.tip);
@@ -62,10 +50,10 @@
           return self.scaleY(d.min) - self.scaleY(d.max) + 2;
         }).attr("x", 0).attr("y", function(d) {
           return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom;
-        }).attr("class", "bar").style("fill", "#ddd");
-        return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("class", "overlay").attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length).attr("width", self.params.width).attr("x", -self.params.margin.left).attr("y", function(d, i) {
-          return self.scaleY(i) - 6;
-        }).on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
+        }).attr("class", "bar").style("fill", "#ddd").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
+        return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("class", "overlay").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", self.params.height).attr("x", 0).attr("y", function(d) {
+          return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom - 20;
+        }).attr("class", "bar").style("fill", "#ddd").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });
       this.svg.append("text").attr("class", "x label").style("fill", "#999").style("font-weight", "400").attr("text-anchor", "start").attr("x", this.params.margin.left + 6).attr("y", 10).text(this.params.yAxisLabel);
     }
@@ -140,9 +128,9 @@
         }).attr("x", 0).attr("y", function(d) {
           return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom;
         }).attr("class", "bar").style("fill", "#ddd");
-        return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("class", "overlay").attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length).attr("width", self.params.width).attr("x", -self.params.margin.left).attr("y", function(d, i) {
-          return self.scaleY(i) - 6;
-        }).on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
+        return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("class", "overlay").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", self.params.height).attr("x", 0).attr("y", function(d) {
+          return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom - 20;
+        }).attr("class", "bar").style("fill", "#ddd").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
       this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left").ticks(3);

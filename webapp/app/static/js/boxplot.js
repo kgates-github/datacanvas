@@ -100,24 +100,24 @@
           return self.scaleX(d.min);
         }).attr("y", function(d, i) {
           return self.scaleY(i) + 1;
-        }).style("fill", "#333");
+        }).style("fill", "#666");
         d3.select(this).append("rect").attr("class", function(d) {
           return "min";
-        }).attr("height", 15).attr("width", 1).style("fill", "#333").attr("x", function(d) {
+        }).attr("height", 15).attr("width", 1).style("fill", "#666").attr("x", function(d) {
           return self.scaleX(d.min);
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
         });
         d3.select(this).append("rect").attr("class", function(d) {
           return "median";
-        }).attr("height", 15).attr("width", 6).style("fill", "#333").attr("x", function(d) {
+        }).attr("height", 15).attr("width", 6).style("fill", "#666").attr("x", function(d) {
           return self.scaleX(d.median) - 3;
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
         });
         d3.select(this).append("rect").attr("class", function(d) {
           return "max";
-        }).attr("height", 15).attr("width", 1).style("fill", "#333").attr("x", function(d) {
+        }).attr("height", 15).attr("width", 1).style("fill", "#666").attr("x", function(d) {
           return self.scaleX(d.max);
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;

@@ -36,43 +36,31 @@ class BoxPlotVertical extends APP.charts['Chart']
     @tip = d3.tip()
       .attr('class', 'd3-tip')
       .offset((d) =>
-        [-20, @scaleX(d.median) - @params.margin.left - 18]
+        [-20,0]
       )
       .html((d) ->
-        lowerClass = self.helpers.getColorClass(d.lower, self.qualitative)
-        lowerName = _.findWhere(self.qualitative, {class: lowerClass}).name
-        medianClass = self.helpers.getColorClass(d.median, self.qualitative)
-        medianName = _.findWhere(self.qualitative, {class: medianClass}).name
-        upperClass = self.helpers.getColorClass(d.upper, self.qualitative)
-        upperName = _.findWhere(self.qualitative, {class: upperClass}).name
         html = """
-          <div style='font-size:11px; color:#bbb; margin-bottom:0px;'>#{d.city}'s Air Quality Index</div>
+          <div style='text-align:center; margin-bottom:10px; font-size:11px; color:#bbb;'>Temperatures (degrees c)</div>
+          <div style='text-align:center; margin-top:12px; margin-bottom:10px; color:white; font-size:20px; font-weight: 400;'>
+            #{moment(d.date).format('MMM D, YYYY')}
+          </div>
+         <hr>
           <table class="table borderless">
             <tbody>
               <tr>
-                <td>
-                  <div>Low</div>
-                  <div style="font-size:11px; color:#bbb;">10th<br>percentile</div>
-                </td>
-                <td style="text-align:center;">
-                  <div>Median</div>
-                </td>
-                <td style="text-align:right;">
+                <td style="text-align:right; vertical-align:center;">
                   <div>High</div>
-                  <div style="font-size:11px; color:#bbb;">90th<br>percentile</div></td>
+                </td>
+                <td style="font-size:26px; line-height:26px; width:70px; text-align:center;">
+                  #{d3.round(d.max, self.params.round)}
+                </td>
               </tr>
-              <tr style="font-size:26px;">
-                <td class="#{lowerClass}" style="width:70px; color:white; text-align:center;">
-                  #{d3.round(d.lower, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{lowerName}</div></td>
+              <tr>
+                <td style="text-align:right;">
+                  <div>Low</div>
                 </td>
-                <td class="#{medianClass}" style="width:70px; color:white; text-align:center;">
-                  #{d3.round(d.median, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{medianName}</div></td>
-                </td>
-                <td class="#{upperClass}" style="width:70px; color:white; text-align:center;">
-                  #{d3.round(d.upper, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{upperName}</div></td>
+                <td style="font-size:26px; line-height:26px; width:70px; text-align:center;">
+                  #{d3.round(d.min, self.params.round)}
                 </td>
               </tr>
             </tbody>
@@ -110,17 +98,24 @@ class BoxPlotVertical extends APP.charts['Chart']
         )
         .attr("class", "bar")
         .style("fill", "#ddd")
+        .on('mouseover', self.tip.show)
+        .on('mouseout', self.tip.hide)
 
       d3.select(@).append("rect")
         .style("fill", "#none")
         .style("opacity", 0.0)
         .attr("class", "overlay")
-        .attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length)
-        .attr("width", self.params.width)
-        .attr("x", -self.params.margin.left)
-        .attr("y", (d, i) -> self.scaleY(i) - 6)
+        .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
+        .attr("height", self.params.height)
+        .attr("x", 0)
+        .attr("y", (d) ->
+          self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom - 20
+        )
+        .attr("class", "bar")
+        .style("fill", "#ddd")
         .on('mouseover', self.tip.show)
         .on('mouseout', self.tip.hide)
+        
     )
 
     @svg.append("text")
@@ -214,10 +209,14 @@ class BoxPlotVertical extends APP.charts['Chart']
         .style("fill", "#none")
         .style("opacity", 0.0)
         .attr("class", "overlay")
-        .attr("height", (self.params.height - (self.params.margin.top + self.params.margin.bottom)) / self.data.length)
-        .attr("width", self.params.width)
-        .attr("x", -self.params.margin.left)
-        .attr("y", (d, i) -> self.scaleY(i) - 6)
+        .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
+        .attr("height", self.params.height)
+        .attr("x", 0)
+        .attr("y", (d) ->
+          self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom - 20
+        )
+        .attr("class", "bar")
+        .style("fill", "#ddd")
         .on('mouseover', self.tip.show)
         .on('mouseout', self.tip.hide)
     )
