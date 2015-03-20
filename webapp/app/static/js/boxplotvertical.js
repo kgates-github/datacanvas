@@ -145,7 +145,9 @@
         }).on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });
       this.xAxis = d3.svg.axis().scale(this.scaleX).tickSize(-6).tickSubdivide(true);
-      return this.svg.selectAll("g.x.axis").call(this.xAxis);
+      this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left").ticks(3);
+      this.svg.selectAll("g.x.axis").call(this.xAxis);
+      return this.svg.selectAll("g.y.axis").call(this.yAxis);
     };
 
     return BoxPlotVertical;

@@ -4,10 +4,11 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <div style="font-size:48px; margin-top:100px;">Seeing Air</div>
+    <div id="intro-viz" style="position:absolute; top:180px;"></div>
+    <div style="font-size:48px; margin-top:100px; background:#fff;">Seeing Air</div>
     <div style="font-size:18px; margin-top:0px;">An experiment in citizen-run, DIY air quality monitoring</div>
-    <div id="intro-viz" style="height:420px;"></div>
-    <div id="intro">
+    
+    <div id="intro" style="background:#fff; opacity:0.8; margin-top:470px;">
       <p>
         Those of us who live in more open societies can take for granted the freely available information we have access to. In many countries it is difficult to get reliable information on something as basic as air quality. [1]
       <p>
@@ -15,27 +16,29 @@
       <p>
         This project is an exploration of how this type of data could be used to increase understanding of air quality. Each city has its own panel of visualizations. These can answer questions that affect the quality of life: Is the air ever hazardous? If so, how often? What is the air like during commute hours?
     </div>
-    <div>
-
+    <div style="text-align:right">
+    <a href="/city2/Bangalore/" type="button" class="btn btn-lg btn-default" style="width:150px;">Enter</a>
     </div>
+   
     <hr style="margin-top:30px;">
     <div style="font-size:11px; color:#999;">
-      <p>Seeing Air is by Kevin Gates and Ramesh Sampath
       <p>
         [1] In China, for example, reliable data on air pollution is often not available. See <a href="http://www.nytimes.com/2013/01/13/science/earth/beijing-air-pollution-off-the-charts.html">http://www.nytimes.com/2013/01/13/science/earth/beijing-air-pollution-off-the-charts.html</a>
       <br>
         [2] The data used in this experiment uses off-the-shelf equipment set up by volunteers, and may not be as accurate as industrial equipment. See <a href="http://map.datacanvas.org/#!/data">http://map.datacanvas.org/#!/data</a>
+
+      <p>Seeing Air is by Kevin Gates and Ramesh Sampath
   </div>
 </div>
 {% endblock body %}
 {% block js %}
+  <script type="text/javascript" src="{{url_for('static', filename='js/data.js')}}"></script>
   <script type='text/javascript'>
-  //var data = {{data | safe}};
-  
-  //{{url_for('static', filename='images/spinner.gif')}}
+ 
   
   </script>
   <script type="text/javascript" src="{{url_for('static', filename='js/chart.js')}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/clockchart.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
 {% endblock js %}
 

@@ -34,20 +34,20 @@ class AreaChart extends APP.charts['Chart']
         maxClass = self.helpers.getColorClass(d.max, self.qualitative)
         maxName = _.findWhere(self.qualitative, {class: maxClass}).name
         html = """
-          <div style='margin-bottom:10px; font-size:11px; color:#bbb;'>Air quality index scores</div>
-          <div style='margin-top:12px; margin-bottom:20px; color:white; font-size:20px; font-weight: 400;'>
+          <div style='text-align:center; margin-bottom:10px; font-size:11px; color:#bbb;'>Air quality index scores</div>
+          <div style='text-align:center; margin-top:12px; margin-bottom:10px; color:white; font-size:20px; font-weight: 400;'>
             #{moment(d.date).format('MMM D, YYYY')}
           </div>
-         
+         <hr>
           <table class="table borderless">
             <tbody>
               <tr>
                 <td style="text-align:right; vertical-align:center;">
                   <div>Max</div>
                 </td>
-                <td class="#{maxClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
+                <td class="#{maxClass}-score" style="font-size:26px; line-height:26px; width:70px; text-align:center;">
                   #{d3.round(d.max, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{maxName}</div></td>
+                  <div style="font-size:11px;">#{maxName}</div></td>
                 </td>
               </tr>
               <tr>
@@ -55,9 +55,9 @@ class AreaChart extends APP.charts['Chart']
                   <div>High</div>
                   <div style="font-size:11px; color:#bbb;">75th<br>percentile</div>
                 </td>
-                <td class="#{upperClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
+                <td class="#{upperClass}-score" style="font-size:26px; line-height:26px; width:70px; text-align:center;">
                   #{d3.round(d.upper, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{upperName}</div></td>
+                  <div style="font-size:11px;">#{upperName}</div></td>
                 </td>
               </tr>
               <tr>
@@ -65,9 +65,9 @@ class AreaChart extends APP.charts['Chart']
                   <div>Average</div>
                   
                 </td>
-                <td class="#{medianClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
+                <td class="#{medianClass}-score" style="font-size:26px; line-height:26px; width:70px; text-align:center;">
                   #{d3.round(d.median, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{medianName}</div></td>
+                  <div style="font-size:11px;">#{medianName}</div></td>
                 </td>
               </tr>
               <tr>
@@ -75,16 +75,16 @@ class AreaChart extends APP.charts['Chart']
                   <div>Low</div>
                   <div style="font-size:11px; color:#bbb;">25th<br>percentile</div>
                 </td>
-                 <td class="#{lowerClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
+                 <td class="#{lowerClass}-score" style="font-size:26px; line-height:26px; width:70px; text-align:center;">
                   #{d3.round(d.lower, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{lowerName}</div></td>
+                  <div style="font-size:11px;">#{lowerName}</div></td>
                 </td>
               </tr>
               <tr>
                 <td style="text-align:right;">
                   <div>Min</div>
                 </td>
-                <td class="#{minClass}" style="font-size:26px; line-height:26px; width:70px; color:white; text-align:center;">
+                <td class="#{minClass}-score" style="font-size:26px; line-height:26px; width:70px; text-align:center;">
                   #{d3.round(d.min, self.params.round)}
                   <div style="font-size:11px; color:#fff;">#{minName}</div></td>
                 </td>
@@ -153,6 +153,7 @@ class AreaChart extends APP.charts['Chart']
     @key = @svg
       .append("g")
       .attr("id", "area-key")
+      .style("display", "none")
       .attr("transform", "translate(#{@params.width - 140}, #{@params.margin.top})")
 
     @key

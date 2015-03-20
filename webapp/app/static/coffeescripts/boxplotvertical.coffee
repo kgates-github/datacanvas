@@ -223,10 +223,14 @@ class BoxPlotVertical extends APP.charts['Chart']
     )
     
     @xAxis = d3.svg.axis().scale(@scaleX).tickSize(-6).tickSubdivide(true)
+    @yAxis = d3.svg.axis().scale(@scaleY).orient("left").ticks(3)
     
     # Update x axis
     @svg.selectAll("g.x.axis")
       .call(@xAxis);
+
+    @svg.selectAll("g.y.axis")
+      .call(@yAxis);
 
    
             

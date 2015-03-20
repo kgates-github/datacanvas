@@ -54,7 +54,7 @@ button.on {
 .header-1 {
   /*font-family: 'Tinos', serif;*/
   font-weight:400;
-  font-size:60px;
+  font-size:48px;
   margin-top:32px; 
   margin-bottom:24px;
 }
@@ -62,7 +62,7 @@ button.on {
 .header-2 {
   /*font-family: 'Tinos', serif;*/
   font-weight:400;
-  font-size:30px; 
+  font-size:26px; 
   margin-top:0px;
   margin-bottom:24px;
 }
