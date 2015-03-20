@@ -59,7 +59,7 @@ class Filter extends APP.charts['Chart']
       .style("width", "112px")
 
     @barsMonthly = @chartMonthly.selectAll(".bar")
-      .data(@dataMonthly)
+      .data(@dataMonthly, (d) -> d.time)
       .enter()
       .append("div")
       .attr("class", "bar")
@@ -97,12 +97,14 @@ class Filter extends APP.charts['Chart']
         @_filterCharts(d.time+"", "btn-time")
       )
 
-    @chartMonthly = d3.select("#filter-time-chart")
+    @chartTime = d3.select("#filter-time-chart")
       .append("div")
       .style("width", "112px")
 
-    @barsMonthly = @chartMonthly.selectAll(".bar")
-      .data(@dataTime)
+    @barsTime = @chartTime.selectAll(".bar")
+
+    @barsTime
+      .data(@dataTime, (d) -> d.time)
       .enter()
       .append("div")
       .attr("class", "bar")
@@ -116,9 +118,6 @@ class Filter extends APP.charts['Chart']
     d3.select("#reset-filters").on("click", =>
       @_filterCharts(null, null)
     )
-
-  update: (data) ->
-    console.log data
 
   _filterCharts: (filter, btnClass) ->
     $("#spinner").show()
@@ -174,6 +173,66 @@ class Filter extends APP.charts['Chart']
     self = @
     @data = data
     @scaleX = @_getScaleX()
+    
+    @workingData = @_getDimensionData(@dimension)
+    @newDataMonthly = _.findWhere(@workingData, 
+      { 
+        chart: 'month'
+      }
+    )
+    @newDataTime = _.findWhere(@workingData, 
+      {
+        chart: 'time_of_day'
+      }
+    )
+
+    # Get scale for all charts
+    combinedData = @newDataMonthly.data.concat @newDataTime.data
+    @scaleX = @_getScaleX(combinedData)
+   
+    console.log @newDataMonthly.data.length
+
+    if @newDataMonthly.data.length == 1
+      @newDataMonthly = @newDataMonthly.data[0]
+
+      for i of @dataMonthly
+        if @dataMonthly[i].time == @newDataMonthly.time
+          @dataMonthly[i].value = @newDataMonthly.value
+        else
+          @dataMonthly[i].value = 0
+    else
+      @dataMonthly = @newDataMonthly.data
+
+    
+    if @newDataTime.data.length == 2
+      @newDataTime = @newDataTime.data[0]
+
+      for i of @dataTime
+        if @dataTime[i].time == @newDataTime.time
+          @dataTime[i].value = @newDataTime.value
+        else
+          @dataTime[i].value = 0
+    else
+      @dataTime = @newDataTime.data
+    
+    @chartMonthly.selectAll(".bar")
+      .data(@dataMonthly, (d) -> d.time)
+      .transition()
+      .duration(1000)
+      .style("width", (d) =>
+        #console.log d
+        "#{@scaleX(d.value)}px"
+      )
+
+    @chartTime.selectAll(".bar")
+      .data(@dataTime, (d) -> d.time)
+      .transition()
+      .duration(1000)
+      .style("width", (d) =>
+        #console.log d
+        "#{@scaleX(d.value)}px"
+      )
+    
 
   getFilters: () ->
     startMonth = @monthFormat(new Date(@dataMonthly[0].time))

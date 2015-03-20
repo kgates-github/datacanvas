@@ -50,7 +50,7 @@
         return html;
       });
       this.svg.call(this.tip);
-      this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
+      this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + (this.params.margin.top + 10) + ")");
       this.qualatativeTicks = this.chart.selectAll(".qualitative").data(this.qualitative).enter().append("g").attr("class", "qualitative").attr("transform", (function(_this) {
         return function(d, i) {
           return "translate(" + (_this.scaleX(d.value)) + ", 0)";
@@ -62,12 +62,12 @@
         d3.select(this).append("line").attr("y1", -44).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 2.5).attr("class", function(d) {
           return d["class"];
         });
-        d3.select(this).append("line").attr("y1", -18).attr("y2", -18).attr("x1", -self.scaleX(50)).attr("x2", 0).style("stroke-width", 2.5).attr("class", function(d) {
+        d3.select(this).append("line").attr("y1", -24).attr("y2", -24).attr("x1", -self.scaleX(50)).attr("x2", 0).style("stroke-width", 2.5).attr("class", function(d) {
           return d["class"];
         });
         return d3.select(this).append("text").attr("text-anchor", "end").text(function(d) {
           return d.name;
-        }).attr("x", -6).attr("y", -24).attr("class", function(d) {
+        }).attr("x", -6).attr("y", -28).attr("class", function(d) {
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
       });

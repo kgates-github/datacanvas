@@ -80,7 +80,7 @@ class BoxPlot extends APP.charts['Chart']
     @svg.call(@tip)
 
     @chart = @svg.append("g")
-      .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
+      .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top + 10})")
 
     @qualatativeTicks = @chart.selectAll(".qualitative")
       .data(@qualitative)
@@ -103,8 +103,8 @@ class BoxPlot extends APP.charts['Chart']
 
       d3.select(@)
         .append("line")
-        .attr("y1", -18)
-        .attr("y2", -18)
+        .attr("y1", -24)
+        .attr("y2", -24)
         .attr("x1", -self.scaleX(50))
         .attr("x2", 0)
         .style("stroke-width", 2.5)
@@ -115,7 +115,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("text-anchor", "end")
         .text((d) -> d.name)
         .attr("x", -6)
-        .attr("y", -24)
+        .attr("y", -28)
         .attr("class", (d) -> d.class)
         .style("stroke", "none")
         .style("font-size", "11")

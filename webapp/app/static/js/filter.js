@@ -56,7 +56,9 @@
         };
       })(this));
       this.chartMonthly = d3.select("#filter-month-chart").append("div").style("width", "112px");
-      this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataMonthly).enter().append("div").attr("class", "bar").style("height", "17px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
+      this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataMonthly, function(d) {
+        return d.time;
+      }).enter().append("div").attr("class", "bar").style("height", "17px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
         return function(d) {
           return (_this.scaleX(d.value)) + "px";
         };
@@ -82,8 +84,11 @@
           return _this._filterCharts(d.time + "", "btn-time");
         };
       })(this));
-      this.chartMonthly = d3.select("#filter-time-chart").append("div").style("width", "112px");
-      this.barsMonthly = this.chartMonthly.selectAll(".bar").data(this.dataTime).enter().append("div").attr("class", "bar").style("height", "17px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
+      this.chartTime = d3.select("#filter-time-chart").append("div").style("width", "112px");
+      this.barsTime = this.chartTime.selectAll(".bar");
+      this.barsTime.data(this.dataTime, function(d) {
+        return d.time;
+      }).enter().append("div").attr("class", "bar").style("height", "17px").style("background", "#ddd").style("margin-bottom", "5px").style("width", (function(_this) {
         return function(d) {
           return (_this.scaleX(d.value)) + "px";
         };
@@ -94,10 +99,6 @@
         };
       })(this));
     }
-
-    Filter.prototype.update = function(data) {
-      return console.log(data);
-    };
 
     Filter.prototype._filterCharts = function(filter, btnClass) {
       var data, self;
@@ -150,10 +151,58 @@
     };
 
     Filter.prototype.update = function(data) {
-      var self;
+      var combinedData, i, self;
       self = this;
       this.data = data;
-      return this.scaleX = this._getScaleX();
+      this.scaleX = this._getScaleX();
+      this.workingData = this._getDimensionData(this.dimension);
+      this.newDataMonthly = _.findWhere(this.workingData, {
+        chart: 'month'
+      });
+      this.newDataTime = _.findWhere(this.workingData, {
+        chart: 'time_of_day'
+      });
+      combinedData = this.newDataMonthly.data.concat(this.newDataTime.data);
+      this.scaleX = this._getScaleX(combinedData);
+      console.log(this.newDataMonthly.data.length);
+      if (this.newDataMonthly.data.length === 1) {
+        this.newDataMonthly = this.newDataMonthly.data[0];
+        for (i in this.dataMonthly) {
+          if (this.dataMonthly[i].time === this.newDataMonthly.time) {
+            this.dataMonthly[i].value = this.newDataMonthly.value;
+          } else {
+            this.dataMonthly[i].value = 0;
+          }
+        }
+      } else {
+        this.dataMonthly = this.newDataMonthly.data;
+      }
+      if (this.newDataTime.data.length === 2) {
+        this.newDataTime = this.newDataTime.data[0];
+        for (i in this.dataTime) {
+          if (this.dataTime[i].time === this.newDataTime.time) {
+            this.dataTime[i].value = this.newDataTime.value;
+          } else {
+            this.dataTime[i].value = 0;
+          }
+        }
+      } else {
+        this.dataTime = this.newDataTime.data;
+      }
+      this.chartMonthly.selectAll(".bar").data(this.dataMonthly, function(d) {
+        return d.time;
+      }).transition().duration(1000).style("width", (function(_this) {
+        return function(d) {
+          return (_this.scaleX(d.value)) + "px";
+        };
+      })(this));
+      return this.chartTime.selectAll(".bar").data(this.dataTime, function(d) {
+        return d.time;
+      }).transition().duration(1000).style("width", (function(_this) {
+        return function(d) {
+          return (_this.scaleX(d.value)) + "px";
+        };
+      })(this));
     };
 
     Filter.prototype.getFilters = function() {
