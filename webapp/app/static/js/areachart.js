@@ -211,7 +211,7 @@
       this.filters = this.app.getFilters();
       monthText = this.filters.monthFilter ? " from " + this.filters.monthFilter + ", 2015" : " between " + this.filters.startMonth + " and " + this.filters.endMonth + ", 2015";
       timeOfDayText = this.filters.timeOfDayFilter != null ? " only using data collected between " + this.filters.timeOfDayFilter : "";
-      html = this.city + "'s daily AQi scores " + monthText + timeOfDayText + ".";
+      html = "Air quality index scores " + monthText + timeOfDayText + ".";
       return d3.select("#timeseries-explanation").html(html);
     };
 

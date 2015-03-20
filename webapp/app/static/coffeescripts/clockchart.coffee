@@ -31,6 +31,12 @@ class ClockChart extends APP.charts['Chart']
       .attr("width", @params.width)
       .attr("height", @params.height)
 
+    @filter = @svg.append("defs")
+      .append("filter")
+      .attr("id", "blur")
+      .append("feGaussianBlur")
+      .attr("stdDeviation", 8)
+
     @cities = ["Bangalore", "Boston", "Rio de Janeiro", "San Francisco", "Shanghai", "Singapore"]
     @cityData = []
     for city in @cities
@@ -67,6 +73,10 @@ class ClockChart extends APP.charts['Chart']
       .attr("transform", (d, i) ->
         #"translate(#{(i % 2 * 85)}, #{60+i*80})"
         "translate(#{(i % 2 * 85)}, #{60+i*80})"
+      )
+      .attr("filter", (d) ->
+        if d.city != "Rio de Janeiro"
+          "url(#blur)"
       )
 
    

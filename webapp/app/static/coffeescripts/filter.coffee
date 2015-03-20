@@ -74,7 +74,7 @@ class Filter extends APP.charts['Chart']
       .attr("class", "bar-text")
       .style("font-size", "11px")
       .style("vertical-align", "top")
-      .style("padding-right", "4px")
+      .style("padding-right", "6px")
       .style("color", "#666")
       .html((d) ->
         Math.round(d.value)
@@ -129,7 +129,7 @@ class Filter extends APP.charts['Chart']
       .attr("class", "bar-text")
       .style("font-size", "11px")
       .style("vertical-align", "top")
-      .style("padding-right", "4px")
+      .style("padding-right", "6px")
       .style("color", "#666")
       .html((d) ->
         Math.round(d.value)

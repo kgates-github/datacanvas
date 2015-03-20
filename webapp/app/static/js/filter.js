@@ -62,7 +62,7 @@
         return function(d) {
           return (_this.scaleX(d.value)) + "px";
         };
-      })(this)).style("text-align", "right").append("span").attr("class", "bar-text").style("font-size", "11px").style("vertical-align", "top").style("padding-right", "4px").style("color", "#666").html(function(d) {
+      })(this)).style("text-align", "right").append("span").attr("class", "bar-text").style("font-size", "11px").style("vertical-align", "top").style("padding-right", "6px").style("color", "#666").html(function(d) {
         return Math.round(d.value);
       });
       this.dataTime = _.reject(this.dataTime.data, function(d) {
@@ -94,7 +94,7 @@
         return function(d) {
           return (_this.scaleX(d.value)) + "px";
         };
-      })(this)).style("text-align", "right").append("span").attr("class", "bar-text").style("font-size", "11px").style("vertical-align", "top").style("padding-right", "4px").style("color", "#666").html(function(d) {
+      })(this)).style("text-align", "right").append("span").attr("class", "bar-text").style("font-size", "11px").style("vertical-align", "top").style("padding-right", "6px").style("color", "#666").html(function(d) {
         return Math.round(d.value);
       });
       d3.select("#reset-filters").on("click", (function(_this) {

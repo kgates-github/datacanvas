@@ -31,6 +31,7 @@
         };
       })(this));
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
+      this.filter = this.svg.append("defs").append("filter").attr("id", "blur").append("feGaussianBlur").attr("stdDeviation", 8);
       this.cities = ["Bangalore", "Boston", "Rio de Janeiro", "San Francisco", "Shanghai", "Singapore"];
       this.cityData = [];
       _ref = this.cities;
@@ -63,6 +64,10 @@
       }
       this.cityContainers = this.svg.selectAll("g").data(this.cityData).enter().append("g").attr("transform", function(d, i) {
         return "translate(" + (i % 2 * 85) + ", " + (60 + i * 80) + ")";
+      }).attr("filter", function(d) {
+        if (d.city !== "Rio de Janeiro") {
+          return "url(#blur)";
+        }
       });
       this.cityContainers.each(function(d, i) {
 

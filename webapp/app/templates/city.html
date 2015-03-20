@@ -50,12 +50,14 @@
   </div>
   <div class="col-sm-9">
     <div style="margin-top:27px; vertical-align:center;">
-      <a class="{{'selected' if city == 'Shanghai'}}" href="{{url_for('main.city', name='Shanghai')}}">Shanghai</a> -
       <a class="{{'selected' if city == 'Bangalore'}}" href="{{url_for('main.city', name='Bangalore')}}">Bangalore</a> -
+      <a class="{{'selected' if city == 'Boston'}}" href="{{url_for('main.city', name='Boston')}}">Boston</a> -
       <a class="{{'selected' if city == 'Geneva'}}" href="{{url_for('main.city', name='Geneva')}}">Geneva</a> -
       <a class="{{'selected' if city == 'Rio de Janeiro'}}" href="{{url_for('main.city', name='Rio de Janeiro')}}">Rio de Janeiro</a> -
-      <a class="{{'selected' if city == 'Boston'}}" href="{{url_for('main.city', name='Boston')}}">Boston</a> -
-      <a class="{{'selected' if city == 'San Francisco'}}" href="{{url_for('main.city', name='San Francisco')}}">San Francisco</a>
+      
+      <a class="{{'selected' if city == 'San Francisco'}}" href="{{url_for('main.city', name='San Francisco')}}">San Francisco</a> -
+      <a class="{{'selected' if city == 'Shanghai'}}" href="{{url_for('main.city', name='Shanghai')}}">Shanghai</a> -
+      <a class="{{'selected' if city == 'Singapore'}}" href="{{url_for('main.city', name='Singapore')}}">Singapore</a> -
     </div>
   </div>
 </div>
@@ -72,7 +74,7 @@
         
         
         <div class="chart-header" style="border-bottom:1px solid #ccc; padding-bottom:10px;">{{city}}'s Daily Air Quality</div>
-        <div id="timeseries-explanation" style="margin-bottom:20px;">{{city}}'s daily AQi scores January to March, 2015 using data collected between 2 and 4pm</div>
+        <div id="timeseries-explanation" style="margin-bottom:20px;">Daily AQI scores January to March, 2015 using data collected between 2 and 4pm</div>
        
         <div id="timeseries-airquality_raw" class="chart-container"></div>
         <div id="timeseries-temperature" class="chart-container"></div>

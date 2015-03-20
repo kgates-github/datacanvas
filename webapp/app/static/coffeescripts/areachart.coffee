@@ -296,7 +296,7 @@ class AreaChart extends APP.charts['Chart']
     timeOfDayText = if @filters.timeOfDayFilter? then \
       " only using data collected between #{@filters.timeOfDayFilter}" else ""
 
-    html = "#{@city}'s daily AQi scores #{monthText}#{timeOfDayText}."
+    html = "Air quality index scores #{monthText}#{timeOfDayText}."
     d3.select("#timeseries-explanation").html(html)
 
     
