@@ -117,6 +117,9 @@ class Filter extends APP.charts['Chart']
       @_filterCharts(null, null)
     )
 
+  update: (data) ->
+    console.log data
+
   _filterCharts: (filter, btnClass) ->
     $("#spinner").show()
     if filter

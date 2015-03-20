@@ -95,6 +95,10 @@
       })(this));
     }
 
+    Filter.prototype.update = function(data) {
+      return console.log(data);
+    };
+
     Filter.prototype._filterCharts = function(filter, btnClass) {
       var data, self;
       $("#spinner").show();

@@ -87,21 +87,7 @@
           <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [2]
         </div>
 
-        <hr>
-        <ul class='inline-list header' style="width:100%;">
-          <li style="width:50%;">
-            <div class="chart-header">{{city}}'s Air Quality Compared to Other Cities</div>
-          </li>
-          <li style="width:50%; text-align:right; padding-top:26px;">
-            <!--<span class="small-text">Sort by</span>&nbsp;-->
-            <div class="btn-group"  id="airquality_raw-sort" role="group" aria-label="">
-              <button type="button" name="sort" value="lower" id="lower" class="btn btn-default btn-sm btn-compact-2">Low</button>
-              <button type="button" name="sort" value="median" id="median" class="btn btn-default btn-sm btn-compact-2 on">Median</button>
-              <button type="button" name="sort" value="upper" id="upper" class="btn btn-default btn-sm btn-compact-2">High</button>
-            </div>
-          </li>
-        </ul>
-
+        <div class="chart-header" style="border-bottom:1px solid #ccc; padding-bottom:10px;">{{city}}'s Air Quality Compared to Other Cities</div>
         <p>
           The chart below ranks the seven cities being measured by median AQI score. It also shows the the minimum and maximum AQI scores for each. <span id="rank-explanation"></span>
         
@@ -117,8 +103,7 @@
           <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [2]
         </div>
 
-        <hr>
-        <div class="chart-header">Air Quality Score Card</div>
+        <div class="chart-header" style="border-bottom:1px solid #ccc; padding-bottom:10px;">Air Quality Score Card</div>
         <p>
           Below is a score card showing the number of days {{city}} reached each category of the air quality index. <span id="score-explanation"></span>
         <div id="scorecard-airquality_raw"></div>

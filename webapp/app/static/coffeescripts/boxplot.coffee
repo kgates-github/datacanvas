@@ -95,9 +95,18 @@ class BoxPlot extends APP.charts['Chart']
       y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) - 4
       d3.select(@)
         .append("line")
-        .attr("y1", -24)
+        .attr("y1", -44)
         .attr("y2", y2)
         .attr("stroke-dasharray", "3,5")
+        .style("stroke-width", 2.5)
+        .attr("class", (d) -> d.class)
+
+      d3.select(@)
+        .append("line")
+        .attr("y1", -18)
+        .attr("y2", -18)
+        .attr("x1", -self.scaleX(50))
+        .attr("x2", 0)
         .style("stroke-width", 2.5)
         .attr("class", (d) -> d.class)
 
@@ -106,7 +115,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("text-anchor", "end")
         .text((d) -> d.name)
         .attr("x", -6)
-        .attr("y", -18)
+        .attr("y", -24)
         .attr("class", (d) -> d.class)
         .style("stroke", "none")
         .style("font-size", "11")
