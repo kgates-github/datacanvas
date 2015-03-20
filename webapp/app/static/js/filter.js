@@ -62,7 +62,9 @@
         return function(d) {
           return (_this.scaleX(d.value)) + "px";
         };
-      })(this));
+      })(this)).style("text-align", "right").append("span").attr("class", "bar-text").style("font-size", "11px").style("vertical-align", "top").style("padding-right", "4px").style("color", "#666").html(function(d) {
+        return Math.round(d.value);
+      });
       this.dataTime = _.reject(this.dataTime.data, function(d) {
         return parseInt(d.time) % 2 !== 0;
       });
@@ -92,7 +94,9 @@
         return function(d) {
           return (_this.scaleX(d.value)) + "px";
         };
-      })(this));
+      })(this)).style("text-align", "right").append("span").attr("class", "bar-text").style("font-size", "11px").style("vertical-align", "top").style("padding-right", "4px").style("color", "#666").html(function(d) {
+        return Math.round(d.value);
+      });
       d3.select("#reset-filters").on("click", (function(_this) {
         return function() {
           return _this._filterCharts(null, null);
@@ -140,7 +144,7 @@
     Filter.prototype._getScaleX = function(data) {
       var domainX, rangeX;
       domainX = this._getDomain(data);
-      rangeX = [0, this.params.width - (this.params.margin.left + this.params.margin.right)];
+      rangeX = [0, this.params.width - (this.params.margin.left + this.params.margin.right + 10)];
       return this.params.scale().domain(domainX).range(rangeX);
     };
 
@@ -164,7 +168,6 @@
       });
       combinedData = this.newDataMonthly.data.concat(this.newDataTime.data);
       this.scaleX = this._getScaleX(combinedData);
-      console.log(this.newDataMonthly.data.length);
       if (this.newDataMonthly.data.length === 1) {
         this.newDataMonthly = this.newDataMonthly.data[0];
         for (i in this.dataMonthly) {
@@ -196,13 +199,29 @@
           return (_this.scaleX(d.value)) + "px";
         };
       })(this));
-      return this.chartTime.selectAll(".bar").data(this.dataTime, function(d) {
+      this.chartMonthly.selectAll(".bar").each(function(d, i) {
+        return d3.select(this).select(".bar-text").html(function() {
+          if (d.value === 0) {
+            return "";
+          }
+          return Math.round(d.value);
+        });
+      });
+      this.chartTime.selectAll(".bar").data(this.dataTime, function(d) {
         return d.time;
       }).transition().duration(1000).style("width", (function(_this) {
         return function(d) {
           return (_this.scaleX(d.value)) + "px";
         };
       })(this));
+      return this.chartTime.selectAll(".bar").each(function(d, i) {
+        return d3.select(this).select(".bar-text").html(function() {
+          if (d.value === 0) {
+            return "";
+          }
+          return Math.round(d.value);
+        });
+      });
     };
 
     Filter.prototype.getFilters = function() {

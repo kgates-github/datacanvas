@@ -86,7 +86,7 @@ class AreaChart extends APP.charts['Chart']
                 </td>
                 <td class="#{minClass}-score" style="font-size:26px; line-height:26px; width:70px; text-align:center;">
                   #{d3.round(d.min, self.params.round)}
-                  <div style="font-size:11px; color:#fff;">#{minName}</div></td>
+                  <div style="font-size:11px;">#{minName}</div></td>
                 </td>
               </tr>
             </tbody>

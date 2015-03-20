@@ -67,7 +67,7 @@
         });
         return d3.select(this).append("text").attr("text-anchor", "end").text(function(d) {
           return d.name;
-        }).attr("x", -6).attr("y", -28).attr("class", function(d) {
+        }).attr("x", -6).attr("y", -30).attr("class", function(d) {
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
       });

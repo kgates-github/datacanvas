@@ -69,6 +69,16 @@ class Filter extends APP.charts['Chart']
       .style("width", (d) =>
         "#{@scaleX(d.value)}px"
       )
+      .style("text-align", "right")
+      .append("span")
+      .attr("class", "bar-text")
+      .style("font-size", "11px")
+      .style("vertical-align", "top")
+      .style("padding-right", "4px")
+      .style("color", "#666")
+      .html((d) ->
+        Math.round(d.value)
+      )
 
     # Time of day
     @dataTime =  _.reject(@dataTime.data, (d) -> 
@@ -114,6 +124,16 @@ class Filter extends APP.charts['Chart']
       .style("width", (d) =>
         "#{@scaleX(d.value)}px"
       )
+      .style("text-align", "right")
+      .append("span")
+      .attr("class", "bar-text")
+      .style("font-size", "11px")
+      .style("vertical-align", "top")
+      .style("padding-right", "4px")
+      .style("color", "#666")
+      .html((d) ->
+        Math.round(d.value)
+      )
 
     d3.select("#reset-filters").on("click", =>
       @_filterCharts(null, null)
@@ -158,7 +178,7 @@ class Filter extends APP.charts['Chart']
   _getScaleX: (data) ->
     domainX = @_getDomain(data)
     rangeX = [
-        0, @params.width - (@params.margin.left + @params.margin.right)
+        0, @params.width - (@params.margin.left + @params.margin.right + 10)
       ]
 
     @params.scale()
@@ -190,7 +210,7 @@ class Filter extends APP.charts['Chart']
     combinedData = @newDataMonthly.data.concat @newDataTime.data
     @scaleX = @_getScaleX(combinedData)
    
-    console.log @newDataMonthly.data.length
+    #console.log @newDataMonthly.data.length
 
     if @newDataMonthly.data.length == 1
       @newDataMonthly = @newDataMonthly.data[0]
@@ -224,6 +244,15 @@ class Filter extends APP.charts['Chart']
         "#{@scaleX(d.value)}px"
       )
 
+    @chartMonthly.selectAll(".bar").each((d, i) ->
+      d3.select(@).select(".bar-text")
+      .html(() ->
+        if d.value == 0 
+          return ""
+        Math.round(d.value)
+      )
+    )
+
     @chartTime.selectAll(".bar")
       .data(@dataTime, (d) -> d.time)
       .transition()
@@ -232,6 +261,15 @@ class Filter extends APP.charts['Chart']
         #console.log d
         "#{@scaleX(d.value)}px"
       )
+
+    @chartTime.selectAll(".bar").each((d, i) ->
+      d3.select(@).select(".bar-text")
+      .html(() ->
+        if d.value == 0 
+          return ""
+        Math.round(d.value)
+      )
+    )
     
 
   getFilters: () ->
