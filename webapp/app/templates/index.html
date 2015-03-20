@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
-{%block title %} Visualizing Air Quality: {{city}}{%endblock title %}
+{%block title %} Seeing the Air{%endblock title %}
 {% block body %}
 
 <div class="row">
   <div class="col-sm-12">
     <div id="intro-viz" style="position:absolute; top:180px;"></div>
-    <div style="font-size:48px; margin-top:100px; background:#fff;">Seeing Air</div>
+    <div style="font-size:48px; margin-top:100px; background:#fff;">Seeing the Air</div>
     <div style="font-size:18px; margin-top:0px;">An experiment in citizen-run, DIY air quality monitoring</div>
     
-    <div id="intro" style="background:#fff; opacity:0.8; margin-top:470px;">
+    <div id="intro" style="background:#fff; opacity:1.0; margin-top:470px;">
       <p>
         Those of us who live in more open societies can take for granted the freely available information we have access to. In many countries it is difficult to get reliable information on something as basic as air quality. [1]
       <p>
-        As sensors become cheaper and more abundant, a future in which this type of data is more freely accessible becomes possible. As part of a partnership between Swissnex, Grey Area and Lift Conference, more than 100 batteries of air quality sensors were set up in seven cities across the globe. These collect readings every 10 seconds, and are freely accessible to anyone with an internet connection. [2]
+        As sensors become cheaper and more abundant, a future in which this type of data is more freely accessible becomes possible. As part of a partnership between Swissnex, Grey Area and Lift Conference, more than 100 batteries of air quality sensors were set up in seven cities across the globe. These collect readings every 10 seconds, and the data they produce are freely accessible to anyone with an internet connection. [2]
       <p>
-        This project is an exploration of how this type of data could be used to increase understanding of air quality. Each city has its own panel of visualizations. These can answer questions that affect the quality of life: Is the air ever hazardous? If so, how often? What is the air like during commute hours?
+        Seeing the Air is an exploration of how this type of data could be used to increase understanding of air quality. To accomplish this, a set of visualizations has been created for each city. These are intended to allow users to explore the data, and to help them to find answers to questions that affect the quality of life: Is the air ever hazardous? If so, how often? What is the air like during commute hours?
     </div>
     <div style="text-align:right">
-    <a href="/city2/Bangalore/" type="button" class="btn btn-lg btn-default" style="width:150px;">Enter</a>
+    <a href="/city2/Bangalore/" type="button" class="enter-btn btn btn-lg btn-default">Enter</a>
     </div>
    
     <hr style="margin-top:30px;">
@@ -39,6 +39,7 @@
   </script>
   <script type="text/javascript" src="{{url_for('static', filename='js/chart.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/clockchart.js')}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/circlechart.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
 {% endblock js %}
 

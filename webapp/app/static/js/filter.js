@@ -113,6 +113,8 @@
           'city': this.city
         };
       } else {
+        this.monthFilter = null;
+        this.timeOfDayFilter = null;
         d3.selectAll(".btn-filter").classed({
           'on': false
         });
@@ -148,6 +150,26 @@
       self = this;
       this.data = data;
       return this.scaleX = this._getScaleX();
+    };
+
+    Filter.prototype.getFilters = function() {
+      var date, endMonth, et, st, startMonth, timeOfDayFilter;
+      startMonth = this.monthFormat(new Date(this.dataMonthly[0].time));
+      endMonth = this.monthFormat(new Date(this.dataMonthly[this.dataMonthly.length - 1].time));
+      if (this.timeOfDayFilter) {
+        date = "2015-03-02T" + this.timeOfDayFilter;
+        st = moment(date);
+        et = moment(st).add(2, "hours");
+        timeOfDayFilter = st.format('h') + ' and ' + et.format('ha');
+      } else {
+        timeOfDayFilter = null;
+      }
+      return {
+        'monthFilter': this.monthFilter,
+        'timeOfDayFilter': timeOfDayFilter,
+        'startMonth': startMonth,
+        'endMonth': endMonth
+      };
     };
 
     return Filter;

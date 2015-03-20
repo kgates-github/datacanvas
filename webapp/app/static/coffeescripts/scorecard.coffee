@@ -3,6 +3,7 @@ class ScoreCard extends APP.charts['Chart']
 
   constructor: (@app, @params, @data, @city, @helpers) ->
    @_setHTML()
+   @_setExplanationText()
     
   _setHTML: ->
     good = _.filter(@data, (d) -> d.max <= 50)
@@ -69,6 +70,21 @@ class ScoreCard extends APP.charts['Chart']
     self = @
     @data = data
     @_setHTML()
+    @_setExplanationText()
+
+  _setExplanationText: ->
+    @filters = @app.getFilters()
+    monthText = if @filters.monthFilter then "#{@filters.monthFilter}, 2015" else \
+      "between #{@filters.startMonth} and #{@filters.endMonth}, 2015"
+
+    timeOfDayText = if @filters.timeOfDayFilter? then \
+      " and only use data collected between #{@filters.timeOfDayFilter}" else ""
+
+    html = """
+      Measurements are from #{monthText}#{timeOfDayText}.
+    """
+    
+    d3.select("#score-explanation").html(html)
     
     
             

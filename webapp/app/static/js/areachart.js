@@ -115,6 +115,7 @@
           return _this.scaleX(new Date(d.date));
         };
       })(this)).attr("y", 0).on('mouseover', this.tip.show).on('mouseout', this.tip.hide);
+      this._setExplanationText();
     }
 
     AreaChart.prototype._getDomain = function(data) {
@@ -201,7 +202,17 @@
         };
       })(this)).attr("y", 0).on('mouseover', this.tip.show).on('mouseout', this.tip.hide);
       this.svg.selectAll("g.x.axis").transition().duration(duration).call(this.xAxis);
-      return this.svg.selectAll("g.y.axis").transition().duration(duration).call(this.yAxis);
+      this.svg.selectAll("g.y.axis").transition().duration(duration).call(this.yAxis);
+      return this._setExplanationText();
+    };
+
+    AreaChart.prototype._setExplanationText = function() {
+      var html, monthText, timeOfDayText;
+      this.filters = this.app.getFilters();
+      monthText = this.filters.monthFilter ? " from " + this.filters.monthFilter + ", 2015" : " between " + this.filters.startMonth + " and " + this.filters.endMonth + ", 2015";
+      timeOfDayText = this.filters.timeOfDayFilter != null ? " only using data collected between " + this.filters.timeOfDayFilter : "";
+      html = this.city + "'s daily AQi scores " + monthText + timeOfDayText + ".";
+      return d3.select("#timeseries-explanation").html(html);
     };
 
     return AreaChart;

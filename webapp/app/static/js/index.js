@@ -64,7 +64,7 @@
           dimension: 'none',
           scale: d3.scale.linear,
           width: 970,
-          height: 530,
+          height: 630,
           qualitative: helpers.aqiQualitative,
           margin: {
             top: 0,
@@ -79,22 +79,25 @@
 
 
   /*
-  {
-    type: 'CircleChart'
-    params:
-      el: 'intro-viz'
-      chart: 'circle'
-      dimension: 'none'
-      scale: d3.scale.linear
-      width: 970
-      height: 530
-      qualitative: helpers.aqiQualitative
-      margin: 
-        top: 0
-        right: 10
-        bottom: 10
-        left: 5
-  }
+  config = 
+    charts: [
+      {
+        type: 'CircleChart'
+        params:
+          el: 'intro-viz'
+          chart: 'circle'
+          dimension: 'none'
+          scale: d3.scale.linear
+          width: 970
+          height: 530
+          qualitative: helpers.aqiQualitative
+          margin: 
+            top: 0
+            right: 10
+            bottom: 10
+            left: 5
+      }
+    ]
    */
 
   App = (function() {

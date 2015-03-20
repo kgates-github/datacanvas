@@ -21,7 +21,7 @@
       this.radius = Math.min(this.width, this.height) / 2;
       this.innerRadius = 0;
       this.interval = 0;
-      this.scale = d3.scale.linear().domain([0, 300]).range([0, 1]);
+      this.scale = d3.scale.linear().domain([0, 350]).range([0, 1]);
       this.pie = d3.layout.pie().sort(null).value(function(d) {
         return d.width;
       });
@@ -86,8 +86,8 @@
               return d.data.color;
             }
             return "none";
-          }).style("opacity", 0.8).attr("class", "middleSolidArc").attr("stroke", "#fff").attr("stroke-width", 1.5).attr("d", self.arc);
-          return d3.select(this).append("circle").attr("cx", 0).attr("cy", 0).attr("r", 2).style("fill", "#999");
+          }).style("opacity", 1.0).attr("class", "middleSolidArc").attr("stroke", "#fff").attr("stroke-width", 1.5).attr("d", self.arc);
+          return d3.select(this).append("circle").attr("cx", 0).attr("cy", 0).attr("r", 2).style("fill", "#666");
         });
       });
     }

@@ -13,7 +13,7 @@ class ClockChart extends APP.charts['Chart']
     @interval = 0
 
     @scale = d3.scale.linear()
-      .domain([0, 300])
+      .domain([0, 350])
       .range([0, 1])
 
     @pie = d3.layout.pie()
@@ -65,6 +65,7 @@ class ClockChart extends APP.charts['Chart']
       .enter()
       .append("g")
       .attr("transform", (d, i) ->
+        #"translate(#{(i % 2 * 85)}, #{60+i*80})"
         "translate(#{(i % 2 * 85)}, #{60+i*80})"
       )
 
@@ -102,10 +103,10 @@ class ClockChart extends APP.charts['Chart']
               return d.data.color
             "none"
           )
-          .style("opacity", 0.8)
+          .style("opacity", 1.0)
           .attr("class", "middleSolidArc")
           .attr("stroke", "#fff")
-          .attr("stroke-width",1.5)
+          .attr("stroke-width", 1.5)
           .attr("d", self.arc)
 
         d3.select(@)
@@ -113,7 +114,7 @@ class ClockChart extends APP.charts['Chart']
           .attr("cx", 0)
           .attr("cy", 0)
           .attr("r", 2)
-          .style("fill", "#999")
+          .style("fill", "#666")
       )
     )
 

@@ -188,6 +188,7 @@ class AreaChart extends APP.charts['Chart']
       .on('mouseover', @tip.show)
       .on('mouseout', @tip.hide)
 
+    @_setExplanationText()
 
   _getDomain: (data) ->
     max = _.max(_.pluck(data, "max"))
@@ -283,8 +284,22 @@ class AreaChart extends APP.charts['Chart']
     @svg.selectAll("g.y.axis")
       .transition()
       .duration(duration)
-      .call(@yAxis);
+      .call(@yAxis)
 
+    @_setExplanationText()
+
+  _setExplanationText: ->
+    @filters = @app.getFilters()
+    monthText = if @filters.monthFilter then " from #{@filters.monthFilter}, 2015" else \
+      " between #{@filters.startMonth} and #{@filters.endMonth}, 2015"
+
+    timeOfDayText = if @filters.timeOfDayFilter? then \
+      " only using data collected between #{@filters.timeOfDayFilter}" else ""
+
+    html = "#{@city}'s daily AQi scores #{monthText}#{timeOfDayText}."
+    d3.select("#timeseries-explanation").html(html)
+
+    
 
 APP.charts['AreaChart'] = AreaChart
    

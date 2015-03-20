@@ -191,6 +191,7 @@ class App
           @filterChart = newChart
 
   update: (@data) ->
+    
     for chart in @charts
       data = _.findWhere(@data, 
         {
@@ -200,8 +201,8 @@ class App
       )
       chart.update data.data
 
-  getFilterParams: ->
-    return filterChart.getParams()
+  getFilters: ->
+    return @filterChart.getFilters()
 
 
 @app = new App config, data, city, helpers

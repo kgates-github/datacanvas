@@ -132,6 +132,9 @@ class Filter extends APP.charts['Chart']
         'city': @city
       }
     else
+      @monthFilter = null
+      @timeOfDayFilter = null
+
       d3.selectAll(".btn-filter").classed({'on': false})
       data = {
         'city': @city
@@ -168,7 +171,25 @@ class Filter extends APP.charts['Chart']
     self = @
     @data = data
     @scaleX = @_getScaleX()
-    
+
+  getFilters: () ->
+    startMonth = @monthFormat(new Date(@dataMonthly[0].time))
+    endMonth = @monthFormat(new Date(@dataMonthly[@dataMonthly.length-1].time))
+
+    if @timeOfDayFilter
+      date = "2015-03-02T#{@timeOfDayFilter}"
+      st = moment(date)
+      et = moment(st).add(2, "hours")
+      timeOfDayFilter = st.format('h') + ' and ' + et.format('ha')
+    else
+      timeOfDayFilter = null
+
+    return {
+      'monthFilter': @monthFilter
+      'timeOfDayFilter': timeOfDayFilter
+      'startMonth': startMonth
+      'endMonth': endMonth
+    }
     
             
 APP.charts['Filter'] = Filter

@@ -221,8 +221,8 @@
       return _results;
     };
 
-    App.prototype.getFilterParams = function() {
-      return filterChart.getParams();
+    App.prototype.getFilters = function() {
+      return this.filterChart.getFilters();
     };
 
     return App;

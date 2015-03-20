@@ -14,6 +14,7 @@
       this.city = _at_city;
       this.helpers = _at_helpers;
       this._setHTML();
+      this._setExplanationText();
     }
 
     ScoreCard.prototype._setHTML = function() {
@@ -44,7 +45,17 @@
       var self;
       self = this;
       this.data = data;
-      return this._setHTML();
+      this._setHTML();
+      return this._setExplanationText();
+    };
+
+    ScoreCard.prototype._setExplanationText = function() {
+      var html, monthText, timeOfDayText;
+      this.filters = this.app.getFilters();
+      monthText = this.filters.monthFilter ? this.filters.monthFilter + ", 2015" : "between " + this.filters.startMonth + " and " + this.filters.endMonth + ", 2015";
+      timeOfDayText = this.filters.timeOfDayFilter != null ? " and only use data collected between " + this.filters.timeOfDayFilter : "";
+      html = "Measurements are from " + monthText + timeOfDayText + ".";
+      return d3.select("#score-explanation").html(html);
     };
 
     return ScoreCard;
