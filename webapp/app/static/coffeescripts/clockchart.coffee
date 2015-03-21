@@ -90,34 +90,35 @@ class ClockChart extends APP.charts['Chart']
         "url(#blur)"
       )
 
-    @svg.selectAll("g")
-      .append("rect")
-      .attr("y", -@params.height / 14)
-      .attr("width", @params.width)
-      .attr("height", @params.height / 7 - 20)
+    @cityContainers
+      .append("g")
+      .attr("transform", (d, i) ->
+        #"translate(#{(i % 2 * 85)}, #{60+i*80})"
+        if i == 0
+          return "translate(0, -50)"
+        "translate(0, -20)"
+      )
+      .attr("class", "cityText")
+      .style("opacity", 1)
+      .append("text")
+      .text((d) ->
+        "#{d.city}"
+      )
+      .attr("x", 0)
+      .attr("y", (d, i) ->
+        if i == 0
+          return 100
+        else if d.city == "Boston"
+          return -40
+        -100
+      )
       .style("opacity", 0.0)
-      .on("mouseover", (d, i) ->
-        self.unBlurCity("id-#{i}", i)
-      )
-      .on("mouseout", (d, i) =>
-        @blurCity()
-      )
-      .style("cursor", "pointer")
+      .style("font-size", "14px")
+      .style("font-weight", "bold")
+      
 
-   
     @cityContainers.each((d, i) ->
-      ###
-      d3.select(@).append("text")
-        .text(d.city)
-        #.attr("transform", "rotate(-90)")
-        .attr("y", 4)
-        #.attr("dx", "0.8em")
-        .style("text-anchor", "start")
-        .style("font-size", "11px")
-        .style("stroke", "none")
-        .style("fill", "#999")
-      ###
-
+      containerIndex = i
       @day = d3.select(@).selectAll(".day")
         .data(d.data)
         .enter()
@@ -126,7 +127,7 @@ class ClockChart extends APP.charts['Chart']
         .attr("transform", (d, i) ->
           "translate(#{(50 + i*190)}, 0)"
         )
-      
+
       @day.each((d, i) ->
         
         @path = d3.select(@).selectAll(".middleSolidArc")
@@ -151,44 +152,94 @@ class ClockChart extends APP.charts['Chart']
           .attr("r", 2)
           .style("fill", "#666")
       )
-    )
-  
-  showText: (d, index) ->
-    
-    @svg.selectAll(".cityText")
-      .data([d])
-      .enter()
-      .append("g")
-      .attr("class", "cityText")
-      .attr("transform", (d, i) ->
-        #"translate(#{(i % 2 * 85)}, #{60+i*80})"
-        console.log  "translate(#{(index % 2 * 85)}, #{60+index*80})"
-        "translate(#{(index % 2 * 85)}, #{60+index*80})"
+
+      @day.each((d, i) ->
+        highest = _.max(d, (elem) -> elem.score)
+
+        date = moment(highest.timestamp)
+        
+        date.format('MMM-Do-YY') #+ '-' + et.format('ha')
+
+        index = containerIndex
+        score = d3.select(@)
+          .append("g")
+          .attr("class", "dayText")
+          .attr("opacity", 0)
+        score
+          .attr("transform", (d, i) ->
+            if index == 0
+              return "translate(0, 70)"
+            else if index == 4
+              return "translate(0, -88)"
+            else if index == 5
+              return "translate(0, -108)"
+            "translate(0, 90)"
+          )
+        score
+          .append("text")
+          .attr("y", 0)
+          .style("font-weight", "bold")
+          .text(highest.score)
+        score
+          .append("text")
+          .attr("y", 20)
+          .text(date.format('MMMM DD'))
+        score
+          .append("text")
+          .attr("y", 40)
+          .text(date.format('ha'))
       )
-      .append("text")
-      .text(d.city)
-      .attr("x", 50)
-    
+    )
 
-
-  hideText: (d) ->
-
+    @svg.selectAll(".city")
+      .append("rect")
+      .attr("y", -@params.height / 14)
+      .attr("width", @params.width)
+      .attr("height", @params.height / 7 - 20)
+      .style("opacity", 0.0)
+      .on("mouseover", (d, i) ->
+        self.unBlurCity("id-#{i}", i)
+      )
+      .on("mouseout", (d, i) =>
+        @blurCity()
+      )
+      .on("click", (d) ->
+        window.location.href = "/city/#{d.city}/"
+      )
+      .style("cursor", "pointer")
+      
 
   unBlurCity: (idx, index) ->
     d3.selectAll(".city").attr("filter", (d) -> 
       "url(#blur)"
     )
+
+    d3.selectAll(".cityText text")
+      .style("opacity", 0)
+
+    d3.selectAll(".day .dayText")
+      .style("opacity", 0)
     
     d3.selectAll("##{idx}")
       .attr("filter", (d) => 
-        @showText(d, index)
+        #@showText(d, index)
         "url(#unblur)"
       )
+      .selectAll("text")
+      .style("opacity", 1)
+
+    d3.selectAll("##{idx} .dayText")
+      .style("opacity", 1)
+
 
   blurCities: ->
     d3.selectAll(".city").attr("filter", (d) => 
       "url(#blur)"
     )
+    d3.selectAll(".cityText text")
+      .style("opacity", 0)
+
+
 
   blurCity: (idx) ->
     null

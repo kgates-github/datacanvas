@@ -71,30 +71,28 @@
       }).attr("class", "city").attr("filter", function(d) {
         return "url(#blur)";
       });
-      this.svg.selectAll("g").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 7 - 20).style("opacity", 0.0).on("mouseover", function(d, i) {
-        return self.unBlurCity("id-" + i, i);
-      }).on("mouseout", (function(_this) {
-        return function(d, i) {
-          return _this.blurCity();
-        };
-      })(this)).style("cursor", "pointer");
+      this.cityContainers.append("g").attr("transform", function(d, i) {
+        if (i === 0) {
+          return "translate(0, -50)";
+        }
+        return "translate(0, -20)";
+      }).attr("class", "cityText").style("opacity", 1).append("text").text(function(d) {
+        return "" + d.city;
+      }).attr("x", 0).attr("y", function(d, i) {
+        if (i === 0) {
+          return 100;
+        } else if (d.city === "Boston") {
+          return -40;
+        }
+        return -100;
+      }).style("opacity", 0.0).style("font-size", "14px").style("font-weight", "bold");
       this.cityContainers.each(function(d, i) {
-
-        /*
-        d3.select(@).append("text")
-          .text(d.city)
-          #.attr("transform", "rotate(-90)")
-          .attr("y", 4)
-          #.attr("dx", "0.8em")
-          .style("text-anchor", "start")
-          .style("font-size", "11px")
-          .style("stroke", "none")
-          .style("fill", "#999")
-         */
+        var containerIndex;
+        containerIndex = i;
         this.day = d3.select(this).selectAll(".day").data(d.data).enter().append("g").attr("class", "day").attr("transform", function(d, i) {
           return "translate(" + (50 + i * 190) + ", 0)";
         });
-        return this.day.each(function(d, i) {
+        this.day.each(function(d, i) {
           this.path = d3.select(this).selectAll(".middleSolidArc").data(self.pie(d)).enter().append("path").attr("fill", function(d) {
             if (d.data.score > 50) {
               return d.data.color;
@@ -103,36 +101,62 @@
           }).style("opacity", 1.0).attr("class", "middleSolidArc").attr("stroke", "#fff").attr("stroke-width", 1.5).attr("d", self.arc);
           return d3.select(this).append("circle").attr("cx", 0).attr("cy", 0).attr("r", 2).style("fill", "#666");
         });
+        return this.day.each(function(d, i) {
+          var highest, index, score;
+          highest = _.max(d, function(elem) {
+            return elem.score;
+          });
+          date = moment(highest.timestamp);
+          date.format('MMM-Do-YY');
+          index = containerIndex;
+          score = d3.select(this).append("g").attr("class", "dayText").attr("opacity", 0);
+          score.attr("transform", function(d, i) {
+            if (index === 0) {
+              return "translate(0, 70)";
+            } else if (index === 4) {
+              return "translate(0, -88)";
+            } else if (index === 5) {
+              return "translate(0, -108)";
+            }
+            return "translate(0, 90)";
+          });
+          score.append("text").attr("y", 0).style("font-weight", "bold").text(highest.score);
+          score.append("text").attr("y", 20).text(date.format('MMMM DD'));
+          return score.append("text").attr("y", 40).text(date.format('ha'));
+        });
       });
+      this.svg.selectAll(".city").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 7 - 20).style("opacity", 0.0).on("mouseover", function(d, i) {
+        return self.unBlurCity("id-" + i, i);
+      }).on("mouseout", (function(_this) {
+        return function(d, i) {
+          return _this.blurCity();
+        };
+      })(this)).on("click", function(d) {
+        return window.location.href = "/city/" + d.city + "/";
+      }).style("cursor", "pointer");
     }
-
-    ClockChart.prototype.showText = function(d, index) {
-      return this.svg.selectAll(".cityText").data([d]).enter().append("g").attr("class", "cityText").attr("transform", function(d, i) {
-        console.log("translate(" + (index % 2 * 85) + ", " + (60 + index * 80) + ")");
-        return "translate(" + (index % 2 * 85) + ", " + (60 + index * 80) + ")";
-      }).append("text").text(d.city).attr("x", 50);
-    };
-
-    ClockChart.prototype.hideText = function(d) {};
 
     ClockChart.prototype.unBlurCity = function(idx, index) {
       d3.selectAll(".city").attr("filter", function(d) {
         return "url(#blur)";
       });
-      return d3.selectAll("#" + idx).attr("filter", (function(_this) {
+      d3.selectAll(".cityText text").style("opacity", 0);
+      d3.selectAll(".day .dayText").style("opacity", 0);
+      d3.selectAll("#" + idx).attr("filter", (function(_this) {
         return function(d) {
-          _this.showText(d, index);
           return "url(#unblur)";
         };
-      })(this));
+      })(this)).selectAll("text").style("opacity", 1);
+      return d3.selectAll("#" + idx + " .dayText").style("opacity", 1);
     };
 
     ClockChart.prototype.blurCities = function() {
-      return d3.selectAll(".city").attr("filter", (function(_this) {
+      d3.selectAll(".city").attr("filter", (function(_this) {
         return function(d) {
           return "url(#blur)";
         };
       })(this));
+      return d3.selectAll(".cityText text").style("opacity", 0);
     };
 
     ClockChart.prototype.blurCity = function(idx) {
