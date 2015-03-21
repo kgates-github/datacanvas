@@ -71,26 +71,7 @@
       }).attr("class", "city").attr("filter", function(d) {
         return "url(#blur)";
       });
-      this.svg.selectAll("g").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 7 - 20).style("opacity", 0.0).on("mouseover", function(d, i) {
-        return self.unBlurCity("id-" + i, i);
-      }).on("mouseout", (function(_this) {
-        return function(d, i) {
-          return _this.blurCity();
-        };
-      })(this)).style("cursor", "pointer");
       this.cityContainers.each(function(d, i) {
-
-        /*
-        d3.select(@).append("text")
-          .text(d.city)
-          #.attr("transform", "rotate(-90)")
-          .attr("y", 4)
-          #.attr("dx", "0.8em")
-          .style("text-anchor", "start")
-          .style("font-size", "11px")
-          .style("stroke", "none")
-          .style("fill", "#999")
-         */
         this.day = d3.select(this).selectAll(".day").data(d.data).enter().append("g").attr("class", "day").attr("transform", function(d, i) {
           return "translate(" + (50 + i * 190) + ", 0)";
         });
@@ -104,11 +85,26 @@
           return d3.select(this).append("circle").attr("cx", 0).attr("cy", 0).attr("r", 2).style("fill", "#666");
         });
       });
+      this.svg.selectAll(".city").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 7 - 20).style("opacity", 0.0).on("mouseover", function(d, i) {
+        return self.unBlurCity("id-" + i, i);
+      }).on("mouseout", (function(_this) {
+        return function(d, i) {
+          return _this.blurCity();
+        };
+      })(this)).style("cursor", "pointer");
+
+      /*
+      @svg.selectAll(".cityText")
+        .append("g")
+        .attr("class", "cityText")
+        .attr("transform", (d, i) ->
+          "translate(#{(index % 2 * 85)}, #{60+index*80})"
+        )
+       */
     }
 
     ClockChart.prototype.showText = function(d, index) {
       return this.svg.selectAll(".cityText").data([d]).enter().append("g").attr("class", "cityText").attr("transform", function(d, i) {
-        console.log("translate(" + (index % 2 * 85) + ", " + (60 + index * 80) + ")");
         return "translate(" + (index % 2 * 85) + ", " + (60 + index * 80) + ")";
       }).append("text").text(d.city).attr("x", 50);
     };

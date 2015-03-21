@@ -90,34 +90,7 @@ class ClockChart extends APP.charts['Chart']
         "url(#blur)"
       )
 
-    @svg.selectAll("g")
-      .append("rect")
-      .attr("y", -@params.height / 14)
-      .attr("width", @params.width)
-      .attr("height", @params.height / 7 - 20)
-      .style("opacity", 0.0)
-      .on("mouseover", (d, i) ->
-        self.unBlurCity("id-#{i}", i)
-      )
-      .on("mouseout", (d, i) =>
-        @blurCity()
-      )
-      .style("cursor", "pointer")
-
-   
     @cityContainers.each((d, i) ->
-      ###
-      d3.select(@).append("text")
-        .text(d.city)
-        #.attr("transform", "rotate(-90)")
-        .attr("y", 4)
-        #.attr("dx", "0.8em")
-        .style("text-anchor", "start")
-        .style("font-size", "11px")
-        .style("stroke", "none")
-        .style("fill", "#999")
-      ###
-
       @day = d3.select(@).selectAll(".day")
         .data(d.data)
         .enter()
@@ -152,6 +125,29 @@ class ClockChart extends APP.charts['Chart']
           .style("fill", "#666")
       )
     )
+
+    @svg.selectAll(".city")
+      .append("rect")
+      .attr("y", -@params.height / 14)
+      .attr("width", @params.width)
+      .attr("height", @params.height / 7 - 20)
+      .style("opacity", 0.0)
+      .on("mouseover", (d, i) ->
+        self.unBlurCity("id-#{i}", i)
+      )
+      .on("mouseout", (d, i) =>
+        @blurCity()
+      )
+      .style("cursor", "pointer")
+
+    ###
+    @svg.selectAll(".cityText")
+      .append("g")
+      .attr("class", "cityText")
+      .attr("transform", (d, i) ->
+        "translate(#{(index % 2 * 85)}, #{60+index*80})"
+      )
+    ###
   
   showText: (d, index) ->
     
@@ -162,7 +158,7 @@ class ClockChart extends APP.charts['Chart']
       .attr("class", "cityText")
       .attr("transform", (d, i) ->
         #"translate(#{(i % 2 * 85)}, #{60+i*80})"
-        console.log  "translate(#{(index % 2 * 85)}, #{60+index*80})"
+        
         "translate(#{(index % 2 * 85)}, #{60+index*80})"
       )
       .append("text")
