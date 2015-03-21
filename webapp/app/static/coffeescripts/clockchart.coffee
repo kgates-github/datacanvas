@@ -80,7 +80,7 @@ class ClockChart extends APP.charts['Chart']
       .append("g")
       .attr("transform", (d, i) ->
         #"translate(#{(i % 2 * 85)}, #{60+i*80})"
-        "translate(#{(i % 2 * 85)}, #{60+i*80})"
+        "translate(#{(i % 2 * 85 + 10)}, #{60+i*80})"
       )
       .attr("id", (d, i) ->
         "id-#{i}"
@@ -110,6 +110,8 @@ class ClockChart extends APP.charts['Chart']
           return 100
         else if d.city == "Boston"
           return -40
+        else if d.city == "Singapore"
+          return -120
         -100
       )
       .style("opacity", 0.0)

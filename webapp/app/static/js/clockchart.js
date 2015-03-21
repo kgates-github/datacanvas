@@ -65,7 +65,7 @@
         });
       }
       this.cityContainers = this.svg.selectAll("g").data(this.cityData).enter().append("g").attr("transform", function(d, i) {
-        return "translate(" + (i % 2 * 85) + ", " + (60 + i * 80) + ")";
+        return "translate(" + (i % 2 * 85 + 10) + ", " + (60 + i * 80) + ")";
       }).attr("id", function(d, i) {
         return "id-" + i;
       }).attr("class", "city").attr("filter", function(d) {
@@ -83,6 +83,8 @@
           return 100;
         } else if (d.city === "Boston") {
           return -40;
+        } else if (d.city === "Singapore") {
+          return -120;
         }
         return -100;
       }).style("opacity", 0.0).style("font-size", "14px").style("font-weight", "bold");
