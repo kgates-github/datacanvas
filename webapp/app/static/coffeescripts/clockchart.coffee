@@ -184,7 +184,7 @@ class ClockChart extends APP.charts['Chart']
           .text(highest.score)
         score
           .append("text")
-          .attr("y", 20)
+          .attr("y", 24)
           .text(date.format('MMMM DD'))
         score
           .append("text")

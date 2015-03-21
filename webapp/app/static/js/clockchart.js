@@ -123,7 +123,7 @@
             return "translate(0, 90)";
           });
           score.append("text").attr("y", 0).style("font-weight", "bold").text(highest.score);
-          score.append("text").attr("y", 20).text(date.format('MMMM DD'));
+          score.append("text").attr("y", 24).text(date.format('MMMM DD'));
           return score.append("text").attr("y", 40).text(date.format('ha'));
         });
       });
