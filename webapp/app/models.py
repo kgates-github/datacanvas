@@ -2,7 +2,25 @@ import json
 import pandas as pd
 
 
-def load_cities_data(date_from, date_to, time_of_day):
+def load_city_data(date_from, date_to):
+    datafiles = []
+    datafiles.append('data/cities-max-2015-03-01-to-2015-03-21.csv')
+    data = []
+    for csv_name in datafiles:
+        df = pd.read_csv(csv_name,
+            usecols=['airquality_raw', 'city', 'timestamp'],
+            parse_dates=['timestamp'])
+        data.append(df)
+    df = pd.concat(data)
+    df.set_index('timestamp', inplace=True)
+    df = df[date_from:date_to]
+    df.reset_index(inplace=True)
+    df.sort(['city', 'timestamp'], ascending=[False, True])
+    df['airquality_raw'] = df['airquality_raw'].map(lambda val: int(val))
+    return df[['airquality_raw', 'city', 'timestamp']]
+
+
+def load_sensor_data(date_from, date_to, time_of_day):
     datafiles = []
     datafiles.append('data/sensors-mean-2015-01-15-to-2015-02-01.csv')
     datafiles.append('data/sensors-mean-2015-02-01-to-2015-03-01.csv')

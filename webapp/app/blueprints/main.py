@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta
 from flask import Blueprint, render_template, request, jsonify
 from app import models
 
@@ -7,11 +8,14 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    return render_template('index.html', data={})
+    date_to = datetime.now().strftime('%Y-%m-%d')
+    date_from = (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
+    df = models.load_city_data(date_from, date_to)
+    return render_template('index.html', data=df.to_json(date_format='iso', orient='records'))
 
 
-def get_data(date_from, date_to, name, time_of_day=''):
-    df = models.load_cities_data(date_from, date_to, time_of_day)
+def get_sensor_data(date_from, date_to, name, time_of_day=''):
+    df = models.load_sensor_data(date_from, date_to, time_of_day)
     city_data = []
     for metric in ['airquality_raw', 'sound', 'dust', 'humidity', 'temperature', 'light', 'noise']:
         # Build Filter Results
@@ -38,7 +42,7 @@ def get_data(date_from, date_to, name, time_of_day=''):
 def city(name='Shanghai'):
     date_from = '2015-01-01'
     date_to = '2015-03-31'
-    data = get_data(date_from, date_to, name)
+    data = get_sensor_data(date_from, date_to, name)
     return render_template('city.html', city=name, data=json.dumps(data))
 
 
@@ -59,5 +63,5 @@ def update():
     else:
         date_from = '2015-01-01'
         date_to = '2015-03-31'
-    data = get_data(date_from, date_to, name, time_of_day)
+    data = get_sensor_data(date_from, date_to, name, time_of_day)
     return jsonify(data=data)

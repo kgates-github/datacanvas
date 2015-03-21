@@ -41,10 +41,8 @@
 </div>
 {% endblock body %}
 {% block js %}
-  <script type="text/javascript" src="{{url_for('static', filename='js/data.js')}}"></script>
   <script type='text/javascript'>
-
-
+    var data = {{data | safe}};
   </script>
   <script type="text/javascript" src="{{url_for('static', filename='js/chart.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/clockchart.js')}}"></script>
