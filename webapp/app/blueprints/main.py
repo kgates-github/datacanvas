@@ -33,8 +33,8 @@ def get_data(date_from, date_to, name, time_of_day=''):
     return city_data
 
 
-@main.route('/city2/<name>/')
-@main.route('/city2/')
+@main.route('/city/<name>/')
+@main.route('/city/')
 def city(name='Shanghai'):
     date_from = '2015-01-01'
     date_to = '2015-03-31'
