@@ -115,7 +115,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("text-anchor", "end")
         .text((d) -> d.name)
         .attr("x", -6)
-        .attr("y", -30)
+        .attr("y", -32)
         .attr("class", (d) -> d.class)
         .style("stroke", "none")
         .style("font-size", "11")

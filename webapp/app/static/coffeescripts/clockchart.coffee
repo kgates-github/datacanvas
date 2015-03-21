@@ -32,10 +32,18 @@ class ClockChart extends APP.charts['Chart']
       .attr("height", @params.height)
 
     @filter = @svg.append("defs")
+
+    @filter 
       .append("filter")
       .attr("id", "blur")
       .append("feGaussianBlur")
       .attr("stdDeviation", 8)
+
+    @filter 
+      .append("filter")
+      .attr("id", "unblur")
+      .append("feGaussianBlur")
+      .attr("stdDeviation", 0)
 
     @cities = ["Bangalore", "Boston", "Rio de Janeiro", "San Francisco", "Shanghai", "Singapore"]
     @cityData = []
@@ -74,10 +82,27 @@ class ClockChart extends APP.charts['Chart']
         #"translate(#{(i % 2 * 85)}, #{60+i*80})"
         "translate(#{(i % 2 * 85)}, #{60+i*80})"
       )
-      .attr("filter", (d) ->
-        if d.city != "Rio de Janeiro"
-          "url(#blur)"
+      .attr("id", (d, i) ->
+        "id-#{i}"
       )
+      .attr("class", "city")
+      .attr("filter", (d) ->
+        "url(#blur)"
+      )
+
+    @svg.selectAll("g")
+      .append("rect")
+      .attr("y", -@params.height / 14)
+      .attr("width", @params.width)
+      .attr("height", @params.height / 7 - 20)
+      .style("opacity", 0.0)
+      .on("mouseover", (d, i) ->
+        self.unBlurCity("id-#{i}", i)
+      )
+      .on("mouseout", (d, i) =>
+        @blurCity()
+      )
+      .style("cursor", "pointer")
 
    
     @cityContainers.each((d, i) ->
@@ -127,6 +152,50 @@ class ClockChart extends APP.charts['Chart']
           .style("fill", "#666")
       )
     )
+  
+  showText: (d, index) ->
+    
+    @svg.selectAll(".cityText")
+      .data([d])
+      .enter()
+      .append("g")
+      .attr("class", "cityText")
+      .attr("transform", (d, i) ->
+        #"translate(#{(i % 2 * 85)}, #{60+i*80})"
+        console.log  "translate(#{(index % 2 * 85)}, #{60+index*80})"
+        "translate(#{(index % 2 * 85)}, #{60+index*80})"
+      )
+      .append("text")
+      .text(d.city)
+      .attr("x", 50)
+    
+
+
+  hideText: (d) ->
+
+
+  unBlurCity: (idx, index) ->
+    d3.selectAll(".city").attr("filter", (d) -> 
+      "url(#blur)"
+    )
+    
+    d3.selectAll("##{idx}")
+      .attr("filter", (d) => 
+        @showText(d, index)
+        "url(#unblur)"
+      )
+
+  blurCities: ->
+    d3.selectAll(".city").attr("filter", (d) => 
+      "url(#blur)"
+    )
+
+  blurCity: (idx) ->
+    null
+    #.attr("filter", (d) => 
+    #  "url(#blur)"
+    #)
+    
 
    
 APP.charts['ClockChart'] = ClockChart

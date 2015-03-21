@@ -31,7 +31,9 @@
         };
       })(this));
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.filter = this.svg.append("defs").append("filter").attr("id", "blur").append("feGaussianBlur").attr("stdDeviation", 8);
+      this.filter = this.svg.append("defs");
+      this.filter.append("filter").attr("id", "blur").append("feGaussianBlur").attr("stdDeviation", 8);
+      this.filter.append("filter").attr("id", "unblur").append("feGaussianBlur").attr("stdDeviation", 0);
       this.cities = ["Bangalore", "Boston", "Rio de Janeiro", "San Francisco", "Shanghai", "Singapore"];
       this.cityData = [];
       _ref = this.cities;
@@ -64,11 +66,18 @@
       }
       this.cityContainers = this.svg.selectAll("g").data(this.cityData).enter().append("g").attr("transform", function(d, i) {
         return "translate(" + (i % 2 * 85) + ", " + (60 + i * 80) + ")";
-      }).attr("filter", function(d) {
-        if (d.city !== "Rio de Janeiro") {
-          return "url(#blur)";
-        }
+      }).attr("id", function(d, i) {
+        return "id-" + i;
+      }).attr("class", "city").attr("filter", function(d) {
+        return "url(#blur)";
       });
+      this.svg.selectAll("g").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 7 - 20).style("opacity", 0.0).on("mouseover", function(d, i) {
+        return self.unBlurCity("id-" + i, i);
+      }).on("mouseout", (function(_this) {
+        return function(d, i) {
+          return _this.blurCity();
+        };
+      })(this)).style("cursor", "pointer");
       this.cityContainers.each(function(d, i) {
 
         /*
@@ -96,6 +105,39 @@
         });
       });
     }
+
+    ClockChart.prototype.showText = function(d, index) {
+      return this.svg.selectAll(".cityText").data([d]).enter().append("g").attr("class", "cityText").attr("transform", function(d, i) {
+        console.log("translate(" + (index % 2 * 85) + ", " + (60 + index * 80) + ")");
+        return "translate(" + (index % 2 * 85) + ", " + (60 + index * 80) + ")";
+      }).append("text").text(d.city).attr("x", 50);
+    };
+
+    ClockChart.prototype.hideText = function(d) {};
+
+    ClockChart.prototype.unBlurCity = function(idx, index) {
+      d3.selectAll(".city").attr("filter", function(d) {
+        return "url(#blur)";
+      });
+      return d3.selectAll("#" + idx).attr("filter", (function(_this) {
+        return function(d) {
+          _this.showText(d, index);
+          return "url(#unblur)";
+        };
+      })(this));
+    };
+
+    ClockChart.prototype.blurCities = function() {
+      return d3.selectAll(".city").attr("filter", (function(_this) {
+        return function(d) {
+          return "url(#blur)";
+        };
+      })(this));
+    };
+
+    ClockChart.prototype.blurCity = function(idx) {
+      return null;
+    };
 
     return ClockChart;
 
