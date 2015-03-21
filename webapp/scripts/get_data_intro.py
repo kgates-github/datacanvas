@@ -43,7 +43,7 @@ def get_sensors(directory, from_dt, before_dt, metric='mean', city=None, resolut
     sensor_ids = sensors_df.Id.unique()
     for sensor_id, city in zip(sensor_ids, cities):
         df = get_datacanvas(directory, from_dt, before_dt, metric, sensor=sensor_id, resolution=resolution)
-        if df is not None:
+        if df is not None and len(df) > 0:
             df['city'] = city
             # Convert to local timezone
             df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
