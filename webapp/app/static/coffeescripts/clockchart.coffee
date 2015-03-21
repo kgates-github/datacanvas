@@ -112,7 +112,7 @@ class ClockChart extends APP.charts['Chart']
           return -40
         -100
       )
-      .style("opacity", 0.1)
+      .style("opacity", 0.0)
       .style("font-size", "14px")
       .style("font-weight", "bold")
       

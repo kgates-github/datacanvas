@@ -85,7 +85,7 @@
           return -40;
         }
         return -100;
-      }).style("opacity", 0.1).style("font-size", "14px").style("font-weight", "bold");
+      }).style("opacity", 0.0).style("font-size", "14px").style("font-weight", "bold");
       this.cityContainers.each(function(d, i) {
         var containerIndex;
         containerIndex = i;
