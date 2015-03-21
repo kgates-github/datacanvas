@@ -134,6 +134,13 @@
       })(this)).on("click", function(d) {
         return window.location.href = "/city/" + d.city + "/";
       }).style("cursor", "pointer");
+      this.svg.on("mouseout", function() {
+        d3.selectAll(".city").attr("filter", function(d) {
+          return "url(#blur)";
+        });
+        d3.selectAll(".cityText text").style("opacity", 0);
+        return d3.selectAll(".day .dayText").style("opacity", 0);
+      });
     }
 
     ClockChart.prototype.unBlurCity = function(idx, index) {

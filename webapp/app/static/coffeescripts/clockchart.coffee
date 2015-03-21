@@ -207,6 +207,18 @@ class ClockChart extends APP.charts['Chart']
         window.location.href = "/city/#{d.city}/"
       )
       .style("cursor", "pointer")
+
+    @svg
+      .on("mouseout", () ->
+        d3.selectAll(".city").attr("filter", (d) -> 
+          "url(#blur)"
+        )
+        d3.selectAll(".cityText text")
+          .style("opacity", 0)
+
+        d3.selectAll(".day .dayText")
+          .style("opacity", 0)
+      )
       
 
   unBlurCity: (idx, index) ->
