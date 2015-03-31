@@ -30,9 +30,10 @@
           return (_this.radius - _this.innerRadius) * (_this.scale(d.data.score)) + _this.innerRadius;
         };
       })(this));
+      this.arc2 = d3.svg.arc().innerRadius(this.innerRadius).startAngle(0).endAngle(0);
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
       this.filter = this.svg.append("defs");
-      this.filter.append("filter").attr("id", "blur").append("feGaussianBlur").attr("stdDeviation", 8);
+      this.filter.append("filter").attr("id", "blur").append("feGaussianBlur").attr("stdDeviation", 10);
       this.filter.append("filter").attr("id", "unblur").append("feGaussianBlur").attr("stdDeviation", 0);
       this.cities = ["Bangalore", "Boston", "Rio de Janeiro", "San Francisco", "Shanghai", "Singapore"];
       this.cityData = [];
@@ -71,23 +72,38 @@
       }).attr("class", "city").attr("filter", function(d) {
         return "url(#blur)";
       });
-      this.cityContainers.append("g").attr("transform", function(d, i) {
+      this.cityText = this.cityContainers.append("g").attr("transform", function(d, i) {
         if (i === 0) {
           return "translate(0, -50)";
         }
         return "translate(0, -20)";
-      }).attr("class", "cityText").style("opacity", 1).append("text").text(function(d) {
+      }).attr("class", "cityText").style("opacity", 1);
+      this.cityText.append("text").text(function(d) {
         return "" + d.city;
       }).attr("x", 0).attr("y", function(d, i) {
         if (i === 0) {
-          return 100;
+          return 20;
+        } else if (d.city === "Boston") {
+          return -60;
+        } else if (d.city === "Shanghai") {
+          return -140;
+        } else if (d.city === "Singapore") {
+          return -140;
+        }
+        return -60;
+      }).style("opacity", 0.0).style("font-size", "14px").style("font-weight", "bold");
+      this.cityText.append("text").text("Worst air quality index score by the hour").attr("x", 0).attr("y", function(d, i) {
+        if (i === 0) {
+          return 90;
         } else if (d.city === "Boston") {
           return -40;
+        } else if (d.city === "Shanghai") {
+          return -120;
         } else if (d.city === "Singapore") {
           return -120;
         }
-        return -100;
-      }).style("opacity", 0.0).style("font-size", "14px").style("font-weight", "bold");
+        return -40;
+      }).style("opacity", 0.0).style("font-size", "14px");
       this.cityContainers.each(function(d, i) {
         var containerIndex;
         containerIndex = i;

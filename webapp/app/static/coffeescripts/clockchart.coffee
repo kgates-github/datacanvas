@@ -22,9 +22,19 @@ class ClockChart extends APP.charts['Chart']
 
     @arc = d3.svg.arc()
       .innerRadius(@innerRadius)
+      #.startAngle(0)
+      #.endAngle(0.5)
       .outerRadius((d, i) =>
         ((@radius - @innerRadius) * (@scale(d.data.score)) + @innerRadius)
       )
+
+    @arc2 = d3.svg.arc()
+      .innerRadius(@innerRadius)
+      .startAngle(0)
+      .endAngle(0)
+      #.outerRadius((d, i) =>
+      #  ((@radius - @innerRadius) * (@scale(d.data.score)) + @innerRadius)
+      #)
     
 
     @svg = d3.select("##{@el}").append("svg")
@@ -37,7 +47,7 @@ class ClockChart extends APP.charts['Chart']
       .append("filter")
       .attr("id", "blur")
       .append("feGaussianBlur")
-      .attr("stdDeviation", 8)
+      .attr("stdDeviation", 10)
 
     @filter 
       .append("filter")
@@ -54,14 +64,14 @@ class ClockChart extends APP.charts['Chart']
       for date of cityData
         data.push _.map(cityData[date], (d, i) -> 
           {
-              'id': "#{d.city}-#{i}"
-              'order': i
-              'color': self.helpers.getColor(d.airquality_raw, self.qualitative)
-              'weight': 1
-              'score': d.airquality_raw
-              'width': 1
-              'label': city
-              'timestamp': d.timestamp
+            'id': "#{d.city}-#{i}"
+            'order': i
+            'color': self.helpers.getColor(d.airquality_raw, self.qualitative)
+            'weight': 1
+            'score': d.airquality_raw
+            'width': 1
+            'label': city
+            'timestamp': d.timestamp
             }
         )
 
@@ -90,16 +100,17 @@ class ClockChart extends APP.charts['Chart']
         "url(#blur)"
       )
 
-    @cityContainers
+    @cityText = @cityContainers
       .append("g")
       .attr("transform", (d, i) ->
-        #"translate(#{(i % 2 * 85)}, #{60+i*80})"
         if i == 0
           return "translate(0, -50)"
         "translate(0, -20)"
       )
       .attr("class", "cityText")
       .style("opacity", 1)
+
+    @cityText
       .append("text")
       .text((d) ->
         "#{d.city}"
@@ -107,16 +118,36 @@ class ClockChart extends APP.charts['Chart']
       .attr("x", 0)
       .attr("y", (d, i) ->
         if i == 0
-          return 100
+          return 20
         else if d.city == "Boston"
-          return -40
+          return -60
+        else if d.city == "Shanghai"
+          return -140
         else if d.city == "Singapore"
-          return -120
-        -100
+          return -140
+        -60
       )
       .style("opacity", 0.0)
       .style("font-size", "14px")
       .style("font-weight", "bold")
+
+    @cityText
+      .append("text")
+      .text("Worst air quality index score by the hour")
+      .attr("x", 0)
+      .attr("y", (d, i) ->
+        if i == 0
+          return 90
+        else if d.city == "Boston"
+          return -40
+        else if d.city == "Shanghai"
+          return -120
+        else if d.city == "Singapore"
+          return -120
+        -40
+      )
+      .style("opacity", 0.0)
+      .style("font-size", "14px")
       
 
     @cityContainers.each((d, i) ->
@@ -136,7 +167,6 @@ class ClockChart extends APP.charts['Chart']
           .data(self.pie(d))
           .enter().append("path")
           .attr("fill", (d) ->
-            
             if d.data.score > 50
               return d.data.color
             "none"

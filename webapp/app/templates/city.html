@@ -54,10 +54,9 @@
       <a class="{{'selected' if city == 'Boston'}}" href="{{url_for('main.city', name='Boston')}}">Boston</a> -
       <a class="{{'selected' if city == 'Geneva'}}" href="{{url_for('main.city', name='Geneva')}}">Geneva</a> -
       <a class="{{'selected' if city == 'Rio de Janeiro'}}" href="{{url_for('main.city', name='Rio de Janeiro')}}">Rio de Janeiro</a> -
-      
       <a class="{{'selected' if city == 'San Francisco'}}" href="{{url_for('main.city', name='San Francisco')}}">San Francisco</a> -
       <a class="{{'selected' if city == 'Shanghai'}}" href="{{url_for('main.city', name='Shanghai')}}">Shanghai</a> -
-      <a class="{{'selected' if city == 'Singapore'}}" href="{{url_for('main.city', name='Singapore')}}">Singapore</a> -
+      <a class="{{'selected' if city == 'Singapore'}}" href="{{url_for('main.city', name='Singapore')}}">Singapore</a>
     </div>
   </div>
 </div>
@@ -86,7 +85,7 @@
           <span contenteditable='false' class='dot unhealthy-mild'>2</span> 101 to 150: unhealthy for sensitive groups&nbsp;
           <span contenteditable='false' class='dot unhealthy'>2</span> 151 to 200: unhealthy&nbsp;
           <span contenteditable='false' class='dot unhealthy-very'>2</span> 201 to 300: very unhealthy&nbsp;
-          <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [2]
+          <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [1]
         </div>
 
         <div class="chart-header" style="border-bottom:1px solid #ccc; padding-bottom:10px;">{{city}}'s Air Quality Compared to Other Cities</div>
@@ -102,7 +101,7 @@
           <span contenteditable='false' class='dot unhealthy-mild'>2</span> 101 to 150: unhealthy for sensitive groups&nbsp;
           <span contenteditable='false' class='dot unhealthy'>2</span> 151 to 200: unhealthy&nbsp;
           <span contenteditable='false' class='dot unhealthy-very'>2</span> 201 to 300: very unhealthy&nbsp;
-          <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [2]
+          <span contenteditable='false' class='dot hazardous'>2</span> 301 to 500: hazardous. [1]
         </div>
 
         <div class="chart-header" style="border-bottom:1px solid #ccc; padding-bottom:10px;">{{city}}'s Air Quality Score Card</div>
@@ -115,7 +114,7 @@
         <!--<p style="font-size:11px; color:#999;">
           [1] Notes on measurements: Lorem ipsum dolor sit amet, vis cu clita rationibus, his et ancillae sensibus. Illum saepe disputando id has, deserunt delicata appellantur ius ei, debet corrumpit ius ad. Lorem eloquentiam at pro, mollis propriae quaestio mea ne, ea vix aeterno suavitate. Nec id soluta eligendi.-->
         <p style="font-size:11px; color:#999;">
-          [2] Qulaitative air quality index scale from <a href="http://airnow.gov/index.cfm?action=aqibasics.aqi">http://airnow.gov</a>
+          [1] Qulaitative air quality index scale from <a href="http://airnow.gov/index.cfm?action=aqibasics.aqi">http://airnow.gov</a>
 
       </div>
     </div>
