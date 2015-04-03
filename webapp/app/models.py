@@ -4,7 +4,7 @@ import pandas as pd
 
 def load_city_data(date_from, date_to):
     datafiles = []
-    datafiles.append('data/cities-max-2015-03-01-to-2015-03-21.csv')
+    datafiles.append('data/cities-max-2015-03-21-to-2015-04-01.csv')
     data = []
     for csv_name in datafiles:
         df = pd.read_csv(csv_name,

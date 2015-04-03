@@ -78,5 +78,5 @@ if __name__ == '__main__':
         print "python get_data_by_city.py '../data/prototype/' '2015-02-15' '2015-02-16' 'mean' 'Shanghai' '2h'"
         sys.exit(0)
     _, directory, from_dt, before_dt, metric, city, resolution = sys.argv
-
-    get_sensors(directory, from_dt, before_dt, metric, city, resolution)
+    # get_sensors(directory, from_dt, before_dt, metric, city, resolution)
+    get_cities(directory, from_dt, before_dt, metric, city, resolution)
