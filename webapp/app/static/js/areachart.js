@@ -57,6 +57,39 @@
       this.svg.append("g").attr("class", "x axis").attr("transform", "translate(20, " + (this.params.margin.top - 10) + ")").call(this.xAxis);
       this.svg.append("g").attr("class", "y axis").attr("transform", "translate(" + (this.params.margin.left - 1) + ", " + this.params.margin.top + ")").call(this.yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", "0.8em").style("text-anchor", "end").style("font-size", "11px").text(this.params.yAxisLabel);
       this.chart = this.svg.append("g").attr("transform", "translate(" + this.params.margin.left + ", " + this.params.margin.top + ")");
+      this.qualatativeTicks = this.chart.selectAll(".qualitative").data(this.qualitative).enter().append("g").attr("class", "qualitative").attr("transform", (function(_this) {
+        return function(d, i) {
+          return "translate(0, " + (_this.scaleY(d.value)) + ")";
+        };
+      })(this));
+      this.qualatativeTicks.each(function(d, i) {
+        var x2;
+        x2 = self.params.width - (self.params.margin.left + self.params.margin.right) + 4;
+        return d3.select(this).append("line").attr("x1", -44).attr("x2", x2).attr("stroke-dasharray", "3,5").style("stroke-width", 2.5).attr("class", function(d) {
+          return d["class"];
+        });
+
+        /*
+        d3.select(@)
+          .append("line")
+          .attr("y1", -24)
+          .attr("y2", -24)
+          .attr("x1", -self.scaleX(50))
+          .attr("x2", 0)
+          .style("stroke-width", 5.0)
+          .attr("class", (d) -> d.class)
+        
+        d3.select(@)
+          .append("text")
+          .attr("text-anchor", "end")
+          .text((d) -> d.name)
+          .attr("x", -6)
+          .attr("y", -32)
+          .attr("class", (d) -> d.class)
+          .style("stroke", "none")
+          .style("font-size", "11")
+         */
+      });
       this.areaMax = d3.svg.area().x((function(_this) {
         return function(d) {
           return _this.scaleX(new Date(d.date));

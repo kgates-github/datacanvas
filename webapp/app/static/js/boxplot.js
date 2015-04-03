@@ -62,7 +62,7 @@
         d3.select(this).append("line").attr("y1", -44).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 2.5).attr("class", function(d) {
           return d["class"];
         });
-        d3.select(this).append("line").attr("y1", -24).attr("y2", -24).attr("x1", -self.scaleX(50)).attr("x2", 0).style("stroke-width", 2.5).attr("class", function(d) {
+        d3.select(this).append("line").attr("y1", -24).attr("y2", -24).attr("x1", -self.scaleX(50)).attr("x2", 0).style("stroke-width", 5.0).attr("class", function(d) {
           return d["class"];
         });
         return d3.select(this).append("text").attr("text-anchor", "end").text(function(d) {

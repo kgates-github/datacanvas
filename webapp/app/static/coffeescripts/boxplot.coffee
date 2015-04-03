@@ -107,7 +107,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("y2", -24)
         .attr("x1", -self.scaleX(50))
         .attr("x2", 0)
-        .style("stroke-width", 2.5)
+        .style("stroke-width", 5.0)
         .attr("class", (d) -> d.class)
 
       d3.select(@)

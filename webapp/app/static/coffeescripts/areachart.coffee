@@ -117,7 +117,47 @@ class AreaChart extends APP.charts['Chart']
 
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
-  
+    
+    @qualatativeTicks = @chart.selectAll(".qualitative")
+      .data(@qualitative)
+      .enter()
+      .append("g")
+      .attr("class", "qualitative")
+      .attr("transform", (d, i) =>
+        "translate(0, #{@scaleY(d.value)})"
+      )
+
+    @qualatativeTicks.each((d, i) ->
+      x2 = self.params.width - (self.params.margin.left + self.params.margin.right) + 4
+      d3.select(@)
+        .append("line")
+        .attr("x1", -44)
+        .attr("x2", x2)
+        .attr("stroke-dasharray", "3,5")
+        .style("stroke-width", 2.5)
+        .attr("class", (d) -> d.class)
+      ###
+      d3.select(@)
+        .append("line")
+        .attr("y1", -24)
+        .attr("y2", -24)
+        .attr("x1", -self.scaleX(50))
+        .attr("x2", 0)
+        .style("stroke-width", 5.0)
+        .attr("class", (d) -> d.class)
+
+      d3.select(@)
+        .append("text")
+        .attr("text-anchor", "end")
+        .text((d) -> d.name)
+        .attr("x", -6)
+        .attr("y", -32)
+        .attr("class", (d) -> d.class)
+        .style("stroke", "none")
+        .style("font-size", "11")
+      ###
+    )
+
     @areaMax = d3.svg.area()
       .x((d) => @scaleX(new Date(d.date)))
       .y0((d) =>  @scaleY(d.min))
