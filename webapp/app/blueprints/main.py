@@ -61,6 +61,9 @@ def update():
     elif month == 'Mar':
         date_from = '2015-03-01'
         date_to = '2015-03-31'
+    elif month == 'Apr':
+        date_from = '2015-04-01'
+        date_to = '2015-04-30'
     else:
         date_from = '2015-01-01'
         date_to = '2015-03-31'

@@ -40,6 +40,9 @@
       });
       this.svg.call(this.tip);
       this.chart = this.svg.append("g").attr("transform", "translate(" + (this.params.margin.left + 2) + ", " + (this.params.margin.top + 8) + ")");
+      this.data = _.sortBy(this.data, function(d) {
+        return d.date;
+      });
       this.plots = this.chart.selectAll(".plot").data(this.data).enter().append("g").attr("class", "plot").attr("transform", (function(_this) {
         return function(d, i) {
           return "translate(" + (_this.scaleX(new Date(d.date))) + ", 0)";
@@ -49,11 +52,11 @@
         d3.select(this).append("rect").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", function(d) {
           return self.scaleY(d.min) - self.scaleY(d.max) + 2;
         }).attr("x", 0).attr("y", function(d) {
-          return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom;
+          return self.scaleY(d.max);
         }).attr("class", "bar").style("fill", "#ddd").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
         return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("class", "overlay").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", self.params.height).attr("x", 0).attr("y", function(d) {
           return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom - 20;
-        }).attr("class", "bar").style("fill", "#ddd").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
+        }).attr("class", "bar").style("fill", "#666").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });
       this.svg.append("text").attr("class", "x label").style("fill", "#999").style("font-weight", "400").attr("text-anchor", "start").attr("x", this.params.margin.left + 6).attr("y", 10).text(this.params.yAxisLabel);
     }
@@ -86,7 +89,7 @@
     BoxPlotVertical.prototype._getScaleY = function() {
       var domainY, rangeY;
       domainY = this._getDomain(this.data);
-      rangeY = [this.params.height - this.params.margin.top - this.params.margin.bottom - 10, 0];
+      rangeY = [this.params.height - this.params.margin.top - this.params.margin.bottom, 0];
       return this.params.scaleY().domain(domainY).range(rangeY);
     };
 
