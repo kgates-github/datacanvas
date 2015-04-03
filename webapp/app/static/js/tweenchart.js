@@ -32,7 +32,7 @@
       })(this));
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
       this.filter = this.svg.append("defs");
-      this.filter.append("filter").attr("id", "blur").append("feGaussianBlur").attr("stdDeviation", 8);
+      this.filter.append("filter").attr("id", "blur").append("feGaussianBlur").attr("stdDeviation", 0);
       this.filter.append("filter").attr("id", "unblur").append("feGaussianBlur").attr("stdDeviation", 0);
       this.cities = ["Bangalore", "Boston", "Rio de Janeiro", "San Francisco", "Shanghai", "Singapore"];
       this.cityData = [];
@@ -79,7 +79,7 @@
         });
         this.day.each(function(d, i) {
           return this.path = d3.select(this).selectAll(".middleSolidArc").data(self.pie(d)).enter().append("path").attr("fill", function(d) {
-            if (d.data.score > 50) {
+            if (d.data.score > 0) {
               return d.data.color;
             }
             return "none";

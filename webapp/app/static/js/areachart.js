@@ -16,9 +16,9 @@
       this.helpers = _at_helpers;
       self = this;
       this.el = this.params.el;
+      this.qualitative = this.params.qualitative || [];
       this.scaleX = this._getScaleX();
       this.scaleY = this._getScaleY();
-      this.qualitative = this.params.qualitative || [];
       this.xAxis = d3.svg.axis().scale(this.scaleX).innerTickSize(6).orient("top");
       this.yAxis = d3.svg.axis().scale(this.scaleY).orient("left");
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
@@ -64,31 +64,18 @@
       })(this));
       this.qualatativeTicks.each(function(d, i) {
         var x2;
-        x2 = self.params.width - (self.params.margin.left + self.params.margin.right) + 4;
-        return d3.select(this).append("line").attr("x1", -44).attr("x2", x2).attr("stroke-dasharray", "3,5").style("stroke-width", 2.5).attr("class", function(d) {
+        x2 = self.params.width - self.params.margin.left;
+        d3.select(this).append("line").attr("x1", self.params.margin.left).attr("x2", x2).attr("stroke-dasharray", "3,5").style("stroke-width", 2.5).attr("class", function(d) {
           return d["class"];
         });
-
-        /*
-        d3.select(@)
-          .append("line")
-          .attr("y1", -24)
-          .attr("y2", -24)
-          .attr("x1", -self.scaleX(50))
-          .attr("x2", 0)
-          .style("stroke-width", 5.0)
-          .attr("class", (d) -> d.class)
-        
-        d3.select(@)
-          .append("text")
-          .attr("text-anchor", "end")
-          .text((d) -> d.name)
-          .attr("x", -6)
-          .attr("y", -32)
-          .attr("class", (d) -> d.class)
-          .style("stroke", "none")
-          .style("font-size", "11")
-         */
+        d3.select(this).append("line").attr("x1", self.params.width - self.params.margin.left - 2.5 - 10).attr("x2", self.params.width - self.params.margin.left - 2.5 - 10).attr("y1", -self.scaleY(100)).attr("y2", 0).style("stroke-width", 5.0).attr("class", function(d) {
+          return d["class"];
+        });
+        return d3.select(this).append("text").text(function(d) {
+          return d.name;
+        }).attr("text-anchor", "end").attr("transform", "translate(" + (self.params.width - self.params.margin.right - 20) + ", 10) rotate(-90)").attr("class", function(d) {
+          return d["class"];
+        }).style("stroke", "none").style("font-size", "11");
       });
       this.areaMax = d3.svg.area().x((function(_this) {
         return function(d) {
@@ -152,9 +139,22 @@
     }
 
     AreaChart.prototype._getDomain = function(data) {
-      var max, min;
+      var elem, max, min, _i, _len, _ref;
       max = _.max(_.pluck(data, "max"));
       min = _.min(_.pluck(data, "min"));
+      if (this.qualitative.length) {
+        _ref = this.qualitative;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          elem = _ref[_i];
+          if (max < elem.value) {
+            max = elem.value;
+            break;
+          }
+        }
+      }
+      if (max < 55) {
+        max = 55;
+      }
       return [min, max];
     };
 

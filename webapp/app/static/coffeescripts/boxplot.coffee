@@ -103,8 +103,8 @@ class BoxPlot extends APP.charts['Chart']
 
       d3.select(@)
         .append("line")
-        .attr("y1", -24)
-        .attr("y2", -24)
+        .attr("y1", -34)
+        .attr("y2", -34)
         .attr("x1", -self.scaleX(50))
         .attr("x2", 0)
         .style("stroke-width", 5.0)
@@ -115,7 +115,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("text-anchor", "end")
         .text((d) -> d.name)
         .attr("x", -6)
-        .attr("y", -32)
+        .attr("y", -18)
         .attr("class", (d) -> d.class)
         .style("stroke", "none")
         .style("font-size", "11")
@@ -258,8 +258,8 @@ class BoxPlot extends APP.charts['Chart']
         if max < elem.value
           max = elem.value
           break
-    if max < 70
-      max = 70
+    if max < 55
+      max = 55
     [min, max]
 
   update: (data) ->

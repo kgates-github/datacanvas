@@ -112,11 +112,11 @@
           scaleX: d3.time.scale,
           scaleY: d3.scale.linear,
           width: 700,
-          height: 330,
+          height: 430,
           qualitative: helpers.aqiQualitative,
           margin: {
             top: 30,
-            right: 0,
+            right: 30,
             bottom: 0,
             left: 30
           }
@@ -136,7 +136,7 @@
           height: 120,
           margin: {
             top: 0,
-            right: 0,
+            right: 30,
             bottom: 30,
             left: 30
           }

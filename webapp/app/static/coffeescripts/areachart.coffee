@@ -4,9 +4,9 @@ class AreaChart extends APP.charts['Chart']
   constructor: (@app, @params, @data, @city, @helpers) ->
     self = @
     @el = @params.el
+    @qualitative = @params.qualitative or []
     @scaleX = @_getScaleX()
     @scaleY = @_getScaleY() 
-    @qualitative = @params.qualitative or []
     @xAxis = d3.svg.axis().scale(@scaleX).innerTickSize(6).orient("top")
     @yAxis = d3.svg.axis().scale(@scaleY).orient("left")
 
@@ -128,34 +128,33 @@ class AreaChart extends APP.charts['Chart']
       )
 
     @qualatativeTicks.each((d, i) ->
-      x2 = self.params.width - (self.params.margin.left + self.params.margin.right) + 4
+      x2 = self.params.width - self.params.margin.left
       d3.select(@)
         .append("line")
-        .attr("x1", -44)
+        .attr("x1", self.params.margin.left)
         .attr("x2", x2)
         .attr("stroke-dasharray", "3,5")
         .style("stroke-width", 2.5)
         .attr("class", (d) -> d.class)
-      ###
+      
       d3.select(@)
         .append("line")
-        .attr("y1", -24)
-        .attr("y2", -24)
-        .attr("x1", -self.scaleX(50))
-        .attr("x2", 0)
+        .attr("x1", self.params.width - self.params.margin.left - 2.5 - 10)
+        .attr("x2", self.params.width - self.params.margin.left - 2.5 - 10)
+        .attr("y1", -self.scaleY(100))
+        .attr("y2", 0)
         .style("stroke-width", 5.0)
         .attr("class", (d) -> d.class)
 
       d3.select(@)
         .append("text")
-        .attr("text-anchor", "end")
         .text((d) -> d.name)
-        .attr("x", -6)
-        .attr("y", -32)
+        .attr("text-anchor", "end")
+        .attr("transform", "translate(#{self.params.width - self.params.margin.right - 20}, 10) rotate(-90)")
         .attr("class", (d) -> d.class)
         .style("stroke", "none")
         .style("font-size", "11")
-      ###
+      
     )
 
     @areaMax = d3.svg.area()
@@ -233,6 +232,15 @@ class AreaChart extends APP.charts['Chart']
   _getDomain: (data) ->
     max = _.max(_.pluck(data, "max"))
     min = _.min(_.pluck(data, "min"))
+    
+    if @qualitative.length
+      for elem in @qualitative
+        if max < elem.value
+          max = elem.value
+          break
+    if max < 55
+      max = 55
+    
     [min, max]
 
   _getScaleX: ->

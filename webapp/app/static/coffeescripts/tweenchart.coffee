@@ -36,7 +36,7 @@ class TweenChart extends APP.charts['Chart']
       .append("filter")
       .attr("id", "blur")
       .append("feGaussianBlur")
-      .attr("stdDeviation", 8)
+      .attr("stdDeviation", 0)
 
     @filter 
       .append("filter")
@@ -98,7 +98,7 @@ class TweenChart extends APP.charts['Chart']
           .data(self.pie(d))
           .enter().append("path")
           .attr("fill", (d) ->
-            if d.data.score > 50
+            if d.data.score > 0
               return d.data.color
             "none"
           )
