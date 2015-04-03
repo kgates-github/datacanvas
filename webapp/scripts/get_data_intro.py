@@ -79,4 +79,4 @@ if __name__ == '__main__':
         sys.exit(0)
     _, directory, from_dt, before_dt, metric, city, resolution = sys.argv
 
-    get_cities(directory, from_dt, before_dt, metric, city, resolution)
+    get_sensors(directory, from_dt, before_dt, metric, city, resolution)

@@ -26,6 +26,7 @@ def load_sensor_data(date_from, date_to, time_of_day):
     datafiles.append('data/sensors-mean-2015-02-01-to-2015-03-01.csv')
     datafiles.append('data/sensors-mean-2015-03-01-to-2015-03-18.csv')
     datafiles.append('data/sensors-mean-2015-03-18-to-2015-03-21.csv')
+    datafiles.append('data/sensors-mean-2015-03-21-to-2015-04-01.csv')
     data = []
     for csv_name in datafiles:
         df = pd.read_csv(csv_name, parse_dates=['timestamp'])
