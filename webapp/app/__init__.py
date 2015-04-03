@@ -1,8 +1,4 @@
-import sqlite3
 from flask import Flask
-
-
-db = sqlite3.connect('db/datacanvas.db')
 
 
 def create_app(config_name):
