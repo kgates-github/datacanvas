@@ -74,6 +74,7 @@ class BoxPlotVertical extends APP.charts['Chart']
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left + 2}, #{@params.margin.top + 8})")
 
+    @data = _.sortBy(@data, (d) -> d.date)
 
     @plots = @chart.selectAll(".plot")
       .data(@data)
@@ -94,7 +95,7 @@ class BoxPlotVertical extends APP.charts['Chart']
         )
         .attr("x", 0)
         .attr("y", (d) ->
-          self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom
+          self.scaleY(d.max)# - self.params.margin.top - self.params.margin.bottom
         )
         .attr("class", "bar")
         .style("fill", "#ddd")
@@ -112,10 +113,9 @@ class BoxPlotVertical extends APP.charts['Chart']
           self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom - 20
         )
         .attr("class", "bar")
-        .style("fill", "#ddd")
+        .style("fill", "#666")
         .on('mouseover', self.tip.show)
         .on('mouseout', self.tip.hide)
-        
     )
 
     @svg.append("text")
@@ -149,7 +149,7 @@ class BoxPlotVertical extends APP.charts['Chart']
   _getScaleY: ->
     domainY = @_getDomain(@data)
     rangeY = [
-        (@params.height - @params.margin.top - @params.margin.bottom - 10), 0
+        (@params.height - @params.margin.top - @params.margin.bottom), 0
       ]
 
     #console.log domainY

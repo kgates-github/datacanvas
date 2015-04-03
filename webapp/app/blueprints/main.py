@@ -8,8 +8,9 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    date_to = '2015-03-20'  # datetime.now().strftime('%Y-%m-%d')
-    date_from = '2015-03-16'  # (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
+    date_to = '2015-03-20' #datetime.now().strftime('%Y-%m-%d')
+    date_from = '2015-03-16' #(datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
+
     df = models.load_city_data(date_from, date_to)
     return render_template('index.html', data=df.to_json(date_format='iso', orient='records'))
 
@@ -60,6 +61,9 @@ def update():
     elif month == 'Mar':
         date_from = '2015-03-01'
         date_to = '2015-03-31'
+    elif month == 'Apr':
+        date_from = '2015-04-01'
+        date_to = '2015-04-30'
     else:
         date_from = '2015-01-01'
         date_to = '2015-03-31'
