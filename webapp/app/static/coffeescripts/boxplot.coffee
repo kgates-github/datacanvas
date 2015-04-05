@@ -101,6 +101,7 @@ class BoxPlot extends APP.charts['Chart']
         .style("stroke-width", 2.5)
         .attr("class", (d) -> d.class)
 
+      ###
       d3.select(@)
         .append("line")
         .attr("y1", -34)
@@ -109,6 +110,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("x2", 0)
         .style("stroke-width", 5.0)
         .attr("class", (d) -> d.class)
+      ###
 
       d3.select(@)
         .append("text")
@@ -182,6 +184,7 @@ class BoxPlot extends APP.charts['Chart']
         .attr("x", (d) -> self.scaleX(d.min))
         .attr("y", (d, i) -> self.scaleY(i) - 6)
 
+      ###
       d3.select(@).append("rect")
         #.attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
         .attr("class", (d) -> "median")
@@ -190,6 +193,15 @@ class BoxPlot extends APP.charts['Chart']
         .style("fill", "#666")
         .attr("x", (d) -> self.scaleX(d.median) - 3)
         .attr("y", (d, i) -> self.scaleY(i) - 6)
+      ###
+
+      d3.select(@).append("circle")
+        #.attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
+        .attr("class", (d) -> "median")
+        .attr("r", 5)
+        .style("fill", "#666")
+        .attr("cx", (d) -> self.scaleX(d.median))
+        .attr("cy", (d, i) -> self.scaleY(i) + 1.5)
 
       d3.select(@).append("rect")
         #.attr("class", (d) -> "max #{self.helpers.getColorClass(d.max, self.qualitative)}")

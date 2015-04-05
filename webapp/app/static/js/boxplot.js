@@ -62,9 +62,17 @@
         d3.select(this).append("line").attr("y1", -44).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 2.5).attr("class", function(d) {
           return d["class"];
         });
-        d3.select(this).append("line").attr("y1", -34).attr("y2", -34).attr("x1", -self.scaleX(50)).attr("x2", 0).style("stroke-width", 5.0).attr("class", function(d) {
-          return d["class"];
-        });
+
+        /*
+        d3.select(@)
+          .append("line")
+          .attr("y1", -34)
+          .attr("y2", -34)
+          .attr("x1", -self.scaleX(50))
+          .attr("x2", 0)
+          .style("stroke-width", 5.0)
+          .attr("class", (d) -> d.class)
+         */
         return d3.select(this).append("text").attr("text-anchor", "end").text(function(d) {
           return d.name;
         }).attr("x", -6).attr("y", -18).attr("class", function(d) {
@@ -111,12 +119,23 @@
         }).attr("y", function(d, i) {
           return self.scaleY(i) - 6;
         });
-        d3.select(this).append("rect").attr("class", function(d) {
+
+        /*
+        d3.select(@).append("rect")
+          #.attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
+          .attr("class", (d) -> "median")
+          .attr("height", 15)
+          .attr("width", 6)
+          .style("fill", "#666")
+          .attr("x", (d) -> self.scaleX(d.median) - 3)
+          .attr("y", (d, i) -> self.scaleY(i) - 6)
+         */
+        d3.select(this).append("circle").attr("class", function(d) {
           return "median";
-        }).attr("height", 15).attr("width", 6).style("fill", "#666").attr("x", function(d) {
-          return self.scaleX(d.median) - 3;
-        }).attr("y", function(d, i) {
-          return self.scaleY(i) - 6;
+        }).attr("r", 5).style("fill", "#666").attr("cx", function(d) {
+          return self.scaleX(d.median);
+        }).attr("cy", function(d, i) {
+          return self.scaleY(i) + 1.5;
         });
         d3.select(this).append("rect").attr("class", function(d) {
           return "max";

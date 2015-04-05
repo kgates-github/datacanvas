@@ -54,9 +54,7 @@
         }).attr("x", 0).attr("y", function(d) {
           return self.scaleY(d.max);
         }).attr("class", "bar").style("fill", "#ddd").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
-        return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("class", "overlay").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", self.params.height).attr("x", 0).attr("y", function(d) {
-          return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom - 20;
-        }).attr("class", "bar").style("fill", "#666").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
+        return d3.select(this).append("rect").style("fill", "#333").style("opacity", 0.0).attr("class", "overlay").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length).attr("height", self.params.height).attr("x", 0).attr("class", "bar").style("fill", "#666").on('mouseover', self.tip.show).on('mouseout', self.tip.hide);
       });
       this.svg.append("text").attr("class", "x label").style("fill", "#999").style("font-weight", "400").attr("text-anchor", "start").attr("x", this.params.margin.left + 6).attr("y", 10).text(this.params.yAxisLabel);
     }

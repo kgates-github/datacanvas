@@ -68,12 +68,20 @@
         d3.select(this).append("line").attr("x1", self.params.margin.left).attr("x2", x2).attr("stroke-dasharray", "3,5").style("stroke-width", 2.5).attr("class", function(d) {
           return d["class"];
         });
-        d3.select(this).append("line").attr("x1", self.params.width - self.params.margin.left - 2.5 - 10).attr("x2", self.params.width - self.params.margin.left - 2.5 - 10).attr("y1", -self.scaleY(100)).attr("y2", 0).style("stroke-width", 5.0).attr("class", function(d) {
-          return d["class"];
-        });
+
+        /*
+        d3.select(@)
+          .append("line")
+          .attr("x1", self.params.width - self.params.margin.left - 2.5 - 10)
+          .attr("x2", self.params.width - self.params.margin.left - 2.5 - 10)
+          .attr("y1", self.scaleY(50))
+          .attr("y2", 0)
+          .style("stroke-width", 5.0)
+          .attr("class", (d) -> d.class)
+         */
         return d3.select(this).append("text").text(function(d) {
           return d.name;
-        }).attr("text-anchor", "end").attr("transform", "translate(" + (self.params.width - self.params.margin.right - 20) + ", 10) rotate(-90)").attr("class", function(d) {
+        }).attr("text-anchor", "end").attr("transform", "translate(" + (self.params.width - self.params.margin.right - 10) + ", 10) rotate(-90)").attr("class", function(d) {
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
       });

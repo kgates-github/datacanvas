@@ -137,20 +137,23 @@ class AreaChart extends APP.charts['Chart']
         .style("stroke-width", 2.5)
         .attr("class", (d) -> d.class)
       
+      #console.log self.scaleY(50), self.scaleY(150), self.scaleY(250), self.scaleY(450)
+      ###
       d3.select(@)
         .append("line")
         .attr("x1", self.params.width - self.params.margin.left - 2.5 - 10)
         .attr("x2", self.params.width - self.params.margin.left - 2.5 - 10)
-        .attr("y1", -self.scaleY(100))
+        .attr("y1", self.scaleY(50))
         .attr("y2", 0)
         .style("stroke-width", 5.0)
         .attr("class", (d) -> d.class)
+      ###
 
       d3.select(@)
         .append("text")
         .text((d) -> d.name)
         .attr("text-anchor", "end")
-        .attr("transform", "translate(#{self.params.width - self.params.margin.right - 20}, 10) rotate(-90)")
+        .attr("transform", "translate(#{self.params.width - self.params.margin.right - 10}, 10) rotate(-90)")
         .attr("class", (d) -> d.class)
         .style("stroke", "none")
         .style("font-size", "11")
@@ -258,6 +261,7 @@ class AreaChart extends APP.charts['Chart']
     rangeY = [
         @params.height - (@params.margin.top + @params.margin.bottom), 0
       ]
+
     @params.scaleY()
       .domain(domainY)
       .range(rangeY)

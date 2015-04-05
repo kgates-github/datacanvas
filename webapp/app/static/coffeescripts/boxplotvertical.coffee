@@ -103,15 +103,12 @@ class BoxPlotVertical extends APP.charts['Chart']
         .on('mouseout', self.tip.hide)
 
       d3.select(@).append("rect")
-        .style("fill", "#none")
+        .style("fill", "#333")
         .style("opacity", 0.0)
         .attr("class", "overlay")
-        .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
+        .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length)
         .attr("height", self.params.height)
         .attr("x", 0)
-        .attr("y", (d) ->
-          self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom - 20
-        )
         .attr("class", "bar")
         .style("fill", "#666")
         .on('mouseover', self.tip.show)
