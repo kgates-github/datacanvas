@@ -90,7 +90,6 @@ class BoxPlotVertical extends APP.charts['Chart']
       d3.select(@).append("rect")
         .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
         .attr("height", (d) ->
-          #console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
           self.scaleY(d.min) - self.scaleY(d.max) + 2
         )
         .attr("x", 0)
@@ -192,12 +191,12 @@ class BoxPlotVertical extends APP.charts['Chart']
       d3.select(@).append("rect")
         .attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2)
         .attr("height", (d) ->
-          #console.log self.scaleY(d.max), self.scaleY(d.min), d.max, d.min
           self.scaleY(d.min) - self.scaleY(d.max) + 2
+          #self.scaleY(d.min) - self.scaleY(d.max) + 2
         )
         .attr("x", 0)
         .attr("y", (d) ->
-          self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom
+          self.scaleY(d.max)
         )
         .attr("class", "bar")
         .style("fill", "#ddd")

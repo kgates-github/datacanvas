@@ -127,7 +127,7 @@
         d3.select(this).append("rect").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", function(d) {
           return self.scaleY(d.min) - self.scaleY(d.max) + 2;
         }).attr("x", 0).attr("y", function(d) {
-          return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom;
+          return self.scaleY(d.max);
         }).attr("class", "bar").style("fill", "#ddd");
         return d3.select(this).append("rect").style("fill", "#none").style("opacity", 0.0).attr("class", "overlay").attr("width", (self.params.width - self.params.margin.left - self.params.margin.right) / self.data.length - 2).attr("height", self.params.height).attr("x", 0).attr("y", function(d) {
           return self.params.height - self.scaleY(d.min) - self.params.margin.top - self.params.margin.bottom - 20;

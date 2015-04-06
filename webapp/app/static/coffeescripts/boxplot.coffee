@@ -306,7 +306,7 @@ class BoxPlot extends APP.charts['Chart']
         #.attr("class", (d) -> "median #{self.helpers.getColorClass(d.median, self.qualitative)}")
         .transition()
         .duration(duration)
-        .attr("x", (d) -> self.scaleX(d.median))
+        .attr("cx", (d) -> self.scaleX(d.median))
 
       d3.select(@).select(".max")
         #.attr("class", (d) -> "max #{self.helpers.getColorClass(d.max, self.qualitative)}")

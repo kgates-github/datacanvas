@@ -232,7 +232,7 @@
         d3.select(this).select(".min").transition().duration(duration).attr("x", function(d) {
           return self.scaleX(d.min);
         });
-        d3.select(this).select(".median").transition().duration(duration).attr("x", function(d) {
+        d3.select(this).select(".median").transition().duration(duration).attr("cx", function(d) {
           return self.scaleX(d.median);
         });
         d3.select(this).select(".max").transition().duration(duration).attr("x", function(d) {
