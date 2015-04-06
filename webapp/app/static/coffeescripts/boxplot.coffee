@@ -24,7 +24,7 @@ class BoxPlot extends APP.charts['Chart']
 
     # X axis
     @svg.append("g")
-      .attr("class", "x axis")
+      .attr("class", "x axis boxplot")
       .attr("transform", "translate(#{@params.margin.left}," + (@params.height - 30) + ")")
       .call(@xAxis);
 
@@ -93,6 +93,8 @@ class BoxPlot extends APP.charts['Chart']
 
     @qualatativeTicks.each((d, i) ->
       y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) - 4
+      x2 = if d.name == 'Good' then self.scaleX(d.value - self.domainX[0] + 1) - 5 else self.scaleX(d.value - d.lower + 1) - 5
+      
       d3.select(@)
         .append("line")
         .attr("y1", -44)
@@ -101,23 +103,21 @@ class BoxPlot extends APP.charts['Chart']
         .style("stroke-width", 2.5)
         .attr("class", (d) -> d.class)
 
-      ###
       d3.select(@)
         .append("line")
-        .attr("y1", -34)
-        .attr("y2", -34)
-        .attr("x1", -self.scaleX(50))
-        .attr("x2", 0)
+        .attr("y1", -30)
+        .attr("y2", -30)
+        .attr("x1", 0)
+        .attr("x2", -x2)
         .style("stroke-width", 5.0)
         .attr("class", (d) -> d.class)
-      ###
-
+      
       d3.select(@)
         .append("text")
         .attr("text-anchor", "end")
         .text((d) -> d.name)
         .attr("x", -6)
-        .attr("y", -18)
+        .attr("y", -14)
         .attr("class", (d) -> d.class)
         .style("stroke", "none")
         .style("font-size", "11")
@@ -230,13 +230,13 @@ class BoxPlot extends APP.charts['Chart']
     d3.select("##{idx}").classed({'on': true})
 
   _getScaleX: ->
-    domainX = @_getDomain(@data)
+    @domainX = @_getDomain(@data)
     rangeX = [
         0, @params.width - (@params.margin.left + @params.margin.right)
       ]
 
     @params.scale()
-      .domain(domainX)
+      .domain(@domainX)
       .range(rangeX)
 
   _getScaleY: ->

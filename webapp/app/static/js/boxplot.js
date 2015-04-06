@@ -27,7 +27,7 @@
         return self._toggleButtons($(this).val());
       });
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
-      this.svg.append("g").attr("class", "x axis").attr("transform", ("translate(" + this.params.margin.left + ",") + (this.params.height - 30) + ")").call(this.xAxis);
+      this.svg.append("g").attr("class", "x axis boxplot").attr("transform", ("translate(" + this.params.margin.left + ",") + (this.params.height - 30) + ")").call(this.xAxis);
       this.tip = d3.tip().attr('class', 'd3-tip').offset((function(_this) {
         return function(d) {
           return [-20, _this.scaleX(d.median) - _this.params.margin.left - 18];
@@ -57,25 +57,18 @@
         };
       })(this));
       this.qualatativeTicks.each(function(d, i) {
-        var y2;
+        var x2, y2;
         y2 = self.params.height - (self.params.margin.top + self.params.margin.bottom) - 4;
+        x2 = d.name === 'Good' ? self.scaleX(d.value - self.domainX[0] + 1) - 5 : self.scaleX(d.value - d.lower + 1) - 5;
         d3.select(this).append("line").attr("y1", -44).attr("y2", y2).attr("stroke-dasharray", "3,5").style("stroke-width", 2.5).attr("class", function(d) {
           return d["class"];
         });
-
-        /*
-        d3.select(@)
-          .append("line")
-          .attr("y1", -34)
-          .attr("y2", -34)
-          .attr("x1", -self.scaleX(50))
-          .attr("x2", 0)
-          .style("stroke-width", 5.0)
-          .attr("class", (d) -> d.class)
-         */
+        d3.select(this).append("line").attr("y1", -30).attr("y2", -30).attr("x1", 0).attr("x2", -x2).style("stroke-width", 5.0).attr("class", function(d) {
+          return d["class"];
+        });
         return d3.select(this).append("text").attr("text-anchor", "end").text(function(d) {
           return d.name;
-        }).attr("x", -6).attr("y", -18).attr("class", function(d) {
+        }).attr("x", -6).attr("y", -14).attr("class", function(d) {
           return d["class"];
         }).style("stroke", "none").style("font-size", "11");
       });
@@ -161,10 +154,10 @@
     };
 
     BoxPlot.prototype._getScaleX = function() {
-      var domainX, rangeX;
-      domainX = this._getDomain(this.data);
+      var rangeX;
+      this.domainX = this._getDomain(this.data);
       rangeX = [0, this.params.width - (this.params.margin.left + this.params.margin.right)];
-      return this.params.scale().domain(domainX).range(rangeX);
+      return this.params.scale().domain(this.domainX).range(rangeX);
     };
 
     BoxPlot.prototype._getScaleY = function() {

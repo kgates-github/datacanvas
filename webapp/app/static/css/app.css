@@ -35,7 +35,7 @@
   color:#999;
 }
 
-.tick line{
+.boxplot .tick line{
   opacity: 0.2;
 }
 

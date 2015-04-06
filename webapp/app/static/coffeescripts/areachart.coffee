@@ -118,48 +118,6 @@ class AreaChart extends APP.charts['Chart']
     @chart = @svg.append("g")
       .attr("transform", "translate(#{@params.margin.left}, #{@params.margin.top})")
     
-    @qualatativeTicks = @chart.selectAll(".qualitative")
-      .data(@qualitative)
-      .enter()
-      .append("g")
-      .attr("class", "qualitative")
-      .attr("transform", (d, i) =>
-        "translate(0, #{@scaleY(d.value)})"
-      )
-
-    @qualatativeTicks.each((d, i) ->
-      x2 = self.params.width - self.params.margin.left
-      d3.select(@)
-        .append("line")
-        .attr("x1", self.params.margin.left)
-        .attr("x2", x2)
-        .attr("stroke-dasharray", "3,5")
-        .style("stroke-width", 2.5)
-        .attr("class", (d) -> d.class)
-      
-      #console.log self.scaleY(50), self.scaleY(150), self.scaleY(250), self.scaleY(450)
-      ###
-      d3.select(@)
-        .append("line")
-        .attr("x1", self.params.width - self.params.margin.left - 2.5 - 10)
-        .attr("x2", self.params.width - self.params.margin.left - 2.5 - 10)
-        .attr("y1", self.scaleY(50))
-        .attr("y2", 0)
-        .style("stroke-width", 5.0)
-        .attr("class", (d) -> d.class)
-      ###
-
-      d3.select(@)
-        .append("text")
-        .text((d) -> d.name)
-        .attr("text-anchor", "end")
-        .attr("transform", "translate(#{self.params.width - self.params.margin.right - 10}, 10) rotate(-90)")
-        .attr("class", (d) -> d.class)
-        .style("stroke", "none")
-        .style("font-size", "11")
-      
-    )
-
     @areaMax = d3.svg.area()
       .x((d) => @scaleX(new Date(d.date)))
       .y0((d) =>  @scaleY(d.min))
@@ -232,6 +190,46 @@ class AreaChart extends APP.charts['Chart']
 
     @_setExplanationText()
 
+    @qualatativeTicks = @chart.selectAll(".qualitative")
+      .data(@qualitative)
+      .enter()
+      .append("g")
+      .attr("class", "qualitative")
+      .attr("transform", (d, i) =>
+        "translate(0, #{@scaleY(d.value)})"
+      )
+
+    @qualatativeTicks.each((d, i) ->
+      x2 = self.params.width - self.params.margin.left
+      y2 = if d.name == 'Good' then self.scaleY(self.domainY[0]) - 5 else self.scaleY(d.value - d.lower + 1) - 5
+      
+      d3.select(@)
+        .append("line")
+        .attr("x1", self.params.margin.left)
+        .attr("x2", x2)
+        .attr("stroke-dasharray", "3,5")
+        .style("stroke-width", 2.5)
+        .attr("class", (d) -> d.class)
+      
+      d3.select(@)
+        .append("line")
+        .attr("x1", self.params.width - self.params.margin.left - 2.5 - 10)
+        .attr("x2", self.params.width - self.params.margin.left - 2.5 - 10)
+        .attr("y1", 0)
+        .attr("y2", y2)
+        .style("stroke-width", 5.0)
+        .attr("class", (d) -> d.class)
+      
+      d3.select(@)
+        .append("text")
+        .text((d) -> d.name)
+        .attr("text-anchor", "end")
+        .attr("transform", "translate(#{self.params.width - self.params.margin.right - 20}, 10) rotate(-90)")
+        .attr("class", (d) -> d.class)
+        .style("stroke", "none")
+        .style("font-size", "11")
+    )
+
   _getDomain: (data) ->
     max = _.max(_.pluck(data, "max"))
     min = _.min(_.pluck(data, "min"))
@@ -257,13 +255,14 @@ class AreaChart extends APP.charts['Chart']
       .domain([new Date(domainX[0]), new Date(domainX[1])])
     
   _getScaleY: ->
-    domainY = @_getDomain(@data)
+    @domainY = @_getDomain(@data)
+
     rangeY = [
         @params.height - (@params.margin.top + @params.margin.bottom), 0
       ]
 
     @params.scaleY()
-      .domain(domainY)
+      .domain(@domainY)
       .range(rangeY)
   
   update: (data) ->

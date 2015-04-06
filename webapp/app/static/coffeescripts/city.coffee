@@ -150,7 +150,7 @@ config =
         height: 290
         qualitative: helpers.aqiQualitative
         margin: 
-          top: 20
+          top: 30
           right: 50
           bottom: 40
           left: 165
