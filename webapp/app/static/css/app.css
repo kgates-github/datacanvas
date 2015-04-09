@@ -4,16 +4,28 @@
   column-count: 3;
 }
 
+.enter-btn-top {
+  width:150px; 
+  background:#333; 
+  color:#fff !important;
+}
+
+.enter-btn-top:hover {
+  width:150px; 
+  background:#666; 
+  color:#fff !important;
+}
+
 .enter-btn {
   width:150px; 
-  background:#eebb00; 
-  color:#fff !important;
+  background:#fff; 
+  color:#333 !important;
 }
 
 .enter-btn:hover {
   width:150px; 
-  background:#ddaa00; 
-  color:#fff !important;
+  background:#eee; 
+  color:#333 !important;
 }
 
 #score-card td {

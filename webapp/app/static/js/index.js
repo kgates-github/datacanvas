@@ -57,14 +57,14 @@
   config = {
     charts: [
       {
-        type: 'ClockChart',
+        type: 'TweenChart',
         params: {
           el: 'intro-viz',
           chart: 'circle',
           dimension: 'none',
           scale: d3.scale.linear,
           width: 970,
-          height: 630,
+          height: 430,
           qualitative: helpers.aqiQualitative,
           margin: {
             top: 0,

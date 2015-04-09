@@ -345,7 +345,7 @@ class AreaChart extends APP.charts['Chart']
       " between #{@filters.startMonth} and #{@filters.endMonth}, 2015"
 
     timeOfDayText = if @filters.timeOfDayFilter? then \
-      " only using data collected between #{@filters.timeOfDayFilter}" else ""
+      " <strong>only using data collected between #{@filters.timeOfDayFilter}</strong>" else ""
 
     html = "Air quality index scores #{monthText}#{timeOfDayText}."
     d3.select("#timeseries-explanation").html(html)

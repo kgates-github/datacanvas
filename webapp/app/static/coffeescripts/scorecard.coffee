@@ -78,7 +78,7 @@ class ScoreCard extends APP.charts['Chart']
       "between #{@filters.startMonth} and #{@filters.endMonth}, 2015"
 
     timeOfDayText = if @filters.timeOfDayFilter? then \
-      " and only use data collected between #{@filters.timeOfDayFilter}" else ""
+      " and <strong>only use data collected between #{@filters.timeOfDayFilter}</strong>" else ""
 
     html = """
       Measurements are from #{monthText}#{timeOfDayText}.

@@ -16,6 +16,7 @@
       self = this;
       this.el = this.params.el;
       this.qualitative = this.params.qualitative || [];
+      this.columnChart = null;
       this.width = 250;
       this.height = 250;
       this.radius = Math.min(this.width, this.height) / 2;
@@ -32,7 +33,8 @@
       })(this));
       this.svg = d3.select("#" + this.el).append("svg").attr("width", this.params.width).attr("height", this.params.height);
       this.filter = this.svg.append("defs");
-      this.filter.append("filter").attr("id", "blur").append("feGaussianBlur").attr("stdDeviation", 0);
+      this.filter.append("filter").attr("id", "blur").append("feGaussianBlur").attr("stdDeviation", 7);
+      this.filter.append("filter").attr("id", "blurMore").append("feGaussianBlur").attr("stdDeviation", 20);
       this.filter.append("filter").attr("id", "unblur").append("feGaussianBlur").attr("stdDeviation", 0);
       this.cities = ["Bangalore", "Boston", "Rio de Janeiro", "San Francisco", "Shanghai", "Singapore"];
       this.cityData = [];
@@ -64,8 +66,9 @@
           data: data
         });
       }
-      this.cityContainers = this.svg.selectAll("g").data(this.cityData).enter().append("g").attr("transform", function(d, i) {
-        return "translate(" + (i % 2 * 85 + 10) + ", " + (60 + i * 80) + ")";
+      this.mainContainer = this.svg.append("g");
+      this.cityContainers = this.mainContainer.selectAll("g").data(this.cityData).enter().append("g").attr("transform", function(d, i) {
+        return "translate(" + (i % 2 * 85 + 0) + ", " + (60 + i * 70) + ")";
       }).attr("id", function(d, i) {
         return "id-" + i;
       }).attr("class", "city").attr("filter", function(d) {
@@ -91,20 +94,30 @@
           };
         })(this));
       });
-      this.svg.selectAll(".city").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 7 - 20).style("opacity", 0.0).on("mouseover", function(d, i) {
-        return self.unBlurCity("id-" + i, i);
-      }).on("mouseout", (function(_this) {
+      this.svg.selectAll(".city").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 7 - 20).style("opacity", 0.0).on("mouseover", (function(_this) {
         return function(d, i) {
-          return _this.blurCity();
+          if (_this.columnChart == null) {
+            return self.unBlurCity("id-" + i, i);
+          }
+        };
+      })(this)).on("mouseout", (function(_this) {
+        return function(d, i) {
+          if (_this.columnChart == null) {
+            return _this.blurCities();
+          }
         };
       })(this)).style("cursor", "pointer");
-      this.svg.on("mouseout", function() {
-        d3.selectAll(".city").attr("filter", function(d) {
-          return "url(#blur)";
-        });
-        d3.selectAll(".cityText text").style("opacity", 0);
-        return d3.selectAll(".day .dayText").style("opacity", 0);
-      });
+      this.svg.on("mouseout", (function(_this) {
+        return function() {
+          if (_this.columnChart == null) {
+            d3.selectAll(".city").attr("filter", function(d) {
+              return "url(#blur)";
+            }).attr("opacity", 1);
+            d3.selectAll(".cityText text").style("opacity", 0);
+            return d3.selectAll(".day .dayText").style("opacity", 0);
+          }
+        };
+      })(this));
     }
 
     TweenChart.prototype.createColumns = function(elem) {
@@ -131,13 +144,20 @@
     };
 
     TweenChart.prototype.openColumns = function(columnChart) {
+      columnChart.attr("transform", "translate(0, 250)");
       return columnChart.selectAll("g").selectAll("rect").transition().duration(700).attr("width", 4).attr("x", function(d, i) {
         return -50 + i * 7.9;
-      });
+      }).each("end", (function(_this) {
+        return function(d, i) {
+          if (i === 0) {
+            return console.log(d);
+          }
+        };
+      })(this));
     };
 
     TweenChart.prototype.tweenToColumns = function(elem) {
-      var arcTween, columnChart, self;
+      var arcTween, self;
       self = this;
       arcTween = function(transition, newStartAngle, newEndAngle) {
         return transition.attrTween("d", function(d) {
@@ -151,12 +171,14 @@
           };
         });
       };
-      columnChart = this.createColumns(elem);
-      return d3.select(elem).selectAll(".middleSolidArc").transition().duration(750).call(arcTween, 0, 0).each("end", (function(_this) {
+      return d3.select(elem).transition().duration(750).attr("transform", "translate(0, 250)").each("end", (function(_this) {
         return function(d, i) {
-          if (i === 0) {
-            return _this.openColumns(columnChart);
-          }
+          _this.columnChart = _this.createColumns(elem);
+          return d3.select(elem).selectAll(".middleSolidArc").transition().duration(750).call(arcTween, 0, 0).each("end", function(d, i) {
+            if (i === 0) {
+              return _this.openColumns(_this.columnChart);
+            }
+          });
         };
       })(this));
     };
@@ -164,7 +186,7 @@
     TweenChart.prototype.unBlurCity = function(idx, index) {
       d3.selectAll(".city").attr("filter", function(d) {
         return "url(#blur)";
-      });
+      }).attr("opacity", 0.3);
       d3.selectAll(".cityText text").style("opacity", 0);
       d3.selectAll(".day .dayText").style("opacity", 0);
       d3.selectAll("#" + idx).attr("filter", (function(_this) {
@@ -172,7 +194,8 @@
           return "url(#unblur)";
         };
       })(this)).selectAll("text").style("opacity", 1);
-      return d3.selectAll("#" + idx + " .dayText").style("opacity", 1);
+      d3.selectAll("#" + idx + " .dayText").style("opacity", 1);
+      return d3.selectAll("#" + idx).attr("opacity", 1.0);
     };
 
     TweenChart.prototype.blurCities = function() {

@@ -4,13 +4,24 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <div id="intro-viz" style="position:absolute; top:180px;"></div>
-    <div style="margin-left:-40px; font-size:48px; margin-top:90px; color:#666; background:#fff; vertical-align:bottom;">
-      <img src="{{url_for('static', filename='images/clock.png')}}">
-      Seeing the Air
+    <div style="margin-left:-40px; margin-top:60px; margin-bottom:0px; color:#666; background:#fff; vertical-align:bottom;">
+      <img src="{{url_for('static', filename='images/clock.png')}}" style="width:80px; float:left;">
+      <span style="margin-left:0px; padding-bottom:-10px; color:#777; font-size:48px;">Seeing the Air</span><br>
+      <span style="font-size:18px; margin-top:0px;">An experiment in citizen-run, DIY air quality monitoring</span>
     </div>
-    <div style="font-size:18px; margin-top:0px;">An experiment in citizen-run, DIY air quality monitoring</div>
-    <div style="background:#fff; opacity:1.0; margin-top:470px;">
+    <div id="intro-viz"></div>
+
+    <div id="intro-text" style="position:absolute; top:440px; font-size:11px;">
+      <div style="font-weight:bold; text-transform:uppercase;">Rio de Janeiro</div>
+      <div style="width:460px;">
+        Worst levels of pollution by the hour over the last five days. Measurements are air quality index scores from DIY kits assembledby volunteers.
+      </div>
+    </div>
+    <div id="intro-button" style="position:absolute; top:500px; text-align:right; width:100%; padding-right:30px;">
+      <a href="#" type="button" class="enter-btn-top btn btn-lg btn-default">Enter</a>
+    </div>
+    
+    <div style="background:#fff; opacity:1.0; margin-top:40px;">
       <div id="intro">
         <p>
           In many countries, air pollution reaches hazardous levels, and getting information about air quality is difficult, if not impossible. [1]
@@ -24,13 +35,13 @@
       </div>
     </div>
     <div style="text-align:right; margin-top:20px;">
-    <a href="/city/Bangalore/" type="button" class="enter-btn btn btn-lg btn-default">Enter</a>
+      <a href="/city/Bangalore/" type="button" class="enter-btn btn btn-lg btn-default">Enter</a>
     </div>
 
     <hr style="margin-top:30px;">
     <div style="font-size:11px; color:#999;">
       <p><strong>Credits</strong></p>
-      <p>Seeing the Air is by Kevin Gates and Ramesh Sampath.
+      <p>Seeing the Air is by Kevin Gates (kgates@gmail.com) and Ramesh Sampath.
       <p><strong>Data Sources</strong>
       <p>
         Data is obtained via API - http://map.datacanvas.org/#!/data.  Thanks to <a href=www.localdata.com>Local Data</a> for making it available.

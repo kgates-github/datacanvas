@@ -5,6 +5,7 @@ class TweenChart extends APP.charts['Chart']
     self = @
     @el = @params.el
     @qualitative = @params.qualitative or []
+    @columnChart = null
 
     @width = 250
     @height = 250
@@ -36,7 +37,13 @@ class TweenChart extends APP.charts['Chart']
       .append("filter")
       .attr("id", "blur")
       .append("feGaussianBlur")
-      .attr("stdDeviation", 0)
+      .attr("stdDeviation", 7)
+
+    @filter 
+      .append("filter")
+      .attr("id", "blurMore")
+      .append("feGaussianBlur")
+      .attr("stdDeviation", 20)
 
     @filter 
       .append("filter")
@@ -71,11 +78,13 @@ class TweenChart extends APP.charts['Chart']
         }
       )
 
-    @cityContainers = @svg.selectAll("g")
+    @mainContainer = @svg.append("g")
+
+    @cityContainers = @mainContainer.selectAll("g")
       .data(@cityData)
       .enter()
       .append("g")
-      .attr("transform", (d, i) -> "translate(#{(i % 2 * 85 + 10)}, #{60+i*80})")
+      .attr("transform", (d, i) -> "translate(#{(i % 2 * 85 + 0)}, #{60+i*70})")
       .attr("id", (d, i) -> "id-#{i}")
       .attr("class", "city")
       .attr("filter", (d) ->
@@ -121,11 +130,13 @@ class TweenChart extends APP.charts['Chart']
       .attr("width", @params.width)
       .attr("height", @params.height / 7 - 20)
       .style("opacity", 0.0)
-      .on("mouseover", (d, i) ->
-        self.unBlurCity("id-#{i}", i)
+      .on("mouseover", (d, i) =>
+        if !@columnChart?
+          self.unBlurCity("id-#{i}", i)
       )
       .on("mouseout", (d, i) =>
-        @blurCity()
+        if !@columnChart?
+          @blurCities()
       )
       #.on("click", (d) ->
       #  window.location.href = "/city/#{d.city}/"
@@ -133,15 +144,18 @@ class TweenChart extends APP.charts['Chart']
       .style("cursor", "pointer")
 
     @svg
-      .on("mouseout", () ->
-        d3.selectAll(".city").attr("filter", (d) -> 
-          "url(#blur)"
-        )
-        d3.selectAll(".cityText text")
-          .style("opacity", 0)
+      .on("mouseout", () =>
+        if !@columnChart?
+          d3.selectAll(".city").attr("filter", (d) -> 
+            "url(#blur)"
+          )
+          .attr("opacity", 1)
 
-        d3.selectAll(".day .dayText")
-          .style("opacity", 0)
+          d3.selectAll(".cityText text")
+            .style("opacity", 0)
+
+          d3.selectAll(".day .dayText")
+            .style("opacity", 0)
       )
 
   createColumns: (elem) ->
@@ -182,6 +196,8 @@ class TweenChart extends APP.charts['Chart']
     return container
 
   openColumns: (columnChart) ->
+    columnChart.attr("transform", "translate(0, 250)")
+
     columnChart.selectAll("g")
       .selectAll("rect")
       #.style("fill", "#ffcc00")
@@ -190,37 +206,46 @@ class TweenChart extends APP.charts['Chart']
       .attr("width", 4)
       .attr("x", (d, i) ->
         -50 + i * 7.9
+      ).each("end", (d, i) =>
+        if i == 0
+          console.log d
       )
-    
 
   tweenToColumns: (elem) ->
     self = @
-
     arcTween = (transition, newStartAngle, newEndAngle) ->
       transition.attrTween("d", (d) ->
         interpolateEnd = d3.interpolate(d.endAngle, newEndAngle)
         interpolatestart = d3.interpolate(d.startAngle, newStartAngle)
-        return (t) ->
+        (t) ->
           d.startAngle = interpolateEnd(t)
           d.endAngle = interpolatestart(t)
-          return self.arc(d)
+          self.arc(d)
       )
 
-    columnChart = @createColumns(elem)
-    
-    d3.select(elem).selectAll(".middleSolidArc")
+    d3.select(elem)
       .transition()
       .duration(750)
-      .call(arcTween, 0, 0)
+      .attr("transform", "translate(0, 250)")
       .each("end", (d, i) =>
-        if i == 0 
-          @openColumns(columnChart)
+        @columnChart = @createColumns(elem)
+        
+        d3.select(elem).selectAll(".middleSolidArc")
+          .transition()
+          .duration(750)
+          .call(arcTween, 0, 0)
+          .each("end", (d, i) =>
+            if i == 0 
+              @openColumns(@columnChart)
+          )
       )
 
   unBlurCity: (idx, index) ->
-    d3.selectAll(".city").attr("filter", (d) -> 
-      "url(#blur)"
-    )
+    d3.selectAll(".city")
+      .attr("filter", (d) -> 
+        "url(#blur)"
+      )
+      .attr("opacity", 0.3)
 
     d3.selectAll(".cityText text")
       .style("opacity", 0)
@@ -238,6 +263,9 @@ class TweenChart extends APP.charts['Chart']
 
     d3.selectAll("##{idx} .dayText")
       .style("opacity", 1)
+
+    d3.selectAll("##{idx}")
+      .attr("opacity", 1.0)
 
 
   blurCities: ->
