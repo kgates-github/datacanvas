@@ -17,6 +17,7 @@
       this.el = this.params.el;
       this.qualitative = this.params.qualitative || [];
       this.columnChart = null;
+      this.columnViewOpen = false;
       this.width = 250;
       this.height = 250;
       this.radius = Math.min(this.width, this.height) / 2;
@@ -94,15 +95,15 @@
           };
         })(this));
       });
-      this.svg.selectAll(".city").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 7 - 20).style("opacity", 0.0).on("mouseover", (function(_this) {
+      this.svg.selectAll(".city").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 6).style("opacity", 0.0).on("mouseover", (function(_this) {
         return function(d, i) {
-          if (_this.columnChart == null) {
+          if (!_this.columnViewOpen) {
             return self.unBlurCity("id-" + i, i);
           }
         };
       })(this)).on("mouseout", (function(_this) {
         return function(d, i) {
-          if (_this.columnChart == null) {
+          if (_this.columnViewOpen) {
             return _this.blurCities();
           }
         };
@@ -110,11 +111,7 @@
       this.svg.on("mouseout", (function(_this) {
         return function() {
           if (_this.columnChart == null) {
-            d3.selectAll(".city").attr("filter", function(d) {
-              return "url(#blur)";
-            }).attr("opacity", 1);
-            d3.selectAll(".cityText text").style("opacity", 0);
-            return d3.selectAll(".day .dayText").style("opacity", 0);
+            return _this.resetBlur();
           }
         };
       })(this));
@@ -143,14 +140,25 @@
       return container;
     };
 
-    TweenChart.prototype.openColumns = function(columnChart) {
-      columnChart.attr("transform", "translate(0, 250)");
+    TweenChart.prototype.openColumns = function(columnChart, elem) {
+      var self;
+      self = this;
+      columnChart.attr("transform", "translate(0, 248)");
+      this.columnViewOpen = true;
+      d3.select("#intro-button").on("click", function() {
+        var city;
+        city = elem.__data__.data[0][0].label;
+        return window.location.href = "/city/" + city + "/";
+      });
+      d3.select("#intro-close").on("click", function() {
+        return self.tweenToRadial(columnChart);
+      });
       return columnChart.selectAll("g").selectAll("rect").transition().duration(700).attr("width", 4).attr("x", function(d, i) {
         return -50 + i * 7.9;
       }).each("end", (function(_this) {
         return function(d, i) {
           if (i === 0) {
-            return console.log(d);
+            return $(".intro").show();
           }
         };
       })(this));
@@ -171,24 +179,40 @@
           };
         });
       };
-      return d3.select(elem).transition().duration(750).attr("transform", "translate(0, 250)").each("end", (function(_this) {
+      this.columnViewOpen = true;
+      return d3.select(elem).transition().duration(750).attr("transform", "translate(0, 248)").each("end", (function(_this) {
         return function(d, i) {
           _this.columnChart = _this.createColumns(elem);
           return d3.select(elem).selectAll(".middleSolidArc").transition().duration(750).call(arcTween, 0, 0).each("end", function(d, i) {
             if (i === 0) {
-              return _this.openColumns(_this.columnChart);
+              console.log(elem.__data__.data);
+              return _this.openColumns(_this.columnChart, elem);
             }
           });
         };
       })(this));
     };
 
+    TweenChart.prototype.tweenToRadial = function(columnChart) {
+      columnChart.remove();
+      this.columnChart = null;
+      $(".intro").hide();
+      this.columnViewOpen = false;
+      return this.resetBlur();
+    };
+
+    TweenChart.prototype.resetBlur = function() {
+      return d3.selectAll(".city").attr("filter", (function(_this) {
+        return function(d) {
+          return "url(#blur)";
+        };
+      })(this)).attr("opacity", 1);
+    };
+
     TweenChart.prototype.unBlurCity = function(idx, index) {
       d3.selectAll(".city").attr("filter", function(d) {
         return "url(#blur)";
       }).attr("opacity", 0.3);
-      d3.selectAll(".cityText text").style("opacity", 0);
-      d3.selectAll(".day .dayText").style("opacity", 0);
       d3.selectAll("#" + idx).attr("filter", (function(_this) {
         return function(d) {
           return "url(#unblur)";

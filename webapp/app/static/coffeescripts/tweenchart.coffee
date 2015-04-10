@@ -6,6 +6,7 @@ class TweenChart extends APP.charts['Chart']
     @el = @params.el
     @qualitative = @params.qualitative or []
     @columnChart = null
+    @columnViewOpen = false
 
     @width = 250
     @height = 250
@@ -128,14 +129,14 @@ class TweenChart extends APP.charts['Chart']
       .append("rect")
       .attr("y", -@params.height / 14)
       .attr("width", @params.width)
-      .attr("height", @params.height / 7 - 20)
+      .attr("height", @params.height / 6)
       .style("opacity", 0.0)
       .on("mouseover", (d, i) =>
-        if !@columnChart?
+        if !@columnViewOpen
           self.unBlurCity("id-#{i}", i)
       )
       .on("mouseout", (d, i) =>
-        if !@columnChart?
+        if @columnViewOpen
           @blurCities()
       )
       #.on("click", (d) ->
@@ -146,16 +147,7 @@ class TweenChart extends APP.charts['Chart']
     @svg
       .on("mouseout", () =>
         if !@columnChart?
-          d3.selectAll(".city").attr("filter", (d) -> 
-            "url(#blur)"
-          )
-          .attr("opacity", 1)
-
-          d3.selectAll(".cityText text")
-            .style("opacity", 0)
-
-          d3.selectAll(".day .dayText")
-            .style("opacity", 0)
+          @resetBlur()
       )
 
   createColumns: (elem) ->
@@ -195,12 +187,24 @@ class TweenChart extends APP.charts['Chart']
 
     return container
 
-  openColumns: (columnChart) ->
-    columnChart.attr("transform", "translate(0, 250)")
+  openColumns: (columnChart, elem) ->
+    self = @
+    columnChart.attr("transform", "translate(0, 248)")
+    @columnViewOpen = true
+
+    d3.select("#intro-button")
+      .on("click", ->
+        city = elem.__data__.data[0][0].label
+        window.location.href = "/city/#{city}/"
+      )
+
+    d3.select("#intro-close") 
+      .on("click", ->
+        self.tweenToRadial(columnChart)
+      )
 
     columnChart.selectAll("g")
       .selectAll("rect")
-      #.style("fill", "#ffcc00")
       .transition()
       .duration(700)
       .attr("width", 4)
@@ -208,7 +212,7 @@ class TweenChart extends APP.charts['Chart']
         -50 + i * 7.9
       ).each("end", (d, i) =>
         if i == 0
-          console.log d
+          $(".intro").show()
       )
 
   tweenToColumns: (elem) ->
@@ -223,10 +227,12 @@ class TweenChart extends APP.charts['Chart']
           self.arc(d)
       )
 
+    @columnViewOpen = true
+
     d3.select(elem)
       .transition()
       .duration(750)
-      .attr("transform", "translate(0, 250)")
+      .attr("transform", "translate(0, 248)")
       .each("end", (d, i) =>
         @columnChart = @createColumns(elem)
         
@@ -236,9 +242,24 @@ class TweenChart extends APP.charts['Chart']
           .call(arcTween, 0, 0)
           .each("end", (d, i) =>
             if i == 0 
-              @openColumns(@columnChart)
+              console.log elem.__data__.data
+              @openColumns(@columnChart, elem)
           )
       )
+
+  tweenToRadial: (columnChart) ->
+    columnChart.remove()
+    @columnChart = null
+    $(".intro").hide()
+    @columnViewOpen = false
+    @resetBlur()
+
+  resetBlur: ->
+    d3.selectAll(".city")
+      .attr("filter", (d) => 
+        "url(#blur)"
+      )
+      .attr("opacity", 1)
 
   unBlurCity: (idx, index) ->
     d3.selectAll(".city")
@@ -246,12 +267,6 @@ class TweenChart extends APP.charts['Chart']
         "url(#blur)"
       )
       .attr("opacity", 0.3)
-
-    d3.selectAll(".cityText text")
-      .style("opacity", 0)
-
-    d3.selectAll(".day .dayText")
-      .style("opacity", 0)
     
     d3.selectAll("##{idx}")
       .attr("filter", (d) => 

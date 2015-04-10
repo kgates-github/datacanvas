@@ -4,21 +4,24 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <div style="margin-left:-40px; margin-top:60px; margin-bottom:0px; color:#666; background:#fff; vertical-align:bottom;">
+    <div style="margin-left:-40px; margin-top:60px; margin-bottom:16px; color:#666; background:#fff; vertical-align:bottom;">
       <img src="{{url_for('static', filename='images/clock.png')}}" style="width:80px; float:left;">
       <span style="margin-left:0px; padding-bottom:-10px; color:#777; font-size:48px;">Seeing the Air</span><br>
-      <span style="font-size:18px; margin-top:0px;">An experiment in citizen-run, DIY air quality monitoring</span>
+      <div style="font-size:18px; margin-top:-2px;">An experiment in citizen-run, DIY air quality monitoring</div>
     </div>
     <div id="intro-viz"></div>
 
-    <div id="intro-text" style="position:absolute; top:440px; font-size:11px;">
-      <div style="font-weight:bold; text-transform:uppercase;">Rio de Janeiro</div>
+    <div class="intro" id="intro-text" style="position:absolute; top:230px; font-size:11px;">
+      <div id="intro-text-city" style="font-weight:bold; text-transform:uppercase; margin-bottom:8px;">Rio de Janeiro</div>
       <div style="width:460px;">
-        Worst levels of pollution by the hour over the last five days. Measurements are air quality index scores from DIY kits assembledby volunteers.
+        Worst levels of pollution by the hour over the last five days. Measurements are air quality index scores from DIY kits assembled by volunteers.
       </div>
     </div>
-    <div id="intro-button" style="position:absolute; top:500px; text-align:right; width:100%; padding-right:30px;">
-      <a href="#" type="button" class="enter-btn-top btn btn-lg btn-default">Enter</a>
+    <div class="intro" style="position:absolute; top:230px; text-align:right; width:100%; padding-right:30px;">
+      <span id="intro-close" class="glyphicon glyphicon-remove-circle" aria-hidden="true" style="font-size: 2.2em; color:#999;"></span>
+    </div>
+    <div class="intro"  style="position:absolute; top:530px; text-align:right; width:100%; padding-right:30px;">
+      <a href="#" id="intro-button" type="button" class="enter-btn-top btn btn-lg btn-default">Enter</a>
     </div>
     
     <div style="background:#fff; opacity:1.0; margin-top:40px;">

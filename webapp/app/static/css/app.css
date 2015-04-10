@@ -4,9 +4,17 @@
   column-count: 3;
 }
 
+.intro {
+  display: none;
+}
+
+#intro-close {
+  cursor: pointer;
+}
+
 .enter-btn-top {
   width:150px; 
-  background:#333; 
+  background:#999; 
   color:#fff !important;
 }
 
@@ -20,6 +28,7 @@
   width:150px; 
   background:#fff; 
   color:#333 !important;
+  border-color:#ddd;
 }
 
 .enter-btn:hover {
