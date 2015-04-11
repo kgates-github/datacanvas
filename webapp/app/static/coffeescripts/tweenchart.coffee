@@ -80,12 +80,16 @@ class TweenChart extends APP.charts['Chart']
       )
 
     @mainContainer = @svg.append("g")
+    @cityTranslate = {}
 
     @cityContainers = @mainContainer.selectAll("g")
       .data(@cityData)
       .enter()
       .append("g")
-      .attr("transform", (d, i) -> "translate(#{(i % 2 * 85 + 0)}, #{60+i*70})")
+      .attr("transform", (d, i) =>
+        @cityTranslate[d.city] = "translate(#{(i % 2 * 85 + 0)}, #{60+i*70})"
+        @cityTranslate[d.city]
+      )
       .attr("id", (d, i) -> "id-#{i}")
       .attr("class", "city")
       .attr("filter", (d) ->
@@ -281,21 +285,39 @@ class TweenChart extends APP.charts['Chart']
         if i == 0 and !called
           called = true
           d3.selectAll(".columnGroup").remove()
-          self.columnViewOpen = false
-
+          
           city = elem.__data__.city 
           data = _.findWhere(@cityData, {"city": city}).data
           days = d3.select(elem).selectAll(".day")
+
+          d3.select(elem)
+            .attr("filter", "url(#unblur)")
           
+          called2 = false
           days.each((d, i) ->
             radials = d3.select(@).selectAll(".middleSolidArc")
             d1 = self.pie(data[i])
-              
+            
             radials.each((d, i) ->
               d3.select(@)
                 .transition()
                 .duration(750)
                 .call(arcTween, d1[i].startAngle, d1[i].endAngle)
+                .each("end", (d, i) =>
+                  
+                  if i == 0 and !called2
+                    called2 = true
+                    d3.select(elem)
+                      .attr("filter", "url(#unblur)")
+                      .transition()
+                      .duration(550)
+                      .attr("transform", self.cityTranslate[city])
+                      .each("end", (d, i) =>
+                        if i == 0
+                          #self.resetBlur()
+                          self.columnViewOpen = false
+                      )
+                )
             )
           )
       )

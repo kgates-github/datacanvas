@@ -68,9 +68,13 @@
         });
       }
       this.mainContainer = this.svg.append("g");
-      this.cityContainers = this.mainContainer.selectAll("g").data(this.cityData).enter().append("g").attr("transform", function(d, i) {
-        return "translate(" + (i % 2 * 85 + 0) + ", " + (60 + i * 70) + ")";
-      }).attr("id", function(d, i) {
+      this.cityTranslate = {};
+      this.cityContainers = this.mainContainer.selectAll("g").data(this.cityData).enter().append("g").attr("transform", (function(_this) {
+        return function(d, i) {
+          _this.cityTranslate[d.city] = "translate(" + (i % 2 * 85 + 0) + ", " + (60 + i * 70) + ")";
+          return _this.cityTranslate[d.city];
+        };
+      })(this)).attr("id", function(d, i) {
         return "id-" + i;
       }).attr("class", "city").attr("filter", function(d) {
         return "url(#blur)";
@@ -214,22 +218,34 @@
       called = false;
       return d3.selectAll(".columnGroup").selectAll("rect").transition().duration(700).attr("x", 0).each("end", (function(_this) {
         return function(d, i) {
-          var city, data, days;
+          var called2, city, data, days;
           if (i === 0 && !called) {
             called = true;
             d3.selectAll(".columnGroup").remove();
-            self.columnViewOpen = false;
             city = elem.__data__.city;
             data = _.findWhere(_this.cityData, {
               "city": city
             }).data;
             days = d3.select(elem).selectAll(".day");
+            d3.select(elem).attr("filter", "url(#unblur)");
+            called2 = false;
             return days.each(function(d, i) {
               var d1, radials;
               radials = d3.select(this).selectAll(".middleSolidArc");
               d1 = self.pie(data[i]);
               return radials.each(function(d, i) {
-                return d3.select(this).transition().duration(750).call(arcTween, d1[i].startAngle, d1[i].endAngle);
+                return d3.select(this).transition().duration(750).call(arcTween, d1[i].startAngle, d1[i].endAngle).each("end", (function(_this) {
+                  return function(d, i) {
+                    if (i === 0 && !called2) {
+                      called2 = true;
+                      return d3.select(elem).attr("filter", "url(#unblur)").transition().duration(550).attr("transform", self.cityTranslate[city]).each("end", function(d, i) {
+                        if (i === 0) {
+                          return self.columnViewOpen = false;
+                        }
+                      });
+                    }
+                  };
+                })(this));
               });
             });
           }
