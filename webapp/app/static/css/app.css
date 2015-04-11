@@ -1,3 +1,9 @@
+
+
+.radial-date {
+  font-size: 11px;
+}
+
 #intro {
   -webkit-column-count: 3; /* Chrome, Safari, Opera */
   -moz-column-count: 3; /* Firefox */
@@ -240,6 +246,12 @@ body {
   border-radius: 5px;
 }
 
+.d3-tip-intro {
+  line-height: 1.1;
+  font-size: 11px;
+  padding: 1px;
+  color: #999;
+}
 /* Creates a small triangle extender for the tooltip */
 /*
 .d3-tip:after {
