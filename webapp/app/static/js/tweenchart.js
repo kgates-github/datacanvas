@@ -98,7 +98,7 @@
       this.svg.selectAll(".city").append("rect").attr("y", -this.params.height / 14).attr("width", this.params.width).attr("height", this.params.height / 6).style("opacity", 0.0).on("mouseover", (function(_this) {
         return function(d, i) {
           if (!_this.columnViewOpen) {
-            return self.unBlurCity("id-" + i, i);
+            return self.unBlurCity("id-" + i, i, d);
           }
         };
       })(this)).on("mouseout", (function(_this) {
@@ -110,7 +110,7 @@
       })(this)).style("cursor", "pointer");
       this.svg.on("mouseout", (function(_this) {
         return function() {
-          if (_this.columnChart == null) {
+          if (!_this.columnViewOpen) {
             return _this.resetBlur();
           }
         };
@@ -126,7 +126,7 @@
       container = this.svg.append("g").attr("transform", g.attr("transform"));
       data.forEach(function(dayData, i) {
         var bars, day;
-        day = container.append("g").attr("transform", "translate(" + (50 + i * 190) + ", 0)");
+        day = container.append("g").attr("class", "columnGroup").attr("transform", "translate(" + (50 + i * 190) + ", 0)");
         return bars = day.selectAll("rect").data(dayData).enter().append("rect").attr("width", 0).attr("height", (function(_this) {
           return function(d) {
             return scaleY(d.score);
@@ -141,18 +141,17 @@
     };
 
     TweenChart.prototype.openColumns = function(columnChart, elem) {
-      var self;
+      var city, self;
       self = this;
       columnChart.attr("transform", "translate(0, 248)");
-      this.columnViewOpen = true;
+      city = elem.__data__.data[0][0].label;
       d3.select("#intro-button").on("click", function() {
-        var city;
-        city = elem.__data__.data[0][0].label;
         return window.location.href = "/city/" + city + "/";
       });
       d3.select("#intro-close").on("click", function() {
         return self.tweenToRadial(columnChart);
       });
+      d3.select("#intro-text-city").html(city);
       return columnChart.selectAll("g").selectAll("rect").transition().duration(700).attr("width", 4).attr("x", function(d, i) {
         return -50 + i * 7.9;
       }).each("end", (function(_this) {
@@ -167,6 +166,7 @@
     TweenChart.prototype.tweenToColumns = function(elem) {
       var arcTween, self;
       self = this;
+      this.columnViewOpen = true;
       arcTween = function(transition, newStartAngle, newEndAngle) {
         return transition.attrTween("d", function(d) {
           var interpolateEnd, interpolatestart;
@@ -180,12 +180,12 @@
         });
       };
       this.columnViewOpen = true;
+      d3.select("#intro-text").transition().duration(750).style("top", "230px");
       return d3.select(elem).transition().duration(750).attr("transform", "translate(0, 248)").each("end", (function(_this) {
         return function(d, i) {
           _this.columnChart = _this.createColumns(elem);
           return d3.select(elem).selectAll(".middleSolidArc").transition().duration(750).call(arcTween, 0, 0).each("end", function(d, i) {
             if (i === 0) {
-              console.log(elem.__data__.data);
               return _this.openColumns(_this.columnChart, elem);
             }
           });
@@ -194,14 +194,23 @@
     };
 
     TweenChart.prototype.tweenToRadial = function(columnChart) {
-      columnChart.remove();
-      this.columnChart = null;
       $(".intro").hide();
-      this.columnViewOpen = false;
-      return this.resetBlur();
+      return d3.selectAll(".columnGroup").selectAll("rect").transition().duration(700).attr("x", 0).each("end", (function(_this) {
+        return function(d, i) {
+          if (i === 0) {
+            _this.columnViewOpen = false;
+            _this.resetBlur();
+            return d3.selectAll(".columnGroup").remove();
+          }
+        };
+      })(this));
     };
 
     TweenChart.prototype.resetBlur = function() {
+      console.log(this.columnViewOpen);
+      if (!this.columnViewOpen) {
+        $("#intro-text").hide();
+      }
       return d3.selectAll(".city").attr("filter", (function(_this) {
         return function(d) {
           return "url(#blur)";
@@ -209,7 +218,18 @@
       })(this)).attr("opacity", 1);
     };
 
-    TweenChart.prototype.unBlurCity = function(idx, index) {
+    TweenChart.prototype.unBlurCity = function(idx, index, d) {
+      if (d.city === 'Bangalore' || d.city === 'Boston') {
+        $("#intro-text").css({
+          "top": "370px"
+        });
+      } else {
+        $("#intro-text").css({
+          "top": "230px"
+        });
+      }
+      $("#intro-text").show();
+      d3.select("#intro-text-city").html(d.city);
       d3.selectAll(".city").attr("filter", function(d) {
         return "url(#blur)";
       }).attr("opacity", 0.3);
