@@ -122,7 +122,8 @@ class TweenChart extends APP.charts['Chart']
       d3.select(@)
         .style("cursor", "pointer")
         .on("click", (e) =>
-          self.tweenToColumns(@)
+          if !self.columnViewOpen
+            self.tweenToColumns(@)
         )
     )
     @svg.selectAll(".city")
@@ -200,7 +201,7 @@ class TweenChart extends APP.charts['Chart']
 
     d3.select("#intro-close") 
       .on("click", ->
-        self.tweenToRadial(columnChart)
+        self.tweenToRadial(columnChart, elem)
       )
 
     d3.select("#intro-text-city").html(city)
@@ -233,8 +234,6 @@ class TweenChart extends APP.charts['Chart']
 
     @columnViewOpen = true
 
-    #$("#intro-text").css(("top": "230px"))
-
     d3.select("#intro-text")
       .transition()
       .duration(750)
@@ -257,8 +256,20 @@ class TweenChart extends APP.charts['Chart']
           )
       )
 
-  tweenToRadial: (columnChart) ->
+  tweenToRadial: (columnChart, elem) ->
+    self = @
+    arcTween = (transition, newStartAngle, newEndAngle) ->
+      transition.attrTween("d", (d) ->
+        interpolateEnd = d3.interpolate(d.endAngle, newEndAngle)
+        interpolatestart = d3.interpolate(d.startAngle, newStartAngle)
+        (t) ->
+          d.startAngle = interpolateEnd(t)
+          d.endAngle = interpolatestart(t)
+          self.arc(d)
+      )
+
     $(".intro").hide()
+    called = false
 
     d3.selectAll(".columnGroup")
       .selectAll("rect")
@@ -266,15 +277,30 @@ class TweenChart extends APP.charts['Chart']
       .duration(700)
       .attr("x", 0)
       .each("end", (d, i) =>
-        if i == 0 
-          @columnViewOpen = false
-          @resetBlur()
+
+        if i == 0 and !called
+          called = true
           d3.selectAll(".columnGroup").remove()
+          self.columnViewOpen = false
+
+          city = elem.__data__.city 
+          data = _.findWhere(@cityData, {"city": city}).data
+          days = d3.select(elem).selectAll(".day")
+          
+          days.each((d, i) ->
+            radials = d3.select(@).selectAll(".middleSolidArc")
+            d1 = self.pie(data[i])
+              
+            radials.each((d, i) ->
+              d3.select(@)
+                .transition()
+                .duration(750)
+                .call(arcTween, d1[i].startAngle, d1[i].endAngle)
+            )
+          )
       )
 
   resetBlur: ->
-    console.log @columnViewOpen
-
     if !@columnViewOpen
       $("#intro-text").hide()
     d3.selectAll(".city")
