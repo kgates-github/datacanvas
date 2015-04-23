@@ -203,8 +203,8 @@ class TweenChart extends APP.charts['Chart']
   createColumns: (elem) ->
     self = @
     scaleY = d3.scale.linear()
-      .domain([0, 180])
-      .range([0, 80])
+      .domain([0, 380])
+      .range([0, 200])
 
     data = elem.__data__.data
     g = d3.select(elem)

@@ -146,7 +146,7 @@
     TweenChart.prototype.createColumns = function(elem) {
       var container, data, g, scaleY, self;
       self = this;
-      scaleY = d3.scale.linear().domain([0, 180]).range([0, 80]);
+      scaleY = d3.scale.linear().domain([0, 380]).range([0, 200]);
       data = elem.__data__.data;
       g = d3.select(elem);
       container = this.svg.append("g").attr("transform", g.attr("transform"));
